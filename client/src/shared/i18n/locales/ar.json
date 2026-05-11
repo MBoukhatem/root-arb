@@ -1,0 +1,48 @@
+{
+  "common": {
+    "app-name": "ArabicWordRoot",
+    "loading": "جارٍ التحميل...",
+    "error": "حدث خطأ",
+    "retry": "إعادة المحاولة",
+    "cancel": "إلغاء",
+    "confirm": "تأكيد",
+    "save": "حفظ",
+    "delete": "حذف",
+    "edit": "تعديل",
+    "back": "رجوع",
+    "next": "التالي",
+    "previous": "السابق",
+    "search": "بحث",
+    "language": "اللغة",
+    "theme": "السمة",
+    "theme-light": "فاتح",
+    "theme-dark": "داكن",
+    "theme-system": "النظام"
+  },
+  "nav": {
+    "home": "الرئيسية",
+    "explore": "استكشاف",
+    "dashboard": "لوحة التحكم",
+    "learn": "تعلم",
+    "constellation": "كوكبة",
+    "login": "تسجيل الدخول",
+    "register": "إنشاء حساب",
+    "logout": "تسجيل الخروج"
+  },
+  "auth": {
+    "login-title": "تسجيل الدخول",
+    "register-title": "إنشاء حساب",
+    "email": "البريد الإلكتروني",
+    "username": "اسم المستخدم",
+    "password": "كلمة المرور",
+    "submit-login": "تسجيل الدخول",
+    "submit-register": "إنشاء الحساب",
+    "no-account": "ليس لديك حساب؟",
+    "has-account": "لديك حساب بالفعل؟"
+  },
+  "errors": {
+    "page-not-found": "الصفحة غير موجودة",
+    "server-error": "خطأ في الخادم",
+    "go-home": "العودة إلى الرئيسية"
+  }
+}

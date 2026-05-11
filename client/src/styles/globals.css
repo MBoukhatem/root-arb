@@ -1,0 +1,101 @@
+/* =============================================================================
+ * Global styles - base reset, fonts, body defaults.
+ * CSS spec: all @import statements must precede any other rule.
+ * Tokens loaded via ./tokens.css (which @imports tailwindcss).
+ *
+ * Fonts via Google Fonts CDN for scaffold; self-host woff2 subset in S6.
+ * Per agent_08 R3: Amiri (titles >=24px) + Noto Naskh Arabic (body >=18px).
+ * `font-display: optional` to eliminate CLS on FR<->AR switch.
+ * ============================================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=optional');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500;700&display=optional');
+@import './tokens.css';
+
+/* -----------------------------------------------------------------------------
+ * Reset (minimal)
+ * --------------------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+html {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: var(--lh-latin);
+  color-scheme: light dark;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  transition:
+    background-color var(--motion-base) var(--motion-ease),
+    color var(--motion-base) var(--motion-ease);
+}
+
+/* Arabic content: RTL is set on the element via `dir="rtl"` (via <ArabicText>
+ * or <html dir>). When html[dir=rtl] is set, the entire chrome flips through
+ * logical properties (ms/me/ps/pe). */
+html[dir='rtl'] {
+  font-family: var(--font-arabic-body);
+  line-height: var(--lh-arabic);
+}
+
+/* Focus visible - WCAG AA */
+*:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Typography defaults */
+h1,
+h2,
+h3,
+h4 {
+  color: var(--text-primary);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+a {
+  color: var(--cat-verb-ink);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Skip link target hint */
+#main:focus {
+  outline: none;
+}

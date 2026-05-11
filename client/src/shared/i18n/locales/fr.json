@@ -1,0 +1,48 @@
+{
+  "common": {
+    "app-name": "ArabicWordRoot",
+    "loading": "Chargement...",
+    "error": "Une erreur est survenue",
+    "retry": "Réessayer",
+    "cancel": "Annuler",
+    "confirm": "Confirmer",
+    "save": "Enregistrer",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "back": "Retour",
+    "next": "Suivant",
+    "previous": "Précédent",
+    "search": "Rechercher",
+    "language": "Langue",
+    "theme": "Thème",
+    "theme-light": "Clair",
+    "theme-dark": "Sombre",
+    "theme-system": "Système"
+  },
+  "nav": {
+    "home": "Accueil",
+    "explore": "Explorer",
+    "dashboard": "Tableau de bord",
+    "learn": "Apprendre",
+    "constellation": "Constellation",
+    "login": "Connexion",
+    "register": "Inscription",
+    "logout": "Déconnexion"
+  },
+  "auth": {
+    "login-title": "Connexion",
+    "register-title": "Inscription",
+    "email": "Adresse e-mail",
+    "username": "Nom d'utilisateur",
+    "password": "Mot de passe",
+    "submit-login": "Se connecter",
+    "submit-register": "Créer mon compte",
+    "no-account": "Pas encore de compte ?",
+    "has-account": "Déjà inscrit ?"
+  },
+  "errors": {
+    "page-not-found": "Page introuvable",
+    "server-error": "Erreur serveur",
+    "go-home": "Retour à l'accueil"
+  }
+}
