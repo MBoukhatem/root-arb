@@ -1,0 +1,16 @@
+{
+  "name": "@arb/shared",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Code partagé entre server et client (enums, helpers Unicode, constantes)",
+  "type": "module",
+  "main": "./src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./enums": "./src/enums.js",
+    "./normalize-arabic": "./src/normalize-arabic.js"
+  },
+  "scripts": {
+    "lint": "echo \"(noop) shared lint\""
+  }
+}
