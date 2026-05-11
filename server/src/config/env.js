@@ -11,7 +11,10 @@ const schema = Joi.object({
   NODE_ENV: Joi.string().valid('development', 'test', 'production').default('development'),
   PORT: Joi.number().integer().min(1).max(65535).default(5000),
 
-  DB_URI: Joi.string().uri({ scheme: ['mongodb', 'mongodb+srv'] }).required(),
+  DB_URI: Joi.string()
+    .uri({ scheme: ['mongodb', 'mongodb+srv'] })
+    .optional(),
+  USE_MEMORY_DB: Joi.boolean().truthy('true').falsy('false').default(false),
 
   JWT_SECRET: Joi.string().min(32).required(),
   JWT_EXPIRES_IN: Joi.string().default('24h'),
@@ -53,6 +56,7 @@ const env = Object.freeze({
   NODE_ENV: value.NODE_ENV,
   PORT: value.PORT,
   DB_URI: value.DB_URI,
+  USE_MEMORY_DB: value.USE_MEMORY_DB,
   JWT_SECRET: value.JWT_SECRET,
   JWT_EXPIRES_IN: value.JWT_EXPIRES_IN,
   BCRYPT_ROUNDS: value.BCRYPT_ROUNDS,
