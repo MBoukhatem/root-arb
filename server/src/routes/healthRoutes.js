@@ -9,10 +9,13 @@ const router = express.Router();
 // Liveness : process up.
 router.get('/', (_req, res) => {
   res.status(200).json({
-    status: 'ok',
-    uptime: process.uptime(),
-    commit: env.GIT_SHA,
-    timestamp: new Date().toISOString(),
+    success: true,
+    data: {
+      status: 'ok',
+      uptime: process.uptime(),
+      commit: env.GIT_SHA,
+      timestamp: new Date().toISOString(),
+    },
   });
 });
 

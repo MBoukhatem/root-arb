@@ -5,6 +5,7 @@ const env = require('./config/env');
 const logger = require('./config/logger');
 const { connectWithRetry, bindConnectionEvents, disconnect } = require('./config/db');
 const app = require('./app');
+const { seedIfEmpty } = require('./seeds/seedOnBoot');
 
 let httpServer = null;
 
@@ -13,10 +14,15 @@ async function start() {
     bindConnectionEvents();
     await connectWithRetry();
 
+    // Auto-seed pour la démo locale (in-memory mode uniquement).
+    if (env.USE_MEMORY_DB) {
+      await seedIfEmpty();
+    }
+
     httpServer = app.listen(env.PORT, () => {
       logger.info(
         { port: env.PORT, env: env.NODE_ENV, commit: env.GIT_SHA },
-        `[server] listening on :${env.PORT}`
+        `[server] listening on :${env.PORT}`,
       );
     });
   } catch (err) {

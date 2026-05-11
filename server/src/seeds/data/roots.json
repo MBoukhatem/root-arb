@@ -1,0 +1,122 @@
+[
+  {
+    "letters": "ك-ت-ب",
+    "transliteration": "k-t-b",
+    "transliterationSimplified": "ktb",
+    "coreMeaning": {
+      "fr": "écrire, écriture",
+      "en": "to write, writing",
+      "ar": "الكتابة"
+    },
+    "semanticField": "knowledge",
+    "frequency": 100,
+    "difficulty": 1,
+    "isEssential": true,
+    "isQuranic": true
+  },
+  {
+    "letters": "ع-ل-م",
+    "transliteration": "ʿ-l-m",
+    "transliterationSimplified": "lm",
+    "coreMeaning": {
+      "fr": "savoir, connaissance, science",
+      "en": "to know, knowledge, science",
+      "ar": "المعرفة"
+    },
+    "semanticField": "knowledge",
+    "frequency": 98,
+    "difficulty": 2,
+    "isEssential": true,
+    "isQuranic": true
+  },
+  {
+    "letters": "ق-ر-أ",
+    "transliteration": "q-r-ʾ",
+    "transliterationSimplified": "qr",
+    "coreMeaning": {
+      "fr": "lire, lecture, réciter",
+      "en": "to read, recite",
+      "ar": "القراءة"
+    },
+    "semanticField": "knowledge",
+    "frequency": 95,
+    "difficulty": 2,
+    "isEssential": true,
+    "isQuranic": true
+  },
+  {
+    "letters": "د-ر-س",
+    "transliteration": "d-r-s",
+    "transliterationSimplified": "drs",
+    "coreMeaning": {
+      "fr": "étudier, leçon",
+      "en": "to study, lesson",
+      "ar": "الدراسة"
+    },
+    "semanticField": "knowledge",
+    "frequency": 80,
+    "difficulty": 2,
+    "isEssential": true,
+    "isQuranic": false
+  },
+  {
+    "letters": "ك-ل-م",
+    "transliteration": "k-l-m",
+    "transliterationSimplified": "klm",
+    "coreMeaning": {
+      "fr": "parler, parole, mot",
+      "en": "to speak, word, speech",
+      "ar": "الكلام"
+    },
+    "semanticField": "communication",
+    "frequency": 92,
+    "difficulty": 2,
+    "isEssential": true,
+    "isQuranic": true
+  },
+  {
+    "letters": "م-ش-ي",
+    "transliteration": "m-sh-y",
+    "transliterationSimplified": "mshy",
+    "coreMeaning": {
+      "fr": "marcher, aller à pied",
+      "en": "to walk, go on foot",
+      "ar": "المشي"
+    },
+    "semanticField": "movement",
+    "frequency": 70,
+    "difficulty": 2,
+    "isEssential": true,
+    "isQuranic": true
+  },
+  {
+    "letters": "أ-ك-ل",
+    "transliteration": "ʾ-k-l",
+    "transliterationSimplified": "kl",
+    "coreMeaning": {
+      "fr": "manger, nourriture",
+      "en": "to eat, food",
+      "ar": "الأكل"
+    },
+    "semanticField": "body",
+    "frequency": 78,
+    "difficulty": 1,
+    "isEssential": true,
+    "isQuranic": true
+  },
+  {
+    "letters": "ح-ب-ب",
+    "transliteration": "ḥ-b-b",
+    "transliterationSimplified": "hbb",
+    "coreMeaning": {
+      "fr": "aimer, amour, affection",
+      "en": "to love, love, affection",
+      "ar": "الحب"
+    },
+    "semanticField": "emotion",
+    "frequency": 85,
+    "difficulty": 2,
+    "isEssential": true,
+    "isQuranic": true
+  }
+]

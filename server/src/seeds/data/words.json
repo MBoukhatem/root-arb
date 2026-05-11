@@ -1,0 +1,796 @@
+[
+  {
+    "rootLetters": "ك-ت-ب",
+    "arabicWord": "كَتَبَ",
+    "transliteration": "kataba",
+    "translations": { "fr": "il a écrit", "en": "he wrote", "ar": "كتب" },
+    "pattern": "فَعَلَ",
+    "patternDescription": { "fr": "verbe accompli 3e p. masc.", "en": "perfect 3rd masc." },
+    "grammaticalCategory": "verb",
+    "examples": [
+      {
+        "sentence": "كَتَبَ الوَلَدُ الدَّرْسَ",
+        "translation": { "fr": "Le garçon a écrit la leçon.", "en": "The boy wrote the lesson." }
+      }
+    ],
+    "difficulty": 1,
+    "isCommon": true
+  },
+  {
+    "rootLetters": "ك-ت-ب",
+    "arabicWord": "كِتَاب",
+    "transliteration": "kitāb",
+    "translations": { "fr": "livre", "en": "book", "ar": "كتاب" },
+    "pattern": "فِعَال",
+    "patternDescription": { "fr": "nom (instrument/objet)", "en": "noun (object)" },
+    "grammaticalCategory": "noun",
+    "examples": [
+      {
+        "sentence": "هَذَا كِتَابٌ جَدِيدٌ",
+        "translation": { "fr": "Ceci est un livre nouveau.", "en": "This is a new book." }
+      }
+    ],
+    "difficulty": 1,
+    "isCommon": true
+  },
+  {
+    "rootLetters": "ك-ت-ب",
+    "arabicWord": "كَاتِب",
+    "transliteration": "kātib",
+    "translations": { "fr": "écrivain, scribe", "en": "writer, scribe", "ar": "كاتب" },
+    "pattern": "فَاعِل",
+    "patternDescription": { "fr": "participe actif", "en": "active participle" },
+    "grammaticalCategory": "agent",
+    "examples": [
+      {
+        "sentence": "الكَاتِبُ مَشْهُورٌ",
+        "translation": { "fr": "L'écrivain est célèbre.", "en": "The writer is famous." }
+      }
+    ],
+    "difficulty": 2,
+    "isCommon": true
+  },
+  {
+    "rootLetters": "ك-ت-ب",
+    "arabicWord": "مَكْتَب",
+    "transliteration": "maktab",
+    "translations": { "fr": "bureau, office", "en": "office, desk", "ar": "مكتب" },
+    "pattern": "مَفْعَل",
+    "patternDescription": { "fr": "nom de lieu", "en": "noun of place" },
+    "grammaticalCategory": "place",
+    "examples": [
+      {
+        "sentence": "ذَهَبَ إِلَى المَكْتَبِ",
+        "translation": { "fr": "Il est allé au bureau.", "en": "He went to the office." }
+      }
+    ],
+    "difficulty": 2,
+    "isCommon": true
+  },
+  {
+    "rootLetters": "ك-ت-ب",
+    "arabicWord": "مَكْتَبَة",
+    "transliteration": "maktaba",
+    "translations": { "fr": "bibliothèque, librairie", "en": "library, bookstore", "ar": "مكتبة" },
+    "pattern": "مَفْعَلَة",
+    "patternDescription": { "fr": "nom de lieu (féminin)", "en": "noun of place (fem.)" },
+    "grammaticalCategory": "place",
+    "examples": [
+      {
+        "sentence": "المَكْتَبَةُ كَبِيرَةٌ",
+        "translation": { "fr": "La bibliothèque est grande.", "en": "The library is big." }
+      }
+    ],
+    "difficulty": 2,
+    "isCommon": true
+  },
+  {
+    "rootLetters": "ك-ت-ب",
+    "arabicWord": "مَكْتُوب",
+    "transliteration": "maktūb",
+    "translations": { "fr": "écrit (chose écrite)", "en": "written, letter", "ar": "مكتوب" },
+    "pattern": "مَفْعُول",
+    "patternDescription": { "fr": "participe passif", "en": "passive participle" },
+    "grammaticalCategory": "participle",
+    "examples": [
+      {
+        "sentence": "الدَّرْسُ مَكْتُوبٌ",
+        "translation": { "fr": "La leçon est écrite.", "en": "The lesson is written." }
+      }
+    ],
+    "difficulty": 2,
+    "isCommon": true
+  },
+  {
+    "rootLetters": "ك-ت-ب",
+    "arabicWord": "كِتَابَة",
+    "transliteration": "kitāba",
+    "translations": {
+      "fr": "écriture, l'acte d'écrire",
+      "en": "writing, act of writing",
+      "ar": "كتابة"
+    },
+    "pattern": "فِعَالَة",
+    "patternDescription": { "fr": "nom verbal (masdar)", "en": "verbal noun" },
+    "grammaticalCategory": "verbal_noun",
+    "examples": [
+      {
+        "sentence": "الكِتَابَةُ مُهِمَّةٌ",
+        "translation": { "fr": "L'écriture est importante.", "en": "Writing is important." }
+      }
+    ],
+    "difficulty": 2,
+    "isCommon": true
+  },
+
+  {
+    "rootLetters": "ع-ل-م",
+    "arabicWord": "عَلِمَ",
+    "transliteration": "ʿalima",
+    "translations": { "fr": "il a su, il a appris", "en": "he knew, he learned", "ar": "علم" },
+    "pattern": "فَعِلَ",
+    "patternDescription": { "fr": "verbe accompli (état)", "en": "perfect verb (state)" },
+    "grammaticalCategory": "verb",
+    "examples": [
+      {
+        "sentence": "عَلِمَ الطَّالِبُ الجَوَابَ",
+        "translation": { "fr": "L'étudiant a su la réponse.", "en": "The student knew the answer." }
+      }
+    ],
+    "difficulty": 2,
+    "isCommon": true
+  },
+  {
+    "rootLetters": "ع-ل-م",
+    "arabicWord": "عِلْم",
+    "transliteration": "ʿilm",
+    "translations": { "fr": "science, savoir", "en": "knowledge, science", "ar": "علم" },
+    "pattern": "فِعْل",
+    "patternDescription": { "fr": "nom (concept)", "en": "noun (concept)" },
+    "grammaticalCategory": "noun",
+    "examples": [
+      {
+        "sentence": "العِلْمُ نُورٌ",
+        "translation": { "fr": "Le savoir est lumière.", "en": "Knowledge is light." }
+      }
+    ],
+    "difficulty": 1,
+    "isCommon": true
+  },
+  {
+    "rootLetters": "ع-ل-م",
+    "arabicWord": "عَالِم",
+    "transliteration": "ʿālim",
+    "translations": { "fr": "savant, érudit", "en": "scholar, scientist", "ar": "عالم" },
+    "pattern": "فَاعِل",
+    "grammaticalCategory": "agent",
+    "examples": [
+      {
+        "sentence": "العَالِمُ يَدْرُسُ",
+        "translation": { "fr": "Le savant étudie.", "en": "The scholar studies." }
+      }
+    ],
+    "difficulty": 2,
+    "isCommon": true
+  },
+  {
+    "rootLetters": "ع-ل-م",
+    "arabicWord": "مُعَلِّم",
+    "transliteration": "muʿallim",
+    "translations": { "fr": "enseignant, instituteur", "en": "teacher", "ar": "معلم" },
+    "pattern": "مُفَعِّل",
+    "patternDescription": {
+      "fr": "participe actif (forme II)",
+      "en": "active participle (form II)"
+    },
+    "grammaticalCategory": "agent",
+    "examples": [
+      {
+        "sentence": "المُعَلِّمُ صَبُورٌ",
+        "translation": { "fr": "L'enseignant est patient.", "en": "The teacher is patient." }
+      }
+    ],
+    "difficulty": 2,
+    "isCommon": true
+  },
+  {
+    "rootLetters": "ع-ل-م",
+    "arabicWord": "تَعْلِيم",
+    "transliteration": "taʿlīm",
+    "translations": { "fr": "enseignement, éducation", "en": "teaching, education", "ar": "تعليم" },
+    "pattern": "تَفْعِيل",
+    "grammaticalCategory": "verbal_noun",
+    "examples": [
+      {
+        "sentence": "التَّعْلِيمُ حَقٌّ",
+        "translation": { "fr": "L'éducation est un droit.", "en": "Education is a right." }
+      }
+    ],
+    "difficulty": 2,
+    "isCommon": true
+  },
+  {
+    "rootLetters": "ع-ل-م",
+    "arabicWord": "مَعْلُوم",
+    "transliteration": "maʿlūm",
+    "translations": { "fr": "connu, su", "en": "known", "ar": "معلوم" },
+    "pattern": "مَفْعُول",
+    "grammaticalCategory": "participle",
+    "examples": [
+      {
+        "sentence": "هَذَا أَمْرٌ مَعْلُومٌ",
+        "translation": { "fr": "C'est une chose connue.", "en": "This is a known matter." }
+      }
+    ],
+    "difficulty": 2,
+    "isCommon": false
+  },
+
+  {
+    "rootLetters": "ق-ر-أ",
+    "arabicWord": "قَرَأَ",
+    "transliteration": "qaraʾa",
+    "translations": { "fr": "il a lu", "en": "he read", "ar": "قرأ" },
+    "pattern": "فَعَلَ",
+    "grammaticalCategory": "verb",
+    "examples": [
+      {
+        "sentence": "قَرَأَ الطَّالِبُ الكِتَابَ",
+        "translation": { "fr": "L'étudiant a lu le livre.", "en": "The student read the book." }
+      }
+    ],
+    "difficulty": 1,
+    "isCommon": true
+  },
+  {
+    "rootLetters": "ق-ر-أ",
+    "arabicWord": "قُرْآن",
+    "transliteration": "qurʾān",
+    "translations": { "fr": "Coran, récitation", "en": "Quran, recitation", "ar": "قرآن" },
+    "pattern": "فُعْلَان",
+    "grammaticalCategory": "noun",
+    "examples": [
+      {
+        "sentence": "القُرْآنُ كِتَابُ اللهِ",
+        "translation": { "fr": "Le Coran est le livre de Dieu.", "en": "The Quran is God's book." }
+      }
+    ],
+    "difficulty": 2,
+    "isCommon": true
+  },
+  {
+    "rootLetters": "ق-ر-أ",
+    "arabicWord": "قَارِئ",
+    "transliteration": "qāriʾ",
+    "translations": { "fr": "lecteur", "en": "reader", "ar": "قارئ" },
+    "pattern": "فَاعِل",
+    "grammaticalCategory": "agent",
+    "examples": [
+      {
+        "sentence": "القَارِئُ مُهْتَمٌّ",
+        "translation": { "fr": "Le lecteur est attentif.", "en": "The reader is attentive." }
+      }
+    ],
+    "difficulty": 2,
+    "isCommon": true
+  },
+  {
+    "rootLetters": "ق-ر-أ",
+    "arabicWord": "قِرَاءَة",
+    "transliteration": "qirāʾa",
+    "translations": { "fr": "lecture", "en": "reading", "ar": "قراءة" },
+    "pattern": "فِعَالَة",
+    "grammaticalCategory": "verbal_noun",
+    "examples": [
+      {
+        "sentence": "أُحِبُّ القِرَاءَةَ",
+        "translation": { "fr": "J'aime la lecture.", "en": "I love reading." }
+      }
+    ],
+    "difficulty": 2,
+    "isCommon": true
+  },
+  {
+    "rootLetters": "ق-ر-أ",
+    "arabicWord": "مَقْرُوء",
+    "transliteration": "maqrūʾ",
+    "translations": { "fr": "lu, lisible", "en": "read, readable", "ar": "مقروء" },
+    "pattern": "مَفْعُول",
+    "grammaticalCategory": "participle",
+    "examples": [
+      {
+        "sentence": "النَّصُّ مَقْرُوءٌ",
+        "translation": { "fr": "Le texte est lu.", "en": "The text is read." }
+      }
+    ],
+    "difficulty": 3,
+    "isCommon": false
+  },
+  {
+    "rootLetters": "ق-ر-أ",
+    "arabicWord": "اِقْرَأْ",
+    "transliteration": "iqraʾ",
+    "translations": { "fr": "lis !", "en": "read!", "ar": "اقرأ" },
+    "pattern": "اِفْعَلْ",
+    "patternDescription": { "fr": "impératif", "en": "imperative" },
+    "grammaticalCategory": "verb",
+    "examples": [
+      {
+        "sentence": "اِقْرَأْ بِاسْمِ رَبِّكَ",
+        "translation": {
+          "fr": "Lis au nom de ton Seigneur.",
+          "en": "Read in the name of your Lord."
+        }
+      }
+    ],
+    "difficulty": 2,
+    "isCommon": true
+  },
+
+  {
+    "rootLetters": "د-ر-س",
+    "arabicWord": "دَرَسَ",
+    "transliteration": "darasa",
+    "translations": { "fr": "il a étudié", "en": "he studied", "ar": "درس" },
+    "pattern": "فَعَلَ",
+    "grammaticalCategory": "verb",
+    "examples": [
+      {
+        "sentence": "دَرَسَ الوَلَدُ بِجِدٍّ",
+        "translation": {
+          "fr": "Le garçon a étudié avec sérieux.",
+          "en": "The boy studied seriously."
+        }
+      }
+    ],
+    "difficulty": 1,
+    "isCommon": true
+  },
+  {
+    "rootLetters": "د-ر-س",
+    "arabicWord": "دَرْس",
+    "transliteration": "dars",
+    "translations": { "fr": "leçon, cours", "en": "lesson, class", "ar": "درس" },
+    "pattern": "فَعْل",
+    "grammaticalCategory": "noun",
+    "examples": [
+      {
+        "sentence": "الدَّرْسُ سَهْلٌ",
+        "translation": { "fr": "La leçon est facile.", "en": "The lesson is easy." }
+      }
+    ],
+    "difficulty": 1,
+    "isCommon": true
+  },
+  {
+    "rootLetters": "د-ر-س",
+    "arabicWord": "مَدْرَسَة",
+    "transliteration": "madrasa",
+    "translations": { "fr": "école", "en": "school", "ar": "مدرسة" },
+    "pattern": "مَفْعَلَة",
+    "grammaticalCategory": "place",
+    "examples": [
+      {
+        "sentence": "أَذْهَبُ إِلَى المَدْرَسَةِ",
+        "translation": { "fr": "Je vais à l'école.", "en": "I go to school." }
+      }
+    ],
+    "difficulty": 1,
+    "isCommon": true
+  },
+  {
+    "rootLetters": "د-ر-س",
+    "arabicWord": "مُدَرِّس",
+    "transliteration": "mudarris",
+    "translations": { "fr": "enseignant, professeur", "en": "teacher, instructor", "ar": "مدرس" },
+    "pattern": "مُفَعِّل",
+    "grammaticalCategory": "agent",
+    "examples": [
+      {
+        "sentence": "المُدَرِّسُ يَشْرَحُ الدَّرْسَ",
+        "translation": {
+          "fr": "Le professeur explique la leçon.",
+          "en": "The teacher explains the lesson."
+        }
+      }
+    ],
+    "difficulty": 2,
+    "isCommon": true
+  },
+  {
+    "rootLetters": "د-ر-س",
+    "arabicWord": "دِرَاسَة",
+    "transliteration": "dirāsa",
+    "translations": { "fr": "étude, études", "en": "study, studies", "ar": "دراسة" },
+    "pattern": "فِعَالَة",
+    "grammaticalCategory": "verbal_noun",
+    "examples": [
+      {
+        "sentence": "الدِّرَاسَةُ صَعْبَةٌ",
+        "translation": { "fr": "Les études sont difficiles.", "en": "Studies are hard." }
+      }
+    ],
+    "difficulty": 2,
+    "isCommon": true
+  },
+  {
+    "rootLetters": "د-ر-س",
+    "arabicWord": "مَدْرُوس",
+    "transliteration": "madrūs",
+    "translations": { "fr": "étudié", "en": "studied", "ar": "مدروس" },
+    "pattern": "مَفْعُول",
+    "grammaticalCategory": "participle",
+    "examples": [
+      {
+        "sentence": "الكِتَابُ مَدْرُوسٌ",
+        "translation": { "fr": "Le livre est étudié.", "en": "The book is studied." }
+      }
+    ],
+    "difficulty": 3,
+    "isCommon": false
+  },
+
+  {
+    "rootLetters": "ك-ل-م",
+    "arabicWord": "كَلَّمَ",
+    "transliteration": "kallama",
+    "translations": { "fr": "il a parlé à", "en": "he spoke to", "ar": "كلم" },
+    "pattern": "فَعَّلَ",
+    "patternDescription": { "fr": "verbe forme II", "en": "form II verb" },
+    "grammaticalCategory": "verb",
+    "examples": [
+      {
+        "sentence": "كَلَّمَ الرَّجُلَ",
+        "translation": { "fr": "Il a parlé à l'homme.", "en": "He spoke to the man." }
+      }
+    ],
+    "difficulty": 2,
+    "isCommon": true
+  },
+  {
+    "rootLetters": "ك-ل-م",
+    "arabicWord": "كَلِمَة",
+    "transliteration": "kalima",
+    "translations": { "fr": "mot, parole", "en": "word", "ar": "كلمة" },
+    "pattern": "فَعِلَة",
+    "grammaticalCategory": "noun",
+    "examples": [
+      {
+        "sentence": "كَلِمَةٌ طَيِّبَةٌ",
+        "translation": { "fr": "Une bonne parole.", "en": "A good word." }
+      }
+    ],
+    "difficulty": 1,
+    "isCommon": true
+  },
+  {
+    "rootLetters": "ك-ل-م",
+    "arabicWord": "كَلَام",
+    "transliteration": "kalām",
+    "translations": { "fr": "parole, discours", "en": "speech, talk", "ar": "كلام" },
+    "pattern": "فَعَال",
+    "grammaticalCategory": "noun",
+    "examples": [
+      {
+        "sentence": "كَلَامُهُ جَمِيلٌ",
+        "translation": { "fr": "Sa parole est belle.", "en": "His speech is beautiful." }
+      }
+    ],
+    "difficulty": 1,
+    "isCommon": true
+  },
+  {
+    "rootLetters": "ك-ل-م",
+    "arabicWord": "مُتَكَلِّم",
+    "transliteration": "mutakallim",
+    "translations": { "fr": "locuteur, orateur", "en": "speaker", "ar": "متكلم" },
+    "pattern": "مُتَفَعِّل",
+    "grammaticalCategory": "agent",
+    "examples": [
+      {
+        "sentence": "المُتَكَلِّمُ وَاضِحٌ",
+        "translation": { "fr": "Le locuteur est clair.", "en": "The speaker is clear." }
+      }
+    ],
+    "difficulty": 3,
+    "isCommon": false
+  },
+  {
+    "rootLetters": "ك-ل-م",
+    "arabicWord": "تَكَلَّمَ",
+    "transliteration": "takallama",
+    "translations": { "fr": "il a parlé", "en": "he spoke", "ar": "تكلم" },
+    "pattern": "تَفَعَّلَ",
+    "grammaticalCategory": "verb",
+    "examples": [
+      {
+        "sentence": "تَكَلَّمَ بِالعَرَبِيَّةِ",
+        "translation": { "fr": "Il a parlé en arabe.", "en": "He spoke in Arabic." }
+      }
+    ],
+    "difficulty": 2,
+    "isCommon": true
+  },
+
+  {
+    "rootLetters": "م-ش-ي",
+    "arabicWord": "مَشَى",
+    "transliteration": "mashā",
+    "translations": { "fr": "il a marché", "en": "he walked", "ar": "مشى" },
+    "pattern": "فَعَى",
+    "grammaticalCategory": "verb",
+    "examples": [
+      {
+        "sentence": "مَشَى الرَّجُلُ فِي الشَّارِعِ",
+        "translation": {
+          "fr": "L'homme a marché dans la rue.",
+          "en": "The man walked in the street."
+        }
+      }
+    ],
+    "difficulty": 2,
+    "isCommon": true
+  },
+  {
+    "rootLetters": "م-ش-ي",
+    "arabicWord": "مَشْي",
+    "transliteration": "mashy",
+    "translations": { "fr": "marche, action de marcher", "en": "walking", "ar": "مشي" },
+    "pattern": "فَعْل",
+    "grammaticalCategory": "verbal_noun",
+    "examples": [
+      {
+        "sentence": "المَشْيُ مُفِيدٌ",
+        "translation": { "fr": "La marche est bénéfique.", "en": "Walking is beneficial." }
+      }
+    ],
+    "difficulty": 2,
+    "isCommon": true
+  },
+  {
+    "rootLetters": "م-ش-ي",
+    "arabicWord": "مَاشِي",
+    "transliteration": "māshī",
+    "translations": { "fr": "marchant, piéton", "en": "walking, pedestrian", "ar": "ماشي" },
+    "pattern": "فَاعِل",
+    "grammaticalCategory": "agent",
+    "examples": [
+      {
+        "sentence": "الرَّجُلُ مَاشِي",
+        "translation": { "fr": "L'homme est en train de marcher.", "en": "The man is walking." }
+      }
+    ],
+    "difficulty": 2,
+    "isCommon": true
+  },
+  {
+    "rootLetters": "م-ش-ي",
+    "arabicWord": "مَمْشَى",
+    "transliteration": "mamshā",
+    "translations": { "fr": "passage, allée", "en": "walkway, path", "ar": "ممشى" },
+    "pattern": "مَفْعَى",
+    "grammaticalCategory": "place",
+    "examples": [
+      {
+        "sentence": "المَمْشَى طَوِيلٌ",
+        "translation": { "fr": "L'allée est longue.", "en": "The walkway is long." }
+      }
+    ],
+    "difficulty": 3,
+    "isCommon": false
+  },
+  {
+    "rootLetters": "م-ش-ي",
+    "arabicWord": "مَاشِيَة",
+    "transliteration": "māshiya",
+    "translations": { "fr": "bétail (animaux qui marchent)", "en": "livestock", "ar": "ماشية" },
+    "pattern": "فَاعِلَة",
+    "grammaticalCategory": "noun",
+    "examples": [
+      {
+        "sentence": "المَاشِيَةُ فِي المَرْعَى",
+        "translation": {
+          "fr": "Le bétail est au pâturage.",
+          "en": "The livestock is in the pasture."
+        }
+      }
+    ],
+    "difficulty": 3,
+    "isCommon": false
+  },
+
+  {
+    "rootLetters": "أ-ك-ل",
+    "arabicWord": "أَكَلَ",
+    "transliteration": "ʾakala",
+    "translations": { "fr": "il a mangé", "en": "he ate", "ar": "أكل" },
+    "pattern": "فَعَلَ",
+    "grammaticalCategory": "verb",
+    "examples": [
+      {
+        "sentence": "أَكَلَ الوَلَدُ التُّفَّاحَ",
+        "translation": { "fr": "Le garçon a mangé la pomme.", "en": "The boy ate the apple." }
+      }
+    ],
+    "difficulty": 1,
+    "isCommon": true
+  },
+  {
+    "rootLetters": "أ-ك-ل",
+    "arabicWord": "أَكْل",
+    "transliteration": "ʾakl",
+    "translations": { "fr": "nourriture, le fait de manger", "en": "food, eating", "ar": "أكل" },
+    "pattern": "فَعْل",
+    "grammaticalCategory": "verbal_noun",
+    "examples": [
+      {
+        "sentence": "الأَكْلُ لَذِيذٌ",
+        "translation": { "fr": "La nourriture est délicieuse.", "en": "The food is delicious." }
+      }
+    ],
+    "difficulty": 1,
+    "isCommon": true
+  },
+  {
+    "rootLetters": "أ-ك-ل",
+    "arabicWord": "آكِل",
+    "transliteration": "ʾākil",
+    "translations": { "fr": "mangeur", "en": "eater", "ar": "آكل" },
+    "pattern": "فَاعِل",
+    "grammaticalCategory": "agent",
+    "examples": [
+      {
+        "sentence": "هُوَ آكِلٌ كَبِيرٌ",
+        "translation": { "fr": "C'est un gros mangeur.", "en": "He is a big eater." }
+      }
+    ],
+    "difficulty": 2,
+    "isCommon": false
+  },
+  {
+    "rootLetters": "أ-ك-ل",
+    "arabicWord": "مَأْكُول",
+    "transliteration": "maʾkūl",
+    "translations": { "fr": "mangé, comestible", "en": "eaten, edible", "ar": "مأكول" },
+    "pattern": "مَفْعُول",
+    "grammaticalCategory": "participle",
+    "examples": [
+      {
+        "sentence": "الطَّعَامُ مَأْكُولٌ",
+        "translation": { "fr": "La nourriture est mangée.", "en": "The food is eaten." }
+      }
+    ],
+    "difficulty": 2,
+    "isCommon": false
+  },
+  {
+    "rootLetters": "أ-ك-ل",
+    "arabicWord": "مَأْكَل",
+    "transliteration": "maʾkal",
+    "translations": { "fr": "repas, lieu où l'on mange", "en": "meal, eatery", "ar": "مأكل" },
+    "pattern": "مَفْعَل",
+    "grammaticalCategory": "place",
+    "examples": [
+      {
+        "sentence": "هَذَا مَأْكَلٌ جَيِّدٌ",
+        "translation": { "fr": "C'est un bon endroit pour manger.", "en": "This is a good eatery." }
+      }
+    ],
+    "difficulty": 3,
+    "isCommon": false
+  },
+  {
+    "rootLetters": "أ-ك-ل",
+    "arabicWord": "أَكُول",
+    "transliteration": "ʾakūl",
+    "translations": { "fr": "gros mangeur, vorace", "en": "voracious, glutton", "ar": "أكول" },
+    "pattern": "فَعُول",
+    "grammaticalCategory": "adjective",
+    "examples": [
+      {
+        "sentence": "الطِّفْلُ أَكُولٌ",
+        "translation": { "fr": "L'enfant est vorace.", "en": "The child is voracious." }
+      }
+    ],
+    "difficulty": 3,
+    "isCommon": false
+  },
+
+  {
+    "rootLetters": "ح-ب-ب",
+    "arabicWord": "أَحَبَّ",
+    "transliteration": "ʾaḥabba",
+    "translations": { "fr": "il a aimé", "en": "he loved", "ar": "أحب" },
+    "pattern": "أَفْعَلَ",
+    "patternDescription": { "fr": "verbe forme IV", "en": "form IV verb" },
+    "grammaticalCategory": "verb",
+    "examples": [
+      {
+        "sentence": "أَحَبَّ وَالِدَيْهِ",
+        "translation": { "fr": "Il a aimé ses parents.", "en": "He loved his parents." }
+      }
+    ],
+    "difficulty": 2,
+    "isCommon": true
+  },
+  {
+    "rootLetters": "ح-ب-ب",
+    "arabicWord": "حُبّ",
+    "transliteration": "ḥubb",
+    "translations": { "fr": "amour", "en": "love", "ar": "حب" },
+    "pattern": "فُعْل",
+    "grammaticalCategory": "noun",
+    "examples": [
+      {
+        "sentence": "الحُبُّ جَمِيلٌ",
+        "translation": { "fr": "L'amour est beau.", "en": "Love is beautiful." }
+      }
+    ],
+    "difficulty": 1,
+    "isCommon": true
+  },
+  {
+    "rootLetters": "ح-ب-ب",
+    "arabicWord": "حَبِيب",
+    "transliteration": "ḥabīb",
+    "translations": { "fr": "bien-aimé, ami cher", "en": "beloved, dear friend", "ar": "حبيب" },
+    "pattern": "فَعِيل",
+    "grammaticalCategory": "adjective",
+    "examples": [
+      {
+        "sentence": "أَنْتَ حَبِيبِي",
+        "translation": { "fr": "Tu es mon bien-aimé.", "en": "You are my beloved." }
+      }
+    ],
+    "difficulty": 1,
+    "isCommon": true
+  },
+  {
+    "rootLetters": "ح-ب-ب",
+    "arabicWord": "مَحْبُوب",
+    "transliteration": "maḥbūb",
+    "translations": { "fr": "aimé, populaire", "en": "loved, beloved, popular", "ar": "محبوب" },
+    "pattern": "مَفْعُول",
+    "grammaticalCategory": "participle",
+    "examples": [
+      {
+        "sentence": "هُوَ مَحْبُوبٌ",
+        "translation": { "fr": "Il est aimé.", "en": "He is beloved." }
+      }
+    ],
+    "difficulty": 2,
+    "isCommon": true
+  },
+  {
+    "rootLetters": "ح-ب-ب",
+    "arabicWord": "مَحَبَّة",
+    "transliteration": "maḥabba",
+    "translations": { "fr": "affection, amour", "en": "affection, love", "ar": "محبة" },
+    "pattern": "مَفْعَلَة",
+    "grammaticalCategory": "verbal_noun",
+    "examples": [
+      {
+        "sentence": "المَحَبَّةُ بَيْنَ النَّاسِ",
+        "translation": { "fr": "L'affection entre les gens.", "en": "Affection among people." }
+      }
+    ],
+    "difficulty": 2,
+    "isCommon": true
+  },
+  {
+    "rootLetters": "ح-ب-ب",
+    "arabicWord": "حَبَّة",
+    "transliteration": "ḥabba",
+    "translations": { "fr": "grain, pilule", "en": "grain, pill, seed", "ar": "حبة" },
+    "pattern": "فَعْلَة",
+    "grammaticalCategory": "noun",
+    "examples": [
+      {
+        "sentence": "حَبَّةُ قَمْحٍ",
+        "translation": { "fr": "Un grain de blé.", "en": "A grain of wheat." }
+      }
+    ],
+    "difficulty": 2,
+    "isCommon": false
+  }
+]
