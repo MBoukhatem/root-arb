@@ -42,13 +42,16 @@ app.use(
           },
         }
       : false, // CSP off en dev pour confort
-  })
+  }),
 );
 
 // --- CORS ---------------------------------------------------------------
 // Whitelist depuis env (FRONTEND_URL) + previews Vercel (regex).
+// En dev, Vite peut fallback sur 5174/5175/... si 5173 occupé → on accepte
+// toute origin http://localhost:51XX (5170-5199) en NODE_ENV=development.
 const allowedOrigins = [env.FRONTEND_URL];
 const vercelPreviewRe = /^https:\/\/[a-z0-9-]+\.vercel\.app$/i;
+const devLocalhostRe = /^http:\/\/localhost:51[7-9]\d$/;
 
 app.use(
   cors({
@@ -58,10 +61,13 @@ app.use(
       if (allowedOrigins.includes(origin) || vercelPreviewRe.test(origin)) {
         return cb(null, true);
       }
+      if (env.isDev && devLocalhostRe.test(origin)) {
+        return cb(null, true);
+      }
       return cb(new Error(`CORS: origin not allowed (${origin})`));
     },
     credentials: false, // refresh tokens = NICE P1, pas de cookie auth pour l'instant
-  })
+  }),
 );
 
 // --- Body parsing & sanitization ----------------------------------------
@@ -78,7 +84,7 @@ if (env.isDev) {
   app.use(
     morgan('combined', {
       stream: { write: (msg) => logger.info(msg.trim()) },
-    })
+    }),
   );
 }
 

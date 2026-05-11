@@ -3,7 +3,7 @@
 const Joi = require('joi');
 
 const recordReview = Joi.object({
-  root: Joi.string().hex().length(24).required(),
+  rootId: Joi.string().hex().length(24).required(),
   success: Joi.boolean().required(),
   wordsLearned: Joi.array().items(Joi.string().hex().length(24)).optional(),
 });

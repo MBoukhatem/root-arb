@@ -70,3 +70,6 @@ client/.vite/
 
 # Secret scanner reports
 .gitleaks-report.json
+
+# Agent runtime state
+.omc/

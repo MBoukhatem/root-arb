@@ -30,7 +30,7 @@ function nextScheduling(current, success) {
   return { masteryLevel, intervalDays, nextReviewDate, lastReviewed: now };
 }
 
-async function recordReview(userId, { root: rootId, success, wordsLearned }) {
+async function recordReview(userId, { rootId, success, wordsLearned }) {
   const root = await Root.findById(rootId).lean();
   if (!root) throw ApiError.notFound('Root not found', undefined, 'ROOT_NOT_FOUND');
 
