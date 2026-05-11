@@ -58,3 +58,15 @@ Desktop.ini
 
 # Misc
 *.local
+
+# Server build
+server/dist/
+
+# Vite cache
+client/.vite/
+
+# Husky internals
+.husky/_/
+
+# Secret scanner reports
+.gitleaks-report.json

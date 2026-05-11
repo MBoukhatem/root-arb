@@ -1,0 +1,12 @@
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Allowlist .env.example placeholders"
+paths = [
+    '''\.env\.example$''',
+]
+regexes = [
+    '''replace_with_.*''',
+    '''ChangeMeStrong.*''',
+]
