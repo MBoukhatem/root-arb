@@ -40,10 +40,16 @@ function cleanParams(q: NotesQuery): Record<string, string | number> {
 
 export const notesApi = {
   async list(query: NotesQuery = {}): Promise<NotesListPayload> {
-    const { data } = await axiosInstance.get<ApiResponse<NotesListPayload>>('/notes', {
-      params: cleanParams(query),
-    });
-    return data.data;
+    // Server: { success, data: [...notes], pagination }. Adapt to { notes, pagination }.
+    const { data } = await axiosInstance.get<{
+      success: boolean;
+      data: Note[];
+      pagination: Pagination;
+    }>('/notes', { params: cleanParams(query) });
+    return {
+      notes: Array.isArray(data.data) ? data.data : [],
+      pagination: data.pagination,
+    };
   },
   async create(payload: CreateNotePayload): Promise<Note> {
     const { data } = await axiosInstance.post<ApiResponse<Note>>('/notes', payload);

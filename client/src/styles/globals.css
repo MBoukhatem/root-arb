@@ -104,15 +104,21 @@ h1 em, h2 em, h3 em {
   font-weight: 400;
 }
 
+/* Anchors: by default keep parent color (cards, buttons, navs set their own).
+ * Naked inline text-flow links get the editorial gold accent via `p > a`. */
 a {
-  color: var(--gold);
+  color: inherit;
   text-decoration: none;
   text-underline-offset: 3px;
   text-decoration-thickness: 1px;
   transition: color var(--motion-fast) var(--motion-ease);
 }
 
-a:hover {
+p > a {
+  color: var(--gold);
+}
+
+p > a:hover {
   color: var(--terracotta);
   text-decoration: underline;
 }

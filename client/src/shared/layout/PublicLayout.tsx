@@ -6,7 +6,7 @@ import { Navbar } from './Navbar';
  */
 export function PublicLayout() {
   return (
-    <div className="flex min-h-screen flex-col bg-(--bg-base)">
+    <div className="flex min-h-screen flex-col bg-(--bg-base) overflow-x-hidden">
       {/* Fix #1: Skip link — first focusable element in the document. */}
       <a
         href="#main"

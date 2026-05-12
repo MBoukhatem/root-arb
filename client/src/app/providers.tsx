@@ -40,7 +40,11 @@ export function Providers({ children }: { children: ReactNode }) {
               <AuthProvider>
                 <BrowserRouter>
                   {children}
-                  <Toaster position="top-right" />
+                  <Toaster
+                    position="top-right"
+                    containerStyle={{ pointerEvents: 'none' }}
+                    toastOptions={{ style: { pointerEvents: 'auto' } }}
+                  />
                 </BrowserRouter>
               </AuthProvider>
             </LanguageProvider>

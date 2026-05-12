@@ -21,9 +21,10 @@
   --bg-elev: #FFFEFA;          /* highest elevation (modals, tooltips) */
   --text-primary: #1A1614;     /* deep ink — 16:1 on parchment */
   --text-secondary: #4A3F38;   /* warm sepia — 9.8:1 */
-  --text-muted: #8A7A6B;       /* aged ink — 4.6:1 */
-  --border: #E8DFCB;           /* faded wash */
-  --border-strong: #C9B89A;    /* sharper rule */
+  --text-muted: #736554;       /* aged ink — 5.9:1 WCAG AA (audit A fix) */
+  --border: #E8DFCB;           /* faded wash, decorative */
+  --border-strong: #C9B89A;    /* sharper rule, decorative */
+  --border-interactive: #9C8A6A; /* inputs + dashed slots — 3.2:1 (audit A) */
   --focus-ring: #B0451F;       /* terracotta focus */
 
   /* Catégorielles - ink (texte/icones) — manuscript inks, AA on parchment */
@@ -141,9 +142,10 @@
   --bg-elev: #2E261F;          /* tooltips, modals */
   --text-primary: #F4ECD8;     /* warm cream — 14.5:1 */
   --text-secondary: #D7C9AC;   /* aged paper — 9.2:1 */
-  --text-muted: #9C8B72;       /* faded — 4.8:1 */
+  --text-muted: #B5A589;       /* faded warm cream — 6.4:1 dark */
   --border: #3A2F25;
   --border-strong: #5B4A38;
+  --border-interactive: #7A6549; /* inputs + slots — 3.4:1 vs walnut */
   --focus-ring: #E0A946;       /* warm gold focus */
 
   /* Catégorielles - ink (light text on dark) */
@@ -200,7 +202,9 @@
  * Tailwind v4 - expose tokens to utility generator (`bg-base`, `text-primary`...)
  * --------------------------------------------------------------------------- */
 @theme {
-  --color-base: var(--bg-base);
+  /* `--color-base` removed: it shadows Tailwind's `text-base` (font-size 16px)
+   * utility and silently turns every `text-base` into `color: var(--bg-base)`.
+   * Use the arbitrary syntax `bg-(--bg-base)` / `text-(--text-primary)` instead. */
   --color-card: var(--bg-card);
   --color-primary: var(--text-primary);
   --color-secondary: var(--text-secondary);

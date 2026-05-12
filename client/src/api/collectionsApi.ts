@@ -19,9 +19,11 @@ export type UpdateCollectionPayload = {
 
 export const collectionsApi = {
   async list(): Promise<Collection[]> {
-    const { data } =
-      await axiosInstance.get<ApiResponse<{ collections: Collection[] }>>('/collections');
-    return data.data.collections;
+    // Server: { success, data: [...collections], pagination }
+    const { data } = await axiosInstance.get<{ success: boolean; data: Collection[] }>(
+      '/collections',
+    );
+    return Array.isArray(data.data) ? data.data : [];
   },
   async getById(id: string): Promise<Collection> {
     const { data } = await axiosInstance.get<ApiResponse<Collection>>(`/collections/${id}`);

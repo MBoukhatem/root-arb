@@ -236,8 +236,12 @@ function ConstellationCanvas({
     ctx.translate(tr.x, tr.y);
     ctx.scale(tr.k, tr.k);
 
-    // Links
-    ctx.strokeStyle = 'rgba(148,163,184,0.4)';
+    // Links — resolve CSS var at draw time so the canvas adapts to theme.
+    const linkColor =
+      getComputedStyle(document.documentElement).getPropertyValue('--border-strong').trim() ||
+      '#5B4A38';
+    ctx.strokeStyle = linkColor;
+    ctx.globalAlpha = 0.55;
     ctx.lineWidth = 1;
     for (const l of simLinksRef.current) {
       const s = l.source;
@@ -249,7 +253,8 @@ function ConstellationCanvas({
       ctx.stroke();
     }
 
-    // Nodes
+    // Nodes — reset alpha so fills render at full opacity.
+    ctx.globalAlpha = 1;
     for (const n of simNodesRef.current) {
       ctx.fillStyle = colorForSemanticField(n.semanticField);
       ctx.beginPath();

@@ -84,7 +84,7 @@ function BuilderSlots({
                 'flex h-16 w-16 items-center justify-center rounded-2xl border-2 transition-all duration-200',
                 letter
                   ? 'border-(--gold-accent) bg-(--bg-card) shadow-[var(--shadow-md)]'
-                  : 'border-dashed border-(--border) bg-(--bg-base)',
+                  : 'border-dashed border-(--border-interactive) bg-(--bg-base)',
               )}
               aria-label={t('slot', { n: i + 1 })}
             >
@@ -179,7 +179,7 @@ function AlphabetPicker({
               disabled={bufferFull && !inBuffer}
               onClick={() => onSelect(letter)}
               className={clsx(
-                'relative w-10 h-10 rounded-lg text-xl transition-all duration-150',
+                'relative w-11 h-11 rounded-lg text-xl transition-all duration-150',
                 'flex items-center justify-center',
                 'border focus-visible:outline-2 focus-visible:outline-(--focus-ring) focus-visible:outline-offset-2',
                 'disabled:cursor-not-allowed disabled:opacity-40',
