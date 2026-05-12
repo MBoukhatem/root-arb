@@ -65,13 +65,13 @@ function AlphabetPicker({
   const { t } = useTranslation(['letters', 'common']);
 
   return (
-    <section aria-label={t('letters.pickerAriaLabel')}>
+    <section aria-label={t('pickerAriaLabel')}>
       <div className="flex flex-wrap gap-1.5 justify-center" dir="rtl">
         {letters.map(({ letter, count }) => (
           <button
             key={letter}
             type="button"
-            title={`${letter} — ${count} ${t('letters.roots', { count })}`}
+            title={`${letter} — ${count} ${t('roots', { count })}`}
             aria-pressed={letter === selected}
             onClick={() => onSelect(letter)}
             className={clsx(
@@ -120,7 +120,7 @@ function RootSidePanel({ node, onClose }: { node: RingNode | null; onClose: () =
             'flex flex-col overflow-hidden rounded-e-xl',
             'shadow-2xl',
           )}
-          aria-label={t('letters.sidePanelAriaLabel')}
+          aria-label={t('sidePanelAriaLabel')}
         >
           {/* Header */}
           <div className="flex items-center justify-between px-4 py-3 border-b border-(--border)">
@@ -135,10 +135,10 @@ function RootSidePanel({ node, onClose }: { node: RingNode | null; onClose: () =
               </span>
               <div className="flex flex-col">
                 <span className="text-sm font-semibold text-(--text-primary)">
-                  {t('letters.sharedRoots', { count: node.sharedRootIds.length })}
+                  {t('sharedRoots', { count: node.sharedRootIds.length })}
                 </span>
                 <span className="text-xs text-(--text-muted)">
-                  {t('letters.cooccurrenceCount', { count: node.count })}
+                  {t('cooccurrenceCount', { count: node.count })}
                 </span>
               </div>
             </div>
@@ -155,7 +155,7 @@ function RootSidePanel({ node, onClose }: { node: RingNode | null; onClose: () =
           {/* Root list */}
           <div className="flex-1 overflow-y-auto p-4">
             {node.sharedRootIds.length === 0 ? (
-              <p className="text-sm text-(--text-muted)">{t('letters.noRoots')}</p>
+              <p className="text-sm text-(--text-muted)">{t('noRoots')}</p>
             ) : (
               <ul className="flex flex-col gap-2">
                 {node.sharedRootIds.map((id) => (
@@ -211,12 +211,12 @@ export default function LettersPage() {
   return (
     <section
       className="relative mx-auto flex w-full max-w-7xl flex-col gap-6 p-6"
-      aria-label={t('letters.pageAriaLabel')}
+      aria-label={t('pageAriaLabel')}
     >
       {/* Page header */}
       <header className="flex flex-col gap-1">
-        <h1 className="text-3xl font-bold text-(--text-primary)">{t('letters.title')}</h1>
-        <p className="text-(--text-muted)">{t('letters.subtitle')}</p>
+        <h1 className="text-3xl font-bold text-(--text-primary)">{t('title')}</h1>
+        <p className="text-(--text-muted)">{t('subtitle')}</p>
       </header>
 
       {/* Alphabet picker */}
@@ -249,11 +249,11 @@ export default function LettersPage() {
           ) : (
             <>
               <span className="text-lg font-semibold text-(--text-primary)">
-                {t('letters.rootCount', { count: totalRoots })}
+                {t('rootCount', { count: totalRoots })}
               </span>
               {data && data.cooccurrences.length > 0 && (
                 <span className="text-xs text-(--text-muted)">
-                  {t('letters.neighbourCount', { count: data.cooccurrences.length })}
+                  {t('neighbourCount', { count: data.cooccurrences.length })}
                 </span>
               )}
             </>
@@ -261,23 +261,21 @@ export default function LettersPage() {
         </div>
       </div>
 
-      {/* Viz + side panel */}
-      <div className="relative overflow-hidden rounded-xl border border-(--border) bg-(--bg-card)">
+      {/* Viz + side panel — viz is self-square so circles stay circular */}
+      <div className="relative overflow-hidden rounded-xl border border-(--border) bg-(--bg-card) p-4">
         <ConcentricLetters
           selectedLetter={selectedLetter}
           data={data ?? null}
           onLetterSelect={handleLetterSelect}
-          height={Math.round(window.innerHeight * 0.6)}
           showTooltip={activePanelNode === null}
           isLoading={isPending}
-          className="min-h-[420px]"
         />
 
         <RootSidePanel node={activePanelNode} onClose={() => setActivePanelNode(null)} />
       </div>
 
       {/* Mobile CTA (sr-accessible note) */}
-      <p className="sr-only sm:hidden">{t('letters.mobileHint')}</p>
+      <p className="sr-only sm:hidden">{t('mobileHint')}</p>
     </section>
   );
 }

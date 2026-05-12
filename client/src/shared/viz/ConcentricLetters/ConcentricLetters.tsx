@@ -1,13 +1,16 @@
 /**
- * ConcentricLetters — React-owns-DOM, D3-owns-math visualisation.
+ * ConcentricLetters — React owns DOM, D3 owns math.
  *
- * Pattern: positions are computed by useConcentricLayout (pure D3 math),
- * then rendered as controlled SVG elements. No D3 DOM manipulation.
+ * Pattern: positions are computed by `useConcentricLayout` in a fixed
+ * 1000×1000 square coordinate space. The SVG uses `viewBox="0 0 1000 1000"`
+ * with `preserveAspectRatio="xMidYMid meet"` and the container forces a
+ * square aspect ratio. Result: circles always render as circles, no matter
+ * the viewport.
  *
- * Framer Motion animates:
- *   • mount: staggered fade-in ring by ring
- *   • center change: layoutId transition — peripheral letter glides to center
- *   • hover: scale + stroke highlight
+ * Lettres are placed via STATIC `<g transform="translate(x,y)">` — animations
+ * live on inner `<motion.circle>` (opacity + scale only). On évite ainsi le
+ * conflit `layoutId` × `animate={{x,y}}` qui empilait les lettres au coin
+ * supérieur gauche.
  */
 
 import { memo, useState, useCallback } from 'react';
@@ -16,45 +19,40 @@ import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { useDirection } from '@/shared/i18n/useDirection';
 import { useReducedMotion } from '../shared/useReducedMotion';
-import { useResizeObserver } from '../shared/useResizeObserver';
-import { useConcentricLayout } from './useConcentricLayout';
+import { useConcentricLayout, VIEWBOX_SIZE } from './useConcentricLayout';
 import { interpolateFill, linkOpacity, CENTER_STROKE } from './colors';
 import type { ConcentricLettersProps, RingNode } from './types';
 
-// Stagger delay per ring (seconds)
-const RING_STAGGER = [0, 0.08, 0.16] as const;
+const RING_STAGGER = [0, 0.06, 0.12] as const;
+const CENTER_RADIUS = 75;
 
-// SVG does not accept `dir` in React's type definition but it is valid HTML5.
-// We cast the svg props to avoid TS2322 while keeping the attribute for
-// bidi-override in RTL page contexts.
-type LooseSVGProps = React.SVGProps<SVGSVGElement> & { dir?: string };
-const LooseSVG = 'svg' as unknown as React.ComponentType<LooseSVGProps>;
+type TooltipInfo = {
+  node: RingNode;
+  // Position in % of SVG box (so it follows when the SVG scales).
+  pctX: number;
+  pctY: number;
+};
 
-// Same for <text> which may carry `dir` in SVG2 / HTML-embedded SVG context.
-// We drop `dir` from text elements instead — single Arabic glyphs render
-// correctly via the Amiri font's built-in shaping without an explicit `dir`.
+// --- Empty / loading states ----------------------------------------------
 
-// --- Sub-components ---
-
-function EmptyStateSvg({
-  cx,
-  cy,
-  letter,
-  t,
-}: {
-  cx: number;
-  cy: number;
-  letter: string;
-  t: (k: string) => string;
-}) {
+function EmptyStateSvg({ letter, t }: { letter: string; t: (k: string) => string }) {
+  const cx = VIEWBOX_SIZE / 2;
+  const cy = VIEWBOX_SIZE / 2;
   return (
     <>
-      <circle cx={cx} cy={cy} r={60} fill="var(--bg-card)" stroke={CENTER_STROKE} strokeWidth={2} />
+      <circle
+        cx={cx}
+        cy={cy}
+        r={CENTER_RADIUS}
+        fill="var(--bg-card)"
+        stroke={CENTER_STROKE}
+        strokeWidth={2}
+      />
       <text
         x={cx}
-        y={cy + 22}
+        y={cy + 28}
         textAnchor="middle"
-        fontSize={48}
+        fontSize={72}
         fontFamily="var(--font-arabic-title)"
         fill="var(--text-muted)"
         lang="ar"
@@ -63,22 +61,24 @@ function EmptyStateSvg({
       </text>
       <text
         x={cx}
-        y={cy + 90}
+        y={cy + CENTER_RADIUS + 50}
         textAnchor="middle"
-        fontSize={13}
+        fontSize={20}
         fontFamily="var(--font-sans)"
         fill="var(--text-muted)"
       >
-        {t('letters.empty')}
+        {t('empty')}
       </text>
     </>
   );
 }
 
-function LoadingRings({ cx, cy }: { cx: number; cy: number }) {
+function LoadingRings() {
+  const cx = VIEWBOX_SIZE / 2;
+  const cy = VIEWBOX_SIZE / 2;
   return (
     <>
-      {[150, 250].map((r) => (
+      {[170, 250, 330].map((r) => (
         <circle
           key={r}
           cx={cx}
@@ -86,23 +86,24 @@ function LoadingRings({ cx, cy }: { cx: number; cy: number }) {
           r={r}
           fill="none"
           stroke="var(--border)"
-          strokeWidth={1}
-          strokeDasharray="4 8"
-          opacity={0.4}
+          strokeWidth={1.5}
+          strokeDasharray="6 12"
+          opacity={0.35}
         />
       ))}
-      <circle cx={cx} cy={cy} r={60} fill="var(--bg-card)" stroke="var(--border)" strokeWidth={2} />
+      <circle
+        cx={cx}
+        cy={cy}
+        r={CENTER_RADIUS}
+        fill="var(--bg-card)"
+        stroke="var(--border)"
+        strokeWidth={2}
+      />
     </>
   );
 }
 
-// --- Tooltip panel ---
-
-type TooltipInfo = {
-  node: RingNode;
-  svgX: number;
-  svgY: number;
-};
+// --- Tooltip overlay -----------------------------------------------------
 
 function LetterTooltip({
   info,
@@ -130,9 +131,9 @@ function LetterTooltip({
         'px-4 py-3 min-w-[160px] max-w-[240px]',
       )}
       style={{
-        left: info.svgX,
-        top: info.svgY - 12,
-        transform: 'translate(-50%, -100%)',
+        left: `${info.pctX}%`,
+        top: `${info.pctY}%`,
+        transform: 'translate(-50%, calc(-100% - 12px))',
       }}
     >
       <div
@@ -144,7 +145,7 @@ function LetterTooltip({
         {node.letter}
       </div>
       <p className="text-center text-xs text-(--text-muted) mb-2">
-        {t('letters.sharedRoots', { count: node.sharedRootIds.length })}
+        {t('sharedRoots', { count: node.sharedRootIds.length })}
       </p>
       {top5.length > 0 && (
         <ul className="flex flex-col gap-1">
@@ -165,14 +166,12 @@ function LetterTooltip({
   );
 }
 
-// --- Main component ---
+// --- Main component ------------------------------------------------------
 
 function ConcentricLettersImpl({
   selectedLetter,
   data,
   onLetterSelect,
-  width: _width,
-  height: _height,
   showTooltip = true,
   isLoading = false,
   className,
@@ -181,18 +180,9 @@ function ConcentricLettersImpl({
   const { isRTL } = useDirection();
   const reducedMotion = useReducedMotion();
 
-  const { ref: containerRef, size } = useResizeObserver<HTMLDivElement>({
-    width: _width ?? 600,
-    height: _height ?? 600,
-  });
-
-  const effectiveSize = {
-    width: size.width || _width || 600,
-    height: size.height || _height || 600,
-  };
-
-  const layout = useConcentricLayout(data, effectiveSize, isRTL);
-  const { centerNode, ringNodes, links } = layout;
+  // Layout is computed in 1000×1000 viewBox coords — size irrelevant.
+  const layout = useConcentricLayout(data, { width: VIEWBOX_SIZE, height: VIEWBOX_SIZE }, isRTL);
+  const { ringNodes, links } = layout;
 
   const [hovered, setHovered] = useState<string | null>(null);
   const [hoverTooltip, setHoverTooltip] = useState<TooltipInfo | null>(null);
@@ -210,58 +200,53 @@ function ConcentricLettersImpl({
   }, []);
 
   const isEmpty = !data || data.cooccurrences.length === 0;
-  const cx = centerNode.x;
-  const cy = centerNode.y;
+  const cx = VIEWBOX_SIZE / 2;
+  const cy = VIEWBOX_SIZE / 2;
 
   const isDark =
     typeof document !== 'undefined' && document.documentElement.classList.contains('dark');
 
-  const dur = reducedMotion ? 0 : 0.3;
-  const stagger = reducedMotion ? 0 : 0.02;
+  const dur = reducedMotion ? 0 : 0.28;
+  const stagger = reducedMotion ? 0 : 0.015;
 
   return (
     <div
-      ref={containerRef}
-      className={clsx('relative w-full select-none', className)}
-      style={{ minHeight: _height ?? 600 }}
+      className={clsx('relative mx-auto aspect-square w-full max-w-[640px] select-none', className)}
       role="application"
-      aria-label={t('letters.vizAriaLabel', { letter: selectedLetter })}
+      aria-label={t('vizAriaLabel', { letter: selectedLetter })}
     >
-      {/* LooseSVG: casts dir prop which is valid HTML5/SVG2 but missing from React's SVGProps */}
-      <LooseSVG
-        dir="ltr"
+      <svg
         width="100%"
-        height={effectiveSize.height}
-        viewBox={`0 0 ${effectiveSize.width} ${effectiveSize.height}`}
+        height="100%"
+        viewBox={`0 0 ${VIEWBOX_SIZE} ${VIEWBOX_SIZE}`}
+        preserveAspectRatio="xMidYMid meet"
         style={{ display: 'block', overflow: 'visible' }}
         aria-hidden="true"
       >
         {/* Guide rings */}
         {!isEmpty && !isLoading && (
-          <>
-            {[150, 250, 350].map((r, i) => (
+          <g aria-hidden="true">
+            {[0.42, 0.62, 0.82].map((f, i) => (
               <circle
-                key={r}
+                key={f}
                 cx={cx}
                 cy={cy}
-                r={Math.min(r, Math.min(cx, cy) - 8)}
+                r={(cx - 95) * f}
                 fill="none"
                 stroke="var(--border)"
-                strokeWidth={0.5}
-                opacity={i === 2 ? 0.2 : 0.3}
-                strokeDasharray="3 9"
+                strokeWidth={0.8}
+                opacity={i === 2 ? 0.18 : 0.32}
+                strokeDasharray="4 10"
               />
             ))}
-          </>
+          </g>
         )}
 
-        {isLoading && <LoadingRings cx={cx} cy={cy} />}
+        {isLoading && <LoadingRings />}
 
-        {!isLoading && isEmpty && (
-          <EmptyStateSvg cx={cx} cy={cy} letter={selectedLetter} t={(k) => t(k)} />
-        )}
+        {!isLoading && isEmpty && <EmptyStateSvg letter={selectedLetter} t={(k) => t(k)} />}
 
-        {/* Links */}
+        {/* Links centre → périphérie */}
         {!isLoading && !isEmpty && (
           <g aria-hidden="true">
             {links.map((link, i) => {
@@ -291,96 +276,99 @@ function ConcentricLettersImpl({
           </g>
         )}
 
-        {/* Peripheral letter nodes */}
-        {!isLoading && !isEmpty && (
-          <AnimatePresence mode="popLayout">
-            {ringNodes.map((node, i) => {
-              const isHov = hovered === node.letter;
-              const fill = interpolateFill(node.normFreq, isDark);
-              const delay = RING_STAGGER[node.ring] + i * stagger;
+        {/* Peripheral letter nodes — positioned via static transform,
+             animations live on inner motion elements only. */}
+        {!isLoading &&
+          !isEmpty &&
+          ringNodes.map((node, i) => {
+            const isHov = hovered === node.letter;
+            const fill = interpolateFill(node.normFreq, isDark);
+            const delay = RING_STAGGER[node.ring] + i * stagger;
 
-              return (
-                <motion.g
-                  key={`node-${node.letter}`}
-                  layoutId={`letter-${node.letter}`}
-                  role="button"
-                  tabIndex={0}
-                  aria-label={`${node.letter} — ${node.count} ${t('letters.sharedRoots', { count: node.count })}`}
-                  style={{ cursor: 'pointer' }}
+            return (
+              <g
+                key={`node-${node.letter}`}
+                transform={`translate(${node.x}, ${node.y})`}
+                role="button"
+                tabIndex={0}
+                aria-label={`${node.letter} — ${node.sharedRootIds.length} ${t('sharedRoots', { count: node.sharedRootIds.length })}`}
+                style={{ cursor: 'pointer' }}
+                onMouseEnter={() => {
+                  setHovered(node.letter);
+                  if (showTooltip) {
+                    setHoverTooltip({
+                      node,
+                      pctX: (node.x / VIEWBOX_SIZE) * 100,
+                      pctY: (node.y / VIEWBOX_SIZE) * 100,
+                    });
+                  }
+                }}
+                onMouseLeave={() => {
+                  setHovered(null);
+                  setHoverTooltip(null);
+                }}
+                onClick={() => handleNodeClick(node.letter)}
+                onKeyDown={(e: React.KeyboardEvent) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    handleNodeClick(node.letter);
+                  }
+                }}
+              >
+                <motion.circle
+                  cx={0}
+                  cy={0}
+                  r={node.radius}
+                  fill={fill}
+                  stroke={isHov ? CENTER_STROKE : 'var(--border)'}
+                  strokeWidth={isHov ? 3 : 1.2}
                   initial={{ opacity: 0, scale: 0.4 }}
-                  animate={{ opacity: 1, scale: isHov ? 1.12 : 1, x: node.x, y: node.y }}
-                  exit={{ opacity: 0, scale: 0.2 }}
+                  animate={{ opacity: 1, scale: isHov ? 1.1 : 1 }}
                   transition={{
-                    layout: { duration: dur, ease: [0.16, 1, 0.3, 1] },
                     opacity: { delay, duration: dur * 0.6 },
                     scale: { duration: 0.2 },
                   }}
-                  onHoverStart={() => {
-                    setHovered(node.letter);
-                    if (showTooltip) {
-                      setHoverTooltip({ node, svgX: node.x, svgY: node.y });
-                    }
-                  }}
-                  onHoverEnd={() => {
-                    setHovered(null);
-                    setHoverTooltip(null);
-                  }}
-                  onClick={() => handleNodeClick(node.letter)}
-                  onKeyDown={(e: React.KeyboardEvent) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
-                      handleNodeClick(node.letter);
-                    }
-                  }}
+                  style={{ transformOrigin: 'center' }}
+                />
+                <text
+                  x={0}
+                  y={node.radius * 0.32}
+                  textAnchor="middle"
+                  fontSize={Math.max(28, node.radius * 1.0)}
+                  fontFamily="var(--font-arabic-title)"
+                  fill="var(--letter-ink, var(--text-primary))"
+                  lang="ar"
+                  style={{ pointerEvents: 'none', userSelect: 'none' }}
                 >
-                  <circle
-                    cx={0}
-                    cy={0}
-                    r={node.radius}
-                    fill={fill}
-                    stroke={isHov ? CENTER_STROKE : 'var(--border)'}
-                    strokeWidth={isHov ? 2.5 : 1}
-                  />
-                  <text
-                    x={0}
-                    y={7}
-                    textAnchor="middle"
-                    fontSize={Math.max(16, node.radius * 0.9)}
-                    fontFamily="var(--font-arabic-title)"
-                    fill="var(--letter-ink, var(--text-primary))"
-                    lang="ar"
-                    style={{ pointerEvents: 'none', userSelect: 'none' }}
-                  >
-                    {node.letter}
-                  </text>
-                </motion.g>
-              );
-            })}
-          </AnimatePresence>
-        )}
+                  {node.letter}
+                </text>
+              </g>
+            );
+          })}
 
         {/* Center node */}
         {!isLoading && (
-          <motion.g
-            layoutId={`letter-${selectedLetter}`}
-            style={{ cursor: isEmpty ? 'default' : 'pointer' }}
-            onClick={() => !isEmpty && onLetterSelect(selectedLetter)}
-            animate={{ x: cx, y: cy }}
-            transition={{ duration: dur, ease: [0.16, 1, 0.3, 1] }}
+          <g
+            transform={`translate(${cx}, ${cy})`}
+            style={{ cursor: isEmpty ? 'default' : 'default' }}
           >
-            <circle
+            <motion.circle
               cx={0}
               cy={0}
-              r={60}
+              r={CENTER_RADIUS}
               fill={isDark ? 'oklch(0.18 0.08 250)' : 'oklch(0.92 0.08 250)'}
               stroke={CENTER_STROKE}
-              strokeWidth={2.5}
+              strokeWidth={3}
+              initial={{ scale: 0.6, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: dur, ease: [0.16, 1, 0.3, 1] }}
+              style={{ transformOrigin: 'center' }}
             />
             <text
               x={0}
-              y={22}
+              y={28}
               textAnchor="middle"
-              fontSize={56}
+              fontSize={84}
               fontFamily="var(--font-arabic-title)"
               fill="var(--text-primary)"
               lang="ar"
@@ -388,11 +376,11 @@ function ConcentricLettersImpl({
             >
               {selectedLetter}
             </text>
-          </motion.g>
+          </g>
         )}
-      </LooseSVG>
+      </svg>
 
-      {/* Tooltip overlay */}
+      {/* Tooltip overlay (CSS positioned, follows SVG scaling via %) */}
       {showTooltip && (
         <AnimatePresence>
           {hoverTooltip && (
@@ -409,7 +397,7 @@ function ConcentricLettersImpl({
       <ul className="sr-only">
         {ringNodes.map((n) => (
           <li key={n.letter}>
-            {n.letter} — {n.count} {t('letters.sharedRoots', { count: n.count })}
+            {n.letter} — {n.count} {t('sharedRoots', { count: n.sharedRootIds.length })}
           </li>
         ))}
       </ul>

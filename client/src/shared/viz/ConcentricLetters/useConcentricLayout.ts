@@ -3,10 +3,20 @@ import { scaleLog, scaleLinear, min, max } from 'd3';
 import type { CooccurrenceData, ConcentricLayout, RingNode, CenterNode, LayoutLink } from './types';
 import { linkStrokeWidth } from './colors';
 
-const RING_RADII = [150, 250, 350] as const; // px for ring 0, 1, 2
-const NODE_RADIUS_RANGE: [number, number] = [20, 36];
-const RING_THRESHOLDS_2 = [0.5]; // split point for 2-ring mode
-const CENTER_FOOTPRINT = 88; // px — from spec §3
+/**
+ * Fixed square coordinate space. The SVG always uses viewBox="0 0 1000 1000"
+ * and the container constrains itself to a square, so circles stay circular
+ * regardless of viewport size.
+ */
+export const VIEWBOX_SIZE = 1000;
+const CENTER = VIEWBOX_SIZE / 2; // 500
+const CENTER_FOOTPRINT = 95; // px (center disc radius + breathing room)
+
+// Ring radii are computed from the square edge so they always fit.
+// Order: ring 0 (closest = most frequent), ring 1, ring 2 (farthest = rare).
+const RING_FRACTIONS = [0.42, 0.62, 0.82] as const;
+
+const NODE_RADIUS_RANGE: [number, number] = [32, 56];
 
 /**
  * `useConcentricLayout` — pure deterministic D3-math layout hook.
@@ -14,23 +24,28 @@ const CENTER_FOOTPRINT = 88; // px — from spec §3
  * Pattern: React owns DOM, D3 owns math. This hook returns stable position
  * data; the component renders SVG elements. No D3 DOM manipulation.
  *
+ * Coordinates are in a fixed 1000×1000 viewBox — the SVG element scales
+ * uniformly to its (square) container. This guarantees:
+ *   • cercles toujours circulaires (pas d'aspect-ratio mismatch)
+ *   • lettres ne se chevauchent pas (positions statiques deterministes)
+ *
  * Ring assignment:
  *   - neighbours sorted descending by count
- *   - top third → ring 0, middle third → ring 1, bottom third → ring 2
- *   - if all ≤ 8 neighbours: use 2 rings only
- *   - if ≤ 12 per ring: use spec RING_RADII; else ring2 expands to 350px
+ *   - ≤ 8 neighbours → 2 rings (split en deux moitiés)
+ *   - sinon → 3 rings (tertiles)
  *
- * RTL direction is handled in the page: the SVG container gets `dir="ltr"`
- * so math stays consistent; only label text gets `dir="rtl"`.
+ * RTL inverse le sens angulaire pour cohérence avec la lecture droite→gauche.
  */
 export function useConcentricLayout(
   data: CooccurrenceData | null,
-  size: { width: number; height: number },
+  _size: { width: number; height: number }, // kept for API compat, unused
   isRTL: boolean = false,
 ): ConcentricLayout {
+  void _size;
   return useMemo(() => {
-    const cx = size.width / 2;
-    const cy = size.height / 2;
+    const cx = CENTER;
+    const cy = CENTER;
+    const maxR = CENTER - CENTER_FOOTPRINT; // 405
 
     const centerNode: CenterNode = { letter: data?.letter ?? '', x: cx, y: cy };
 
@@ -41,10 +56,8 @@ export function useConcentricLayout(
     const neighbours = [...data.cooccurrences].sort((a, b) => b.count - a.count);
     const n = neighbours.length;
 
-    // --- Decide ring count ---
     const useRings = n <= 8 ? 2 : 3;
 
-    // --- Assign ring index by tertile (or half) ---
     const ringOf = (i: number): 0 | 1 | 2 => {
       if (useRings === 2) {
         const half = Math.ceil(n / 2);
@@ -56,10 +69,10 @@ export function useConcentricLayout(
       return 2;
     };
 
-    // --- Scale: log on count for node radii ---
     const counts = neighbours.map((nb) => nb.count);
     const minC = min(counts) ?? 1;
     const maxC = max(counts) ?? 1;
+
     const radiusScale =
       minC === maxC
         ? () => (NODE_RADIUS_RANGE[0] + NODE_RADIUS_RANGE[1]) / 2
@@ -71,32 +84,26 @@ export function useConcentricLayout(
     const normScale =
       minC === maxC ? () => 1 : scaleLinear().domain([minC, maxC]).range([0, 1]).clamp(true);
 
-    // Group by ring to compute angular distribution per ring
     const byRing = new Map<0 | 1 | 2, Array<(typeof neighbours)[number] & { idx: number }>>([
       [0, []],
       [1, []],
       [2, []],
     ]);
     neighbours.forEach((nb, i) => {
-      const ring = ringOf(i);
-      byRing.get(ring)!.push({ ...nb, idx: i });
+      byRing.get(ringOf(i))!.push({ ...nb, idx: i });
     });
 
-    // Radius expansion: if a ring has >12 items, push ring2 out further
-    const ringsRadii = [...RING_RADII] as [number, number, number];
-    const maxW = Math.min(cx, cy) - CENTER_FOOTPRINT;
-    ringsRadii[0] = Math.min(RING_RADII[0], maxW * 0.45);
-    ringsRadii[1] = Math.min(RING_RADII[1], maxW * 0.72);
-    ringsRadii[2] = Math.min(RING_RADII[2], maxW * 0.97);
+    const ringRadii = RING_FRACTIONS.map((f) => f * maxR) as [number, number, number];
 
     const ringNodes: RingNode[] = [];
     const links: LayoutLink[] = [];
 
     for (const [ring, group] of byRing.entries()) {
       if (group.length === 0) continue;
-      const r = ringsRadii[ring as 0 | 1 | 2];
-      const step = (2 * Math.PI) / group.length;
-      // Start at 12 o'clock (-π/2). RTL reverses angular direction.
+      const r = ringRadii[ring as 0 | 1 | 2];
+      const count = group.length;
+      const step = (2 * Math.PI) / count;
+      // Start at 12 o'clock (-π/2). RTL inverse le sens.
       const direction = isRTL ? -1 : 1;
 
       group.forEach((nb, i) => {
@@ -129,8 +136,8 @@ export function useConcentricLayout(
     }
 
     return { centerNode, ringNodes, links };
-  }, [data, size.width, size.height, isRTL]);
+  }, [data, isRTL]);
 }
 
-// Also export the threshold so tests can import it
-export { RING_THRESHOLDS_2 };
+// Kept exported for layout tests
+export const RING_THRESHOLDS_2 = [0.5];

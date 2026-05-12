@@ -38,6 +38,7 @@ void i18n
       'notes',
       'collections',
       'landing',
+      'letters',
     ],
     defaultNS: 'common',
     compatibilityJSON: 'v4',
