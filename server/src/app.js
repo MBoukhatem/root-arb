@@ -58,10 +58,12 @@ app.use(
     origin: (origin, cb) => {
       // Requêtes server-to-server / curl : origin = undefined → autoriser.
       if (!origin) return cb(null, true);
+      // En dev : tout autoriser (Vite, Tailscale IP, ngrok, etc.). En prod : whitelist stricte.
+      if (env.isDev) return cb(null, true);
       if (allowedOrigins.includes(origin) || vercelPreviewRe.test(origin)) {
         return cb(null, true);
       }
-      if (env.isDev && devLocalhostRe.test(origin)) {
+      if (devLocalhostRe.test(origin)) {
         return cb(null, true);
       }
       return cb(new Error(`CORS: origin not allowed (${origin})`));
