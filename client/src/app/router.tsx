@@ -30,9 +30,13 @@ export function AppRouter() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
-          <Route path="/explore" element={<ExplorePage />} />
+          {/* /explore is the trilitère builder (was the static cards grid). */}
+          <Route path="/explore" element={<LettersPage />} />
           <Route path="/roots/:id" element={<RootDetailPage />} />
-          <Route path="/letters" element={<LettersPage />} />
+          {/* Legacy /letters → /explore */}
+          <Route path="/letters" element={<Navigate to="/explore" replace />} />
+          {/* Catalogue grid kept on /catalog for those who want browse-mode. */}
+          <Route path="/catalog" element={<ExplorePage />} />
         </Route>
 
         {/* Protected app layout (Navbar + Sidebar) */}
