@@ -14,7 +14,7 @@ export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 
 const VARIANT_CLASSES: Record<Variant, string> = {
   primary:
-    'bg-(--text-primary) text-(--bg-base) shadow-[var(--shadow-md)] hover:shadow-[var(--shadow-lg)] hover:-translate-y-px active:translate-y-0 active:shadow-[var(--shadow-sm)]',
+    'bg-(--text-primary) shadow-[var(--shadow-md)] hover:shadow-[var(--shadow-lg)] hover:-translate-y-px active:translate-y-0 active:shadow-[var(--shadow-sm)]',
   secondary:
     'bg-(--bg-card) text-(--text-primary) border border-(--border-strong) shadow-[var(--shadow-sm)] hover:bg-(--bg-elev) hover:border-(--gold-accent)',
   ghost: 'bg-transparent text-(--text-primary) hover:bg-(--bg-card)',
@@ -46,6 +46,14 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
   },
   ref,
 ) {
+  // For "primary" variant the text colour needs the inverse-ink (parchment in
+  // light, walnut in dark). Tailwind v4 utility classes via CSS vars don't
+  // resolve reliably on every element (observed bug on react-router <Link>
+  // and certain <button>). Inline style is the safest, smallest workaround.
+  const { style: userStyle, ...restAttrs } = rest;
+  const primaryColorStyle = variant === 'primary' ? { color: 'var(--bg-base)' } : undefined;
+  const mergedStyle = { ...primaryColorStyle, ...(userStyle ?? {}) };
+
   return (
     <button
       ref={ref}
@@ -58,7 +66,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
         SIZE_CLASSES[size],
         className,
       )}
-      {...rest}
+      style={mergedStyle}
+      {...restAttrs}
     >
       {loading ? <LoadingSpinner size={16} /> : icon}
       {children}

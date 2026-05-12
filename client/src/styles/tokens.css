@@ -204,7 +204,9 @@
 @theme {
   /* `--color-base` removed: it shadows Tailwind's `text-base` (font-size 16px)
    * utility and silently turns every `text-base` into `color: var(--bg-base)`.
-   * Use the arbitrary syntax `bg-(--bg-base)` / `text-(--text-primary)` instead. */
+   * Use the arbitrary syntax `bg-(--bg-base)` / `text-(--text-primary)` instead.
+   * For "inverse ink" (light text on dark btn), use `text-ink-inverse`. */
+  --color-ink-inverse: var(--bg-base);
   --color-card: var(--bg-card);
   --color-primary: var(--text-primary);
   --color-secondary: var(--text-secondary);

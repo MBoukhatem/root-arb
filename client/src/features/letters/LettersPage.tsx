@@ -428,13 +428,14 @@ export default function LettersPage() {
                 <Link
                   to={`/roots/${encodeURIComponent(foundRoot._id)}`}
                   className={clsx(
-                    'inline-flex items-center gap-2 rounded-full',
-                    'bg-(--text-primary) text-(--bg-base) px-4 py-1.5 text-sm font-medium',
-                    'hover:opacity-90 transition-opacity',
+                    'inline-flex shrink-0 items-center gap-2 rounded-full',
+                    'bg-(--text-primary) px-5 py-2 text-sm font-medium whitespace-nowrap',
+                    'shadow-[var(--shadow-sm)] hover:shadow-[var(--shadow-md)] hover:-translate-y-px transition-all',
                   )}
+                  style={{ color: 'var(--bg-base)' }}
                 >
-                  {t('openRoot')}
-                  <ArrowRight size={14} aria-hidden />
+                  <span style={{ color: 'var(--bg-base)' }}>{t('openRoot')}</span>
+                  <ArrowRight size={16} aria-hidden style={{ color: 'var(--bg-base)' }} />
                 </Link>
               </>
             )}
