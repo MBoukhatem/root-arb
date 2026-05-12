@@ -11,51 +11,58 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 /* -----------------------------------------------------------------------------
- * Light (default)
+ * Light (default) — "Manuscript meets Knowledge Graph"
+ * Warm parchment, deep ink, lacquered gold, terracotta accent.
  * --------------------------------------------------------------------------- */
 :root {
-  /* Neutres */
-  --bg-base: #fafaf9;
-  --bg-card: #f5f5f4;
-  --text-primary: #0f172a; /* 15.8:1 */
-  --text-secondary: #334155; /* 9.6:1 */
-  --text-muted: #64748b; /* 5.7:1 */
-  --border: #e2e8f0;
-  --focus-ring: #2563eb;
+  /* Neutres — warm parchment */
+  --bg-base: #FBF8F1;          /* parchment */
+  --bg-card: #FFFCF5;          /* vellum (cards lift above parchment) */
+  --bg-elev: #FFFEFA;          /* highest elevation (modals, tooltips) */
+  --text-primary: #1A1614;     /* deep ink — 16:1 on parchment */
+  --text-secondary: #4A3F38;   /* warm sepia — 9.8:1 */
+  --text-muted: #8A7A6B;       /* aged ink — 4.6:1 */
+  --border: #E8DFCB;           /* faded wash */
+  --border-strong: #C9B89A;    /* sharper rule */
+  --focus-ring: #B0451F;       /* terracotta focus */
 
-  /* Catégorielles - ink (texte/icones) */
-  --cat-verb-ink: #1d4ed8;
-  --cat-noun-ink: #047857;
-  --cat-adjective-ink: #b45309;
-  --cat-adverb-ink: #7c2d12;
-  --cat-participle-ink: #6d28d9;
-  --cat-masdar-ink: #be185d;
-  --cat-pluriel-brise-ink: #0e7490;
-  --cat-derive-ink: #4338ca;
+  /* Catégorielles - ink (texte/icones) — manuscript inks, AA on parchment */
+  --cat-verb-ink: #1E4D6B;      /* indigo manuscrit */
+  --cat-noun-ink: #2F5D3A;      /* émeraude profonde */
+  --cat-adjective-ink: #8C5A1A; /* ochre */
+  --cat-adverb-ink: #7C2D12;    /* rouille */
+  --cat-participle-ink: #5B3A8F;/* violet enluminé */
+  --cat-masdar-ink: #9A2A52;    /* carmin */
+  --cat-pluriel-brise-ink: #156871;/* turquoise antique */
+  --cat-derive-ink: #4338CA;    /* lapis */
 
-  /* Catégorielles - fill (graphes D3) */
-  --cat-verb-fill: #3b82f6;
-  --cat-noun-fill: #10b981;
-  --cat-adjective-fill: #f59e0b;
-  --cat-adverb-fill: #ea580c;
-  --cat-participle-fill: #8b5cf6;
-  --cat-masdar-fill: #ec4899;
-  --cat-pluriel-brise-fill: #06b6d4;
-  --cat-derive-fill: #6366f1;
+  /* Catégorielles - fill (graphes D3) — saturées pour les noeuds */
+  --cat-verb-fill: #3D7CA6;
+  --cat-noun-fill: #4F9966;
+  --cat-adjective-fill: #D4A33A;
+  --cat-adverb-fill: #C75F2E;
+  --cat-participle-fill: #8B72C7;
+  --cat-masdar-fill: #C94A77;
+  --cat-pluriel-brise-fill: #2D9AA3;
+  --cat-derive-fill: #6366F1;
 
   /* États */
-  --success: #16a34a;
-  --warning: #d97706;
-  --danger: #e23923; /* reserve aux confirmations destructives */
-  --info: #0284c7;
+  --success: #2F7D32;
+  --warning: #B45309;
+  --danger: #B0322B;
+  --info: #1E4D6B;
 
-  /* Or décoratif (titres >=24px uniquement, contrast AA) */
-  --gold: #92400e;
+  /* Or — lacquered, deep enough for body text on parchment */
+  --gold: #8C5A1A;           /* texte sur clair */
+  --gold-accent: #C49A3F;    /* doré pur (icônes, ornaments) */
+  --gold-light: oklch(0.92 0.07 80);
+  --terracotta: #B0451F;     /* accent chaud secondaire */
 
   /* Typo */
   --font-sans:
     'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  --font-arabic-title: 'Amiri', 'Segoe UI Arabic', 'Geeza Pro', serif;
+  --font-display: 'Fraunces', 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+  --font-arabic-title: 'Amiri', 'Scheherazade New', 'Segoe UI Arabic', 'Geeza Pro', serif;
   --font-arabic-body: 'Noto Naskh Arabic', 'Segoe UI Arabic', 'Geeza Pro', serif;
   --font-mono: ui-monospace, 'SF Mono', Consolas, monospace;
 
@@ -78,11 +85,18 @@
   --sp-12: 3rem;
   --sp-16: 4rem;
 
-  /* Radii */
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-xl: 16px;
+  /* Radii — soft editorial corners */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-2xl: 28px;
+
+  /* Shadows — warm, low-elevation manuscript shadows */
+  --shadow-sm: 0 1px 2px rgba(74, 63, 56, 0.06), 0 1px 1px rgba(74, 63, 56, 0.04);
+  --shadow-md: 0 4px 12px rgba(74, 63, 56, 0.08), 0 1px 3px rgba(74, 63, 56, 0.05);
+  --shadow-lg: 0 12px 28px rgba(74, 63, 56, 0.10), 0 4px 8px rgba(74, 63, 56, 0.06);
+  --shadow-gold: 0 8px 24px rgba(196, 154, 63, 0.22), 0 2px 6px rgba(140, 90, 26, 0.12);
 
   /* Layout */
   --sidebar-width: 280px;
@@ -94,16 +108,16 @@
   --motion-base: 200ms;
   --motion-ease: cubic-bezier(0.4, 0, 0.2, 1);
 
-  /* ConcentricLetters ring tokens */
-  --letter-ring1-fill: oklch(0.92 0.08 250);
-  --letter-ring2-fill: oklch(0.95 0.04 250);
-  --letter-ring3-fill: oklch(0.97 0.02 250);
-  --letter-ink: oklch(0.30 0.08 250);
-  --letter-center-stroke: var(--gold);
+  /* ConcentricLetters ring tokens — warm parchment tints */
+  --letter-ring1-fill: oklch(0.93 0.05 75);   /* lightest gold wash */
+  --letter-ring2-fill: oklch(0.96 0.03 80);
+  --letter-ring3-fill: oklch(0.98 0.015 85);
+  --letter-ink: #1A1614;
+  --letter-center-stroke: var(--gold-accent);
 
   /* Skeleton shimmer */
-  --skeleton-base: #e2e8f0;
-  --skeleton-shine: #f1f5f9;
+  --skeleton-base: #EDE3D0;
+  --skeleton-shine: #F6EFDF;
   --skeleton-duration: 1.6s;
 
   /* Semantic field colors (shared between Constellation + future overlays) */
@@ -118,55 +132,68 @@
 }
 
 /* -----------------------------------------------------------------------------
- * Dark
+ * Dark — "Library at midnight" : deep walnut + warm gold + warm whites
  * --------------------------------------------------------------------------- */
 .dark {
-  /* Neutres */
-  --bg-base: #0a0a0f;
-  --bg-card: #1a1a2e;
-  --text-primary: #f1f5f9; /* 15.1:1 */
-  --text-secondary: #cbd5e1; /* 10.4:1 */
-  --text-muted: #94a3b8; /* 5.4:1 */
-  --border: #2d2d44;
-  --focus-ring: #60a5fa;
+  /* Neutres — deep walnut / espresso, NOT pure black */
+  --bg-base: #1A1410;          /* warm walnut */
+  --bg-card: #241D17;          /* slightly elevated, brown-ink */
+  --bg-elev: #2E261F;          /* tooltips, modals */
+  --text-primary: #F4ECD8;     /* warm cream — 14.5:1 */
+  --text-secondary: #D7C9AC;   /* aged paper — 9.2:1 */
+  --text-muted: #9C8B72;       /* faded — 4.8:1 */
+  --border: #3A2F25;
+  --border-strong: #5B4A38;
+  --focus-ring: #E0A946;       /* warm gold focus */
 
-  /* Catégorielles - ink */
-  --cat-verb-ink: #93c5fd;
-  --cat-noun-ink: #6ee7b7;
-  --cat-adjective-ink: #fcd34d;
-  --cat-adverb-ink: #fdba74;
-  --cat-participle-ink: #c4b5fd;
-  --cat-masdar-ink: #f9a8d4;
-  --cat-pluriel-brise-ink: #67e8f9;
-  --cat-derive-ink: #a5b4fc;
+  /* Catégorielles - ink (light text on dark) */
+  --cat-verb-ink: #87B6D9;
+  --cat-noun-ink: #88D4A0;
+  --cat-adjective-ink: #F0CE7E;
+  --cat-adverb-ink: #F2A074;
+  --cat-participle-ink: #C4ABEC;
+  --cat-masdar-ink: #F098B5;
+  --cat-pluriel-brise-ink: #7FE0E5;
+  --cat-derive-ink: #ADB0FF;
 
-  /* Catégorielles - fill dark (graphes D3 — luminosité réduite pour fond sombre) */
-  --cat-verb-fill: #60a5fa;
-  --cat-noun-fill: #34d399;
-  --cat-adjective-fill: #fbbf24;
-  --cat-adverb-fill: #fb923c;
-  --cat-participle-fill: #a78bfa;
-  --cat-masdar-fill: #f472b6;
-  --cat-pluriel-brise-fill: #22d3ee;
-  --cat-derive-fill: #818cf8;
+  /* Catégorielles - fill dark */
+  --cat-verb-fill: #5A93C1;
+  --cat-noun-fill: #5BB479;
+  --cat-adjective-fill: #DDB14B;
+  --cat-adverb-fill: #D87340;
+  --cat-participle-fill: #9F87DA;
+  --cat-masdar-fill: #D6678C;
+  --cat-pluriel-brise-fill: #46B3BB;
+  --cat-derive-fill: #818CF8;
 
   /* Skeleton shimmer — dark */
-  --skeleton-base: #1e293b;
-  --skeleton-shine: #2d3f55;
+  --skeleton-base: #2C241C;
+  --skeleton-shine: #3D332A;
 
   /* États */
-  --success: #4ade80;
-  --warning: #fbbf24;
-  --info: #38bdf8;
+  --success: #5BB479;
+  --warning: #DDB14B;
+  --danger: #D87370;
+  --info: #87B6D9;
 
-  /* Or décoratif */
-  --gold: #fcd34d;
+  /* Or décoratif — luminous gold leaf on walnut */
+  --gold: #E0A946;
+  --gold-accent: #F0C56A;
+  --gold-light: oklch(0.50 0.12 75);
+  --terracotta: #D87340;
 
-  /* ConcentricLetters ring tokens — dark overrides (floor raised for ring-2/3 legibility) */
-  --letter-ring1-fill: oklch(0.42 0.10 250);
-  --letter-ring2-fill: oklch(0.32 0.07 250);
-  --letter-ring3-fill: oklch(0.24 0.04 250);
-  --letter-ink: oklch(0.88 0.06 250);
+  /* Shadows — deeper on dark */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.25);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.32), 0 1px 3px rgba(0, 0, 0, 0.20);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.40), 0 4px 10px rgba(0, 0, 0, 0.24);
+  --shadow-gold: 0 8px 28px rgba(224, 169, 70, 0.20), 0 2px 6px rgba(224, 169, 70, 0.12);
+
+  /* ConcentricLetters ring tokens — warm dark (lifted from bg for contrast) */
+  --letter-ring1-fill: oklch(0.36 0.07 75);
+  --letter-ring2-fill: oklch(0.28 0.05 75);
+  --letter-ring3-fill: oklch(0.22 0.035 75);
+  --letter-ink: #F4ECD8;
+  --letter-center-stroke: var(--gold-accent);
 }
 
 /* -----------------------------------------------------------------------------
@@ -204,6 +231,10 @@
   --color-danger: var(--danger);
   --color-info: var(--info);
   --color-gold: var(--gold);
+  --color-gold-accent: var(--gold-accent);
+  --color-terracotta: var(--terracotta);
+  --color-elev: var(--bg-elev);
+  --color-border-strong: var(--border-strong);
 
   /* Skeleton */
   --color-skeleton-base: var(--skeleton-base);
@@ -220,6 +251,7 @@
   --color-sf-derive: var(--sf-derive);
 
   --font-sans: var(--font-sans);
+  --font-display: var(--font-display);
   --font-arabic: var(--font-arabic-body);
   --font-arabic-title: var(--font-arabic-title);
   --font-mono: var(--font-mono);

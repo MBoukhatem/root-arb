@@ -6,7 +6,7 @@ import {
   useState,
   type KeyboardEvent as ReactKeyboardEvent,
 } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { useDirection } from '@/shared/i18n/useDirection';
@@ -205,80 +205,97 @@ function RootTreeImpl({ root, words, onWordClick, className }: RootTreeProps) {
           })}
         </g>
 
-        {/* Nodes */}
-        <AnimatePresence>
-          {layout.nodes.map((node, i) => {
-            const isRoot = node.data.category === 'root';
-            const fill = isRoot ? 'var(--bg-card)' : categoryFill(node.data.category as never);
-            const stroke = isRoot ? 'var(--gold)' : categoryInk(node.data.category as never);
-            const radius = isRoot ? ROOT_RADIUS : NODE_RADIUS;
-            const interactive = Boolean(node.data.wordId);
+        {/* Nodes — positioning via SVG transform attribute (NOT animated, so
+            Framer Motion never overrides it via style). Motion is applied to an
+            inner <g> which animates opacity/scale around the positioned origin. */}
+        {layout.nodes.map((node, i) => {
+          const isRoot = node.data.category === 'root';
+          const fill = isRoot ? 'var(--bg-card)' : categoryFill(node.data.category as never);
+          const stroke = isRoot ? 'var(--gold)' : categoryInk(node.data.category as never);
+          const radius = isRoot ? ROOT_RADIUS : NODE_RADIUS;
+          const interactive = Boolean(node.data.wordId);
 
-            const anchor =
-              layout.mode === 'radial' ? textAnchorForAngle(node.raw.x, isRTL) : 'middle';
+          const anchor =
+            layout.mode === 'radial' ? textAnchorForAngle(node.raw.x, isRTL) : 'middle';
 
-            const labelOffset =
-              layout.mode === 'radial'
-                ? anchor === 'middle'
-                  ? 0
-                  : anchor === (isRTL ? 'end' : 'start')
-                    ? radius + 8
-                    : -(radius + 8)
-                : 0;
+          const labelOffset =
+            layout.mode === 'radial'
+              ? anchor === 'middle'
+                ? 0
+                : anchor === (isRTL ? 'end' : 'start')
+                  ? radius + 8
+                  : -(radius + 8)
+              : 0;
 
-            const labelY = layout.mode === 'vertical' ? radius + 18 : 4;
+          const labelY = layout.mode === 'vertical' ? radius + 18 : 4;
 
-            return (
+          return (
+            <g
+              key={`${node.id}`}
+              data-node-id={node.id}
+              role={isRoot ? 'group' : 'treeitem'}
+              aria-level={isRoot ? 1 : 2}
+              aria-label={
+                isRoot
+                  ? `${root.letters} (${root.transliteration})`
+                  : `${node.data.label}, ${node.data.transliteration}, ${node.data.translation}`
+              }
+              tabIndex={interactive ? 0 : -1}
+              transform={`translate(${node.x},${node.y})`}
+              onMouseEnter={() => interactive && showTooltip(node)}
+              onMouseLeave={hideTooltip}
+              onFocus={() => {
+                if (!interactive) return;
+                setFocusedId(node.id);
+                showTooltip(node);
+              }}
+              onBlur={hideTooltip}
+              onClick={() => handleNodeActivate(node)}
+              onKeyDown={(e) => handleKeyDown(e, node)}
+              style={{
+                cursor: interactive ? 'pointer' : 'default',
+                outline: focusedId === node.id ? '2px solid var(--focus-ring)' : 'none',
+                outlineOffset: 4,
+              }}
+            >
               <motion.g
-                key={`${node.id}-${replayKey}`}
-                data-node-id={node.id}
-                role={isRoot ? 'group' : 'treeitem'}
-                aria-level={isRoot ? 1 : 2}
-                aria-label={
-                  isRoot
-                    ? `${root.letters} (${root.transliteration})`
-                    : `${node.data.label}, ${node.data.transliteration}, ${node.data.translation}`
-                }
-                tabIndex={interactive ? 0 : -1}
-                transform={`translate(${node.x},${node.y})`}
-                initial={reducedMotion ? false : { opacity: 0, scale: 0 }}
+                key={`anim-${node.id}-${replayKey}`}
+                initial={reducedMotion ? false : { opacity: 0, scale: 0.5 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{
-                  duration: reducedMotion ? 0 : 0.25,
-                  delay: reducedMotion ? 0 : 0.1 + i * 0.03,
-                  ease: 'easeOut',
+                  duration: reducedMotion ? 0 : 0.35,
+                  delay: reducedMotion ? 0 : 0.1 + i * 0.04,
+                  ease: [0.22, 1, 0.36, 1],
                 }}
-                whileHover={interactive && !reducedMotion ? { scale: 1.1 } : undefined}
-                whileFocus={interactive && !reducedMotion ? { scale: 1.1 } : undefined}
-                onMouseEnter={() => interactive && showTooltip(node)}
-                onMouseLeave={hideTooltip}
-                onFocus={() => {
-                  if (!interactive) return;
-                  setFocusedId(node.id);
-                  showTooltip(node);
-                }}
-                onBlur={hideTooltip}
-                onClick={() => handleNodeActivate(node)}
-                onKeyDown={(e) => handleKeyDown(e, node)}
-                style={{
-                  cursor: interactive ? 'pointer' : 'default',
-                  outline: focusedId === node.id ? '2px solid var(--focus-ring)' : 'none',
-                  outlineOffset: 4,
-                }}
+                whileHover={interactive && !reducedMotion ? { scale: 1.12 } : undefined}
+                whileFocus={interactive && !reducedMotion ? { scale: 1.12 } : undefined}
+                style={{ originX: 0.5, originY: 0.5 }}
               >
+                {/* Subtle outer halo (root only) for hierarchy */}
+                {isRoot && (
+                  <circle
+                    r={radius + 10}
+                    fill="none"
+                    stroke="var(--gold-accent)"
+                    strokeWidth={1}
+                    strokeDasharray="2 4"
+                    opacity={0.45}
+                  />
+                )}
                 <circle
                   r={radius}
                   fill={fill}
                   stroke={stroke}
                   strokeWidth={isRoot ? 3 : 2}
-                  fillOpacity={isRoot ? 1 : 0.18}
+                  fillOpacity={isRoot ? 1 : 0.22}
                 />
                 {/* Arabic glyph inside node */}
                 <text
                   textAnchor="middle"
                   dominantBaseline="central"
-                  fontSize={isRoot ? 36 : 18}
+                  fontSize={isRoot ? 40 : 20}
                   fontFamily="var(--font-arabic-title)"
+                  fontWeight={isRoot ? 700 : 500}
                   fill={isRoot ? 'var(--text-primary)' : stroke}
                   lang="ar"
                   direction="rtl"
@@ -292,8 +309,9 @@ function RootTreeImpl({ root, words, onWordClick, className }: RootTreeProps) {
                     x={labelOffset}
                     y={labelY}
                     textAnchor={anchor}
-                    fontSize={14}
-                    fontFamily="var(--font-sans)"
+                    fontSize={13}
+                    fontFamily="var(--font-display)"
+                    fontStyle="italic"
                     fill="var(--text-secondary)"
                     style={{ pointerEvents: 'none' }}
                   >
@@ -301,9 +319,9 @@ function RootTreeImpl({ root, words, onWordClick, className }: RootTreeProps) {
                   </text>
                 )}
               </motion.g>
-            );
-          })}
-        </AnimatePresence>
+            </g>
+          );
+        })}
       </svg>
 
       {/* Tooltip — pixel-positioned via getScreenCTM to avoid RTL/viewBox drift */}

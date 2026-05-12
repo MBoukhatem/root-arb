@@ -162,7 +162,7 @@ export function Navbar({ variant = 'public', onToggleSidebar, hamburgerRef }: Na
               </Link>
               <Link
                 to="/register"
-                className="rounded-md bg-(--cat-verb-fill) px-3 py-1.5 text-sm font-medium text-white hover:opacity-90"
+                className="rounded-full bg-(--text-primary) px-4 py-1.5 text-sm font-medium text-(--bg-base) shadow-[var(--shadow-sm)] transition-all hover:-translate-y-px hover:shadow-[var(--shadow-md)]"
               >
                 {t('nav:register')}
               </Link>

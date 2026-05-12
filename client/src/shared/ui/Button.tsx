@@ -13,21 +13,25 @@ export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 };
 
 const VARIANT_CLASSES: Record<Variant, string> = {
-  primary: 'bg-(--cat-verb-fill) text-white hover:opacity-90',
-  secondary: 'bg-(--bg-card) text-(--text-primary) border border-(--border) hover:bg-(--border)',
+  primary:
+    'bg-(--text-primary) text-(--bg-base) shadow-[var(--shadow-md)] hover:shadow-[var(--shadow-lg)] hover:-translate-y-px active:translate-y-0 active:shadow-[var(--shadow-sm)]',
+  secondary:
+    'bg-(--bg-card) text-(--text-primary) border border-(--border-strong) shadow-[var(--shadow-sm)] hover:bg-(--bg-elev) hover:border-(--gold-accent)',
   ghost: 'bg-transparent text-(--text-primary) hover:bg-(--bg-card)',
-  destructive: 'bg-(--danger) text-white hover:opacity-90',
+  destructive:
+    'bg-(--danger) text-white shadow-[var(--shadow-md)] hover:opacity-95 hover:-translate-y-px active:translate-y-0',
 };
 
 const SIZE_CLASSES: Record<Size, string> = {
-  sm: 'h-8 px-3 text-sm',
-  md: 'h-10 px-4 text-base',
-  lg: 'h-12 px-6 text-lg',
+  sm: 'h-9 px-3.5 text-sm',
+  md: 'h-11 px-5 text-[15px]',
+  lg: 'h-[52px] px-7 text-base tracking-wide',
 };
 
 /**
- * Shared <Button> per agent_04 R3 §3. Focus-visible ring is supplied by the
- * global `*:focus-visible` rule in globals.css.
+ * Shared <Button> per agent_04 R3 §3 — editorial manuscript style.
+ * Primary = ink-on-parchment (deep contrast), secondary = vellum card with
+ * gold-on-hover border. Focus-visible ring supplied by globals.css.
  */
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
   {
@@ -47,7 +51,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       ref={ref}
       disabled={disabled ?? loading}
       className={clsx(
-        'inline-flex items-center justify-center gap-2 rounded-md font-medium transition-opacity disabled:opacity-50 disabled:cursor-not-allowed',
+        'inline-flex items-center justify-center gap-2 rounded-full font-medium',
+        'transition-[transform,box-shadow,background-color,border-color,opacity] duration-200 ease-out',
+        'disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-[var(--shadow-sm)]',
         VARIANT_CLASSES[variant],
         SIZE_CLASSES[size],
         className,

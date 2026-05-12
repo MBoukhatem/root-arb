@@ -23,7 +23,7 @@ export type RegisterPayload = {
 
 export type LoginResponse = {
   user: AuthUser;
-  token: string;
+  accessToken: string;
 };
 
 export const authApi = {

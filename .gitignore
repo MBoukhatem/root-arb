@@ -73,3 +73,6 @@ client/.vite/
 
 # Agent runtime state
 .omc/
+
+# QA artifacts (screenshots, reports) — too heavy for git
+qa-output/

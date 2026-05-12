@@ -209,7 +209,18 @@
     "step3Body": "An interactive constellation of your vocabulary.",
     "demoTitle": "The root ك-ت-ب",
     "demoSubtitle": "A single root, dozens of derived words.",
-    "footerTagline": "Built for curious learners."
+    "footerTagline": "Built for curious learners.",
+    "heroEyebrow": "to write, book, writer, office, library…",
+    "heroBadge": "Learn through trilateral roots",
+    "heroScrollHint": "Discover the living tree ↓",
+    "demoLegendTitle": "Legend",
+    "demoLegendVerb": "Verb",
+    "demoLegendNoun": "Noun",
+    "demoLegendAgent": "Agent",
+    "demoLegendPlace": "Place",
+    "demoLegendVerbalNoun": "Masdar",
+    "demoLegendParticiple": "Participle",
+    "demoLegendInstrument": "Instrument"
   },
   "letters": {
     "title": "Arabic letters",

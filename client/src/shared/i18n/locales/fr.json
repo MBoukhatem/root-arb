@@ -209,7 +209,18 @@
     "step3Body": "Une constellation interactive de ton vocabulaire.",
     "demoTitle": "La racine ك-ت-ب",
     "demoSubtitle": "Une seule racine, des dizaines de mots.",
-    "footerTagline": "Conçu pour les apprenants curieux."
+    "footerTagline": "Conçu pour les apprenants curieux.",
+    "heroEyebrow": "écrire, livre, écrivain, bureau, bibliothèque…",
+    "heroBadge": "Apprentissage par les racines trilitères",
+    "heroScrollHint": "Découvre l'arbre vivant ↓",
+    "demoLegendTitle": "Légende",
+    "demoLegendVerb": "Verbe",
+    "demoLegendNoun": "Nom",
+    "demoLegendAgent": "Agent",
+    "demoLegendPlace": "Lieu",
+    "demoLegendVerbalNoun": "Masdar",
+    "demoLegendParticiple": "Participe",
+    "demoLegendInstrument": "Instrument"
   },
   "letters": {
     "title": "Lettres arabes",
