@@ -455,8 +455,8 @@ export default function LettersPage() {
         </div>
       )}
 
-      {/* Stats bar — only when focal letter exists */}
-      {focal && (
+      {/* Stats bar — only when buffer in progress (hidden at 3 letters) */}
+      {focal && buffer.length < MAX_LETTERS && (
         <div className="flex items-center gap-3 rounded-xl border border-(--border) bg-(--bg-card) px-5 py-3">
           <span
             className="text-3xl"
