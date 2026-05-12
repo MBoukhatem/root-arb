@@ -241,6 +241,14 @@
     "sharedRoots_one": "{{count}} shared root",
     "sharedRoots_other": "{{count}} shared roots",
     "cooccurrenceCount_one": "co-occurrence: {{count}}",
-    "cooccurrenceCount_other": "co-occurrences: {{count}}"
+    "cooccurrenceCount_other": "co-occurrences: {{count}}",
+    "buildTitle": "Build a trilateral root",
+    "buildHint": "Choose 1, 2 then 3 letters to compose a root.",
+    "back": "Remove last",
+    "reset": "Reset",
+    "slot": "Slot {{n}}",
+    "rootFound": "Root found",
+    "rootNotInDb": "Unknown combination: {{letters}}",
+    "openRoot": "Open root"
   }
 }

@@ -35,13 +35,28 @@ function cleanParams(input: RootsQuery): Record<string, string | number> {
 
 export const rootsApi = {
   async list(query: RootsQuery): Promise<RootsListPayload> {
-    const { data } = await axiosInstance.get<ApiResponse<RootsListPayload>>('/roots', {
-      params: cleanParams(query),
-    });
-    return data.data;
+    // Server flat shape: { success, data: [...roots], pagination: {...} }
+    // Adapt to client nested shape: { roots, pagination }
+    const { data } = await axiosInstance.get<{
+      success: boolean;
+      data: Root[];
+      pagination: RootsListPayload['pagination'];
+    }>('/roots', { params: cleanParams(query) });
+    return {
+      roots: Array.isArray(data.data) ? data.data : [],
+      pagination: data.pagination,
+    };
   },
   async getById(id: string): Promise<RootDetailPayload> {
-    const { data } = await axiosInstance.get<ApiResponse<RootDetailPayload>>(`/roots/${id}`);
-    return data.data;
+    // /api/roots/:id → { success, data: <root> }
+    // /api/words/by-root/:id → { success, data: [...words] }
+    const [rootRes, wordsRes] = await Promise.all([
+      axiosInstance.get<ApiResponse<Root>>(`/roots/${id}`),
+      axiosInstance.get<{ success: boolean; data: Word[] }>(`/words/by-root/${id}`),
+    ]);
+    return {
+      root: rootRes.data.data,
+      words: Array.isArray(wordsRes.data.data) ? wordsRes.data.data : [],
+    };
   },
 };

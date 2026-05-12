@@ -1,25 +1,28 @@
 /**
- * /letters — ConcentricLetters visualisation page.
+ * /letters — Trilitère root builder + ConcentricLetters viz.
  *
- * Layout:
- *   - Alphabet picker (28-letter grid) to select initial letter
- *   - Stats counter "X racines contiennent cette lettre"
- *   - ConcentricLetters viz occupying ~60vh
- *   - Side panel (sheet) listing shared roots when a peripheral letter is hovered/clicked
- *   - Dark mode + RTL aware
+ * Workflow:
+ *   1. Clic sur une lettre dans le picker → ajoutée au buffer (max 3 lettres).
+ *   2. La viz ConcentricLetters montre la dernière lettre choisie au centre,
+ *      entourée de ses co-occurrences (autres lettres présentes dans les
+ *      mêmes racines).
+ *   3. Lorsque le buffer atteint 3 lettres, on cherche la racine correspondante
+ *      dans la liste seedée. Si trouvée, lien direct vers /roots/:id.
+ *      Sinon : message "combinaison inédite".
+ *   4. Boutons "Retour" (pop la dernière) et "Réinitialiser" (clear).
  */
 
 import { useState, useCallback, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { AnimatePresence, motion } from 'framer-motion';
-import { X, Loader2, Hash } from 'lucide-react';
+import { X, Loader2, Hash, RotateCcw, Undo2, ArrowRight } from 'lucide-react';
 import clsx from 'clsx';
 import { ConcentricLetters } from '@/shared/viz/ConcentricLetters';
 import { useLettersList, useCooccurrences } from './hooks/useCooccurrences';
+import { useRoots } from '@/features/roots/hooks/useRoots';
 import type { RingNode } from '@/shared/viz/ConcentricLetters/types';
 
-// Canonical 28 Arabic letters — fallback when API hasn't loaded yet
 const ARABIC_ALPHABET = [
   'ا',
   'ب',
@@ -51,50 +54,155 @@ const ARABIC_ALPHABET = [
   'ي',
 ] as const;
 
-// --- Alphabet picker grid ---
+const MAX_LETTERS = 3;
 
-function AlphabetPicker({
-  letters,
-  selected,
-  onSelect,
+// --- Builder slots ---
+
+function BuilderSlots({
+  buffer,
+  onPop,
+  onReset,
 }: {
-  letters: { letter: string; count: number }[];
-  selected: string;
-  onSelect: (l: string) => void;
+  buffer: string[];
+  onPop: () => void;
+  onReset: () => void;
 }) {
   const { t } = useTranslation(['letters', 'common']);
 
   return (
+    <div className="flex flex-col items-center gap-3">
+      <span className="text-xs uppercase tracking-[0.18em] text-(--text-muted)">
+        {t('buildHint')}
+      </span>
+      <div className="flex items-center gap-2" dir="rtl">
+        {Array.from({ length: MAX_LETTERS }).map((_, i) => {
+          const letter = buffer[i];
+          return (
+            <div
+              key={i}
+              className={clsx(
+                'flex h-16 w-16 items-center justify-center rounded-2xl border-2 transition-all duration-200',
+                letter
+                  ? 'border-(--gold-accent) bg-(--bg-card) shadow-[var(--shadow-md)]'
+                  : 'border-dashed border-(--border) bg-(--bg-base)',
+              )}
+              aria-label={t('slot', { n: i + 1 })}
+            >
+              <AnimatePresence mode="wait">
+                {letter ? (
+                  <motion.span
+                    key={letter + i}
+                    initial={{ opacity: 0, scale: 0.5, y: -8 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.5, y: 8 }}
+                    transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                    className="text-4xl text-(--text-primary)"
+                    lang="ar"
+                    style={{ fontFamily: 'var(--font-arabic-title)' }}
+                  >
+                    {letter}
+                  </motion.span>
+                ) : (
+                  <span className="text-2xl text-(--text-muted)" aria-hidden>
+                    +
+                  </span>
+                )}
+              </AnimatePresence>
+            </div>
+          );
+        })}
+      </div>
+      <div className="flex items-center gap-2">
+        <button
+          type="button"
+          onClick={onPop}
+          disabled={buffer.length === 0}
+          className={clsx(
+            'inline-flex items-center gap-2 rounded-full border border-(--border-strong) bg-(--bg-card) px-4 py-2 text-sm',
+            'transition-colors duration-150',
+            'hover:border-(--gold-accent) hover:text-(--text-primary)',
+            'disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-(--border-strong)',
+            'text-(--text-secondary)',
+          )}
+        >
+          <Undo2 size={14} aria-hidden />
+          {t('back')}
+        </button>
+        <button
+          type="button"
+          onClick={onReset}
+          disabled={buffer.length === 0}
+          className={clsx(
+            'inline-flex items-center gap-2 rounded-full border border-(--border-strong) bg-(--bg-card) px-4 py-2 text-sm',
+            'transition-colors duration-150',
+            'hover:border-(--terracotta) hover:text-(--text-primary)',
+            'disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-(--border-strong)',
+            'text-(--text-secondary)',
+          )}
+        >
+          <RotateCcw size={14} aria-hidden />
+          {t('reset')}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// --- Alphabet picker ---
+
+function AlphabetPicker({
+  letters,
+  buffer,
+  focal,
+  onSelect,
+}: {
+  letters: { letter: string; count: number }[];
+  buffer: string[];
+  focal: string | null;
+  onSelect: (l: string) => void;
+}) {
+  const { t } = useTranslation(['letters', 'common']);
+  const bufferFull = buffer.length >= MAX_LETTERS;
+
+  return (
     <section aria-label={t('pickerAriaLabel')}>
       <div className="flex flex-wrap gap-1.5 justify-center" dir="rtl">
-        {letters.map(({ letter, count }) => (
-          <button
-            key={letter}
-            type="button"
-            title={`${letter} — ${count} ${t('roots', { count })}`}
-            aria-pressed={letter === selected}
-            onClick={() => onSelect(letter)}
-            className={clsx(
-              'relative w-10 h-10 rounded-lg text-xl transition-all duration-150',
-              'flex items-center justify-center',
-              'border focus-visible:outline-2 focus-visible:outline-(--focus-ring) focus-visible:outline-offset-2',
-              letter === selected
-                ? 'border-(--gold) bg-(--bg-card) text-(--text-primary) shadow-md scale-110'
-                : 'border-(--border) bg-(--bg-base) text-(--text-secondary) hover:border-(--gold) hover:text-(--text-primary) hover:scale-105',
-            )}
-            style={{ fontFamily: 'var(--font-arabic-title)' }}
-          >
-            {letter}
-            {count > 0 && (
-              <span
-                className="absolute -top-1 -right-1 min-w-[16px] h-4 rounded-full bg-(--cat-derive-fill) text-white text-[9px] flex items-center justify-center px-0.5 leading-none"
-                aria-hidden="true"
-              >
-                {count}
-              </span>
-            )}
-          </button>
-        ))}
+        {letters.map(({ letter, count }) => {
+          const isFocal = focal === letter;
+          const inBuffer = buffer.includes(letter);
+          return (
+            <button
+              key={letter}
+              type="button"
+              title={`${letter} — ${count} ${t('roots', { count })}`}
+              aria-pressed={isFocal}
+              disabled={bufferFull && !inBuffer}
+              onClick={() => onSelect(letter)}
+              className={clsx(
+                'relative w-10 h-10 rounded-lg text-xl transition-all duration-150',
+                'flex items-center justify-center',
+                'border focus-visible:outline-2 focus-visible:outline-(--focus-ring) focus-visible:outline-offset-2',
+                'disabled:cursor-not-allowed disabled:opacity-40',
+                isFocal
+                  ? 'border-(--gold-accent) bg-(--bg-card) text-(--text-primary) shadow-md scale-110'
+                  : inBuffer
+                    ? 'border-(--gold-accent)/60 bg-(--bg-card)/60 text-(--text-primary)'
+                    : 'border-(--border) bg-(--bg-base) text-(--text-secondary) hover:border-(--gold-accent) hover:text-(--text-primary) hover:scale-105',
+              )}
+              style={{ fontFamily: 'var(--font-arabic-title)' }}
+            >
+              {letter}
+              {count > 0 && (
+                <span
+                  className="absolute -top-1 -right-1 min-w-[16px] h-4 rounded-full bg-(--cat-derive-fill) text-white text-[9px] flex items-center justify-center px-0.5 leading-none"
+                  aria-hidden="true"
+                >
+                  {count}
+                </span>
+              )}
+            </button>
+          );
+        })}
       </div>
     </section>
   );
@@ -122,7 +230,6 @@ function RootSidePanel({ node, onClose }: { node: RingNode | null; onClose: () =
           )}
           aria-label={t('sidePanelAriaLabel')}
         >
-          {/* Header */}
           <div className="flex items-center justify-between px-4 py-3 border-b border-(--border)">
             <div className="flex items-center gap-3">
               <span
@@ -152,7 +259,6 @@ function RootSidePanel({ node, onClose }: { node: RingNode | null; onClose: () =
             </button>
           </div>
 
-          {/* Root list */}
           <div className="flex-1 overflow-y-auto p-4">
             {node.sharedRootIds.length === 0 ? (
               <p className="text-sm text-(--text-muted)">{t('noRoots')}</p>
@@ -165,7 +271,7 @@ function RootSidePanel({ node, onClose }: { node: RingNode | null; onClose: () =
                       className={clsx(
                         'flex items-center gap-2 rounded-lg px-3 py-2',
                         'border border-(--border) bg-(--bg-base)',
-                        'hover:border-(--gold) hover:bg-(--bg-card)',
+                        'hover:border-(--gold-accent) hover:bg-(--bg-card)',
                         'text-sm text-(--text-secondary) hover:text-(--text-primary)',
                         'transition-all duration-150',
                       )}
@@ -189,22 +295,51 @@ function RootSidePanel({ node, onClose }: { node: RingNode | null; onClose: () =
 export default function LettersPage() {
   const { t } = useTranslation(['letters', 'common']);
 
-  // Merge API letter list with canonical alphabet as fallback
   const { data: apiLetters } = useLettersList();
   const letterList = useMemo(() => {
     if (apiLetters) return apiLetters;
     return ARABIC_ALPHABET.map((l) => ({ letter: l, count: 0 }));
   }, [apiLetters]);
 
-  const [selectedLetter, setSelectedLetter] = useState<string>('ك');
+  // Fetch all roots once to detect when buffer matches a known trilitère.
+  const { data: allRoots } = useRoots({ page: 1, limit: 100 });
+
+  const [buffer, setBuffer] = useState<string[]>([]);
   const [activePanelNode, setActivePanelNode] = useState<RingNode | null>(null);
 
-  const { data, isPending, isError } = useCooccurrences(selectedLetter);
+  // Focal letter (centre du viz) = dernière lettre du buffer, ou null si vide.
+  const focal = buffer[buffer.length - 1] ?? null;
+
+  const { data, isPending, isError } = useCooccurrences(focal ?? '');
 
   const handleLetterSelect = useCallback((letter: string) => {
-    setSelectedLetter(letter);
+    setBuffer((curr) => {
+      if (curr.length >= MAX_LETTERS) return curr;
+      return [...curr, letter];
+    });
     setActivePanelNode(null);
   }, []);
+
+  const handlePop = useCallback(() => {
+    setBuffer((curr) => curr.slice(0, -1));
+    setActivePanelNode(null);
+  }, []);
+
+  const handleReset = useCallback(() => {
+    setBuffer([]);
+    setActivePanelNode(null);
+  }, []);
+
+  // Détection racine trilitère complète
+  const foundRoot = useMemo(() => {
+    if (buffer.length !== MAX_LETTERS || !allRoots) return null;
+    return (
+      allRoots.roots.find(
+        (r) =>
+          r.lettersArray.length === MAX_LETTERS && r.lettersArray.every((l, i) => l === buffer[i]),
+      ) ?? 'NOT_FOUND'
+    );
+  }, [buffer, allRoots]);
 
   const totalRoots = data?.totalRootsWithLetter ?? 0;
 
@@ -213,68 +348,133 @@ export default function LettersPage() {
       className="relative mx-auto flex w-full max-w-7xl flex-col gap-6 p-6"
       aria-label={t('pageAriaLabel')}
     >
-      {/* Page header */}
       <header className="flex flex-col gap-1">
-        <h1 className="text-3xl font-bold text-(--text-primary)">{t('title')}</h1>
+        <h1 className="text-3xl font-bold text-(--text-primary)">{t('buildTitle')}</h1>
         <p className="text-(--text-muted)">{t('subtitle')}</p>
       </header>
+
+      {/* Builder slots */}
+      <div className="rounded-2xl border border-(--border) bg-(--bg-card) p-6 shadow-[var(--shadow-sm)]">
+        <BuilderSlots buffer={buffer} onPop={handlePop} onReset={handleReset} />
+      </div>
+
+      {/* Found root banner */}
+      <AnimatePresence>
+        {foundRoot && (
+          <motion.div
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.22 }}
+            className={clsx(
+              'flex items-center justify-between gap-3 rounded-xl border px-5 py-3',
+              foundRoot === 'NOT_FOUND'
+                ? 'border-(--terracotta)/40 bg-(--bg-card) text-(--text-secondary)'
+                : 'border-(--gold-accent) bg-(--bg-card) text-(--text-primary) shadow-[var(--shadow-gold)]',
+            )}
+          >
+            {foundRoot === 'NOT_FOUND' ? (
+              <span className="text-sm">{t('rootNotInDb', { letters: buffer.join('-') })}</span>
+            ) : (
+              <>
+                <div className="flex items-center gap-3">
+                  <span
+                    className="text-3xl"
+                    lang="ar"
+                    dir="rtl"
+                    style={{ fontFamily: 'var(--font-arabic-title)' }}
+                  >
+                    {foundRoot.letters}
+                  </span>
+                  <div className="flex flex-col">
+                    <span className="text-sm font-semibold">{t('rootFound')}</span>
+                    <span className="text-xs text-(--text-muted)">{foundRoot.transliteration}</span>
+                  </div>
+                </div>
+                <Link
+                  to={`/roots/${encodeURIComponent(foundRoot._id)}`}
+                  className={clsx(
+                    'inline-flex items-center gap-2 rounded-full',
+                    'bg-(--text-primary) text-(--bg-base) px-4 py-1.5 text-sm font-medium',
+                    'hover:opacity-90 transition-opacity',
+                  )}
+                >
+                  {t('openRoot')}
+                  <ArrowRight size={14} aria-hidden />
+                </Link>
+              </>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Alphabet picker */}
       <div className="rounded-xl border border-(--border) bg-(--bg-card) p-4">
         <AlphabetPicker
           letters={letterList}
-          selected={selectedLetter}
+          buffer={buffer}
+          focal={focal}
           onSelect={handleLetterSelect}
         />
       </div>
 
-      {/* Stats bar */}
-      <div className="flex items-center gap-3 rounded-xl border border-(--border) bg-(--bg-card) px-5 py-3">
-        <span
-          className="text-3xl"
-          lang="ar"
-          dir="rtl"
-          style={{ fontFamily: 'var(--font-arabic-title)', color: 'var(--gold)' }}
-        >
-          {selectedLetter}
-        </span>
-        <div className="flex flex-col">
-          {isPending ? (
-            <span className="flex items-center gap-2 text-sm text-(--text-muted)">
-              <Loader2 size={14} className="animate-spin" aria-hidden />
-              {t('common:loading')}
-            </span>
-          ) : isError ? (
-            <span className="text-sm text-(--danger)">{t('common:error')}</span>
-          ) : (
-            <>
-              <span className="text-lg font-semibold text-(--text-primary)">
-                {t('rootCount', { count: totalRoots })}
+      {/* Stats bar — only when focal letter exists */}
+      {focal && (
+        <div className="flex items-center gap-3 rounded-xl border border-(--border) bg-(--bg-card) px-5 py-3">
+          <span
+            className="text-3xl"
+            lang="ar"
+            dir="rtl"
+            style={{ fontFamily: 'var(--font-arabic-title)', color: 'var(--gold-accent)' }}
+          >
+            {focal}
+          </span>
+          <div className="flex flex-col">
+            {isPending ? (
+              <span className="flex items-center gap-2 text-sm text-(--text-muted)">
+                <Loader2 size={14} className="animate-spin" aria-hidden />
+                {t('common:loading')}
               </span>
-              {data && data.cooccurrences.length > 0 && (
-                <span className="text-xs text-(--text-muted)">
-                  {t('neighbourCount', { count: data.cooccurrences.length })}
+            ) : isError ? (
+              <span className="text-sm text-(--danger)">{t('common:error')}</span>
+            ) : (
+              <>
+                <span className="text-lg font-semibold text-(--text-primary)">
+                  {t('rootCount', { count: totalRoots })}
                 </span>
-              )}
-            </>
-          )}
+                {data && data.cooccurrences.length > 0 && (
+                  <span className="text-xs text-(--text-muted)">
+                    {t('neighbourCount', { count: data.cooccurrences.length })}
+                  </span>
+                )}
+              </>
+            )}
+          </div>
         </div>
-      </div>
+      )}
 
-      {/* Viz + side panel — viz is self-square so circles stay circular */}
+      {/* Viz + side panel */}
       <div className="relative overflow-hidden rounded-xl border border-(--border) bg-(--bg-card) p-4">
-        <ConcentricLetters
-          selectedLetter={selectedLetter}
-          data={data ?? null}
-          onLetterSelect={handleLetterSelect}
-          showTooltip={activePanelNode === null}
-          isLoading={isPending}
-        />
+        {focal ? (
+          <ConcentricLetters
+            selectedLetter={focal}
+            data={data ?? null}
+            onLetterSelect={handleLetterSelect}
+            showTooltip={activePanelNode === null}
+            isLoading={isPending}
+          />
+        ) : (
+          <div className="flex h-[420px] flex-col items-center justify-center gap-2 text-center">
+            <span className="text-5xl text-(--text-muted)" aria-hidden>
+              ✦
+            </span>
+            <p className="text-(--text-muted)">{t('buildHint')}</p>
+          </div>
+        )}
 
         <RootSidePanel node={activePanelNode} onClose={() => setActivePanelNode(null)} />
       </div>
 
-      {/* Mobile CTA (sr-accessible note) */}
       <p className="sr-only sm:hidden">{t('mobileHint')}</p>
     </section>
   );

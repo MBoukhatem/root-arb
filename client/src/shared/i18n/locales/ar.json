@@ -269,6 +269,14 @@
     "cooccurrenceCount_two": "تواجدان مشتركان",
     "cooccurrenceCount_few": "{{count}} تواجدات مشتركة",
     "cooccurrenceCount_many": "{{count}} تواجداً مشتركاً",
-    "cooccurrenceCount_other": "{{count}} تواجد مشترك"
+    "cooccurrenceCount_other": "{{count}} تواجد مشترك",
+    "buildTitle": "ركّب جذراً ثلاثياً",
+    "buildHint": "اختر حرفاً ثم اثنين ثم ثلاثة لتركيب جذر.",
+    "back": "حذف الأخير",
+    "reset": "إعادة",
+    "slot": "الموضع {{n}}",
+    "rootFound": "جذر معروف",
+    "rootNotInDb": "تركيبة غير معروفة: {{letters}}",
+    "openRoot": "فتح الجذر"
   }
 }

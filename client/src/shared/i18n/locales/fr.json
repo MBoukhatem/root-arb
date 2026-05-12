@@ -241,6 +241,14 @@
     "sharedRoots_one": "{{count}} racine partagée",
     "sharedRoots_other": "{{count}} racines partagées",
     "cooccurrenceCount_one": "co-occurrence : {{count}}",
-    "cooccurrenceCount_other": "co-occurrences : {{count}}"
+    "cooccurrenceCount_other": "co-occurrences : {{count}}",
+    "buildTitle": "Construire une racine trilitère",
+    "buildHint": "Choisis 1, 2 puis 3 lettres pour composer une racine.",
+    "back": "Effacer la dernière",
+    "reset": "Réinitialiser",
+    "slot": "Emplacement {{n}}",
+    "rootFound": "Racine répertoriée",
+    "rootNotInDb": "Combinaison inédite : {{letters}}",
+    "openRoot": "Voir la racine"
   }
 }
