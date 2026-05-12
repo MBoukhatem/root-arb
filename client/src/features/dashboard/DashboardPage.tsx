@@ -1,6 +1,14 @@
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { AlertCircle, Award, BookOpen, CalendarCheck, Flame, GraduationCap } from 'lucide-react';
+import {
+  AlertCircle,
+  Award,
+  BookOpen,
+  CalendarCheck,
+  Flame,
+  GraduationCap,
+  RefreshCw,
+} from 'lucide-react';
 import { useAuth } from '@/features/auth/useAuth';
 import { useProgressStats, useTodayReview } from '@/features/progress/hooks/useProgress';
 import { StatCard } from '@/shared/ui/StatCard';
@@ -15,13 +23,59 @@ export default function DashboardPage() {
   const stats = useProgressStats();
   const today = useTodayReview();
 
+  // #2/#3 null-safe destructuring from server response
+  const totalRootsLearned = stats.data?.totalRootsLearned ?? 0;
+  const totalWordsMastered = stats.data?.totalWordsMastered ?? 0;
+  const streak = stats.data?.streak ?? 0;
+  const activeDays = stats.data?.activeDays ?? 0;
+  const weeklyActivity = stats.data?.weeklyActivity ?? [];
+  const levels = stats.data?.levels ?? {};
+
+  // #8 Global empty state for new users
+  const todayItems = today.data?.rootsToReview ?? [];
+  const isNewUser =
+    !stats.isPending && !today.isPending && totalRootsLearned === 0 && todayItems.length === 0;
+
+  if (isNewUser) {
+    return (
+      <section className="mx-auto flex w-full max-w-6xl flex-col gap-8">
+        <EmptyState
+          icon={<BookOpen size={48} aria-hidden />}
+          title={t('dashboard:emptyTitle')}
+          description={t('dashboard:emptyDescription')}
+          action={
+            <Link to="/explore">
+              <Button>{t('dashboard:startStudying')}</Button>
+            </Link>
+          }
+          className="py-24"
+        />
+      </section>
+    );
+  }
+
   return (
     <section className="mx-auto flex w-full max-w-6xl flex-col gap-8">
-      <header className="flex flex-col gap-1">
-        <h1 className="text-3xl font-bold text-(--text-primary)">
-          {t('dashboard:welcome', { name: user?.username ?? '' })}
-        </h1>
-        <p className="text-(--text-muted)">{t('dashboard:welcomeSubtitle')}</p>
+      <header className="flex items-center justify-between gap-1">
+        <div className="flex flex-col gap-1">
+          <h1 className="text-3xl font-bold text-(--text-primary)">
+            {t('dashboard:welcome', { name: user?.username ?? '' })}
+          </h1>
+          <p className="text-(--text-muted)">{t('dashboard:welcomeSubtitle')}</p>
+        </div>
+        {/* #9 Manual refresh button */}
+        <button
+          type="button"
+          onClick={() => {
+            void stats.refetch();
+            void today.refetch();
+          }}
+          className="rounded-lg border border-(--border) bg-(--bg-card) p-2 text-(--text-muted) hover:text-(--text-primary) transition-colors"
+          title={t('common:refresh')}
+          aria-label={t('common:refresh')}
+        >
+          <RefreshCw size={16} aria-hidden />
+        </button>
       </header>
 
       {stats.isPending ? (
@@ -36,42 +90,54 @@ export default function DashboardPage() {
           title={t('common:error')}
           action={<Button onClick={() => void stats.refetch()}>{t('common:retry')}</Button>}
         />
-      ) : stats.data ? (
+      ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {/* #5 streak uses stats.streak with animation from StatCard */}
           <StatCard
             icon={<BookOpen size={18} aria-hidden />}
             label={t('dashboard:rootsLearned')}
-            value={stats.data.totalRootsLearned}
+            value={totalRootsLearned}
             tone="verb"
           />
           <StatCard
             icon={<Award size={18} aria-hidden />}
             label={t('dashboard:wordsMastered')}
-            value={stats.data.totalWordsMastered}
+            value={totalWordsMastered}
             tone="noun"
           />
           <StatCard
             icon={<Flame size={18} aria-hidden />}
             label={t('dashboard:streak')}
-            value={stats.data.streak}
+            value={streak}
             suffix={t('dashboard:daysSuffix')}
             tone="adjective"
           />
           <StatCard
             icon={<CalendarCheck size={18} aria-hidden />}
             label={t('dashboard:activeDays')}
-            value={stats.data.activeDays}
+            value={activeDays}
             tone="masdar"
           />
         </div>
-      ) : null}
+      )}
 
-      {stats.data ? (
+      {/* #2/#3 WeeklyBars null-safe */}
+      {!stats.isPending && !stats.isError ? (
         <section className="rounded-xl border border-(--border) bg-(--bg-card) p-6">
           <h2 className="mb-4 text-lg font-semibold text-(--text-primary)">
             {t('dashboard:weeklyActivity')}
           </h2>
-          <WeeklyBars data={stats.data.weeklyActivity} />
+          <WeeklyBars data={weeklyActivity} />
+        </section>
+      ) : null}
+
+      {/* #6 Mastery distribution */}
+      {!stats.isPending && !stats.isError && Object.keys(levels).length > 0 ? (
+        <section className="rounded-xl border border-(--border) bg-(--bg-card) p-6">
+          <h2 className="mb-4 text-lg font-semibold text-(--text-primary)">
+            {t('dashboard:masteryDistribution')}
+          </h2>
+          <MasteryBars levels={levels} />
         </section>
       ) : null}
 
@@ -96,7 +162,7 @@ export default function DashboardPage() {
             title={t('common:error')}
             action={<Button onClick={() => void today.refetch()}>{t('common:retry')}</Button>}
           />
-        ) : today.data && today.data.rootsToReview.length === 0 ? (
+        ) : todayItems.length === 0 ? (
           <EmptyState
             icon={<Award size={32} aria-hidden />}
             title={t('dashboard:allCaughtUpTitle')}
@@ -109,7 +175,7 @@ export default function DashboardPage() {
           />
         ) : (
           <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
-            {today.data?.rootsToReview.map(({ root }) => (
+            {todayItems.map(({ root }) => (
               <Link
                 key={root._id}
                 to={`/roots/${encodeURIComponent(root._id)}`}
@@ -133,11 +199,16 @@ export default function DashboardPage() {
   );
 }
 
-function WeeklyBars({ data }: { data: { date: string; count: number }[] }) {
-  const max = data.reduce((m, p) => Math.max(m, p.count), 0) || 1;
+// #2/#3 WeeklyBars — null-safe, renders EmptyState if no data
+function WeeklyBars({ data }: { data?: { date: string; count: number }[] }) {
+  const safe = data ?? [];
+  if (safe.length === 0) {
+    return <p className="text-center text-sm text-(--text-muted)">—</p>;
+  }
+  const max = safe.reduce((m, p) => Math.max(m, p.count), 0) || 1;
   return (
     <div className="flex h-32 items-end gap-2">
-      {data.map((p) => {
+      {safe.map((p) => {
         const height = Math.max(4, Math.round((p.count / max) * 100));
         return (
           <div
@@ -151,6 +222,42 @@ function WeeklyBars({ data }: { data: { date: string; count: number }[] }) {
               aria-hidden
             />
             <span className="text-[10px] text-(--text-muted)">{p.date.slice(5)}</span>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+// #6 Mastery distribution bars (levels 0-5) colored via CSS vars
+const LEVEL_COLORS: Record<number, string> = {
+  0: 'bg-(--cat-derive-fill)/50',
+  1: 'bg-(--cat-masdar-fill)/60',
+  2: 'bg-(--cat-adjective-fill)/70',
+  3: 'bg-(--cat-noun-fill)/80',
+  4: 'bg-(--cat-verb-fill)/80',
+  5: 'bg-(--cat-verb-fill)',
+};
+
+function MasteryBars({ levels }: { levels: Record<number, number> }) {
+  const entries = [0, 1, 2, 3, 4, 5].map((lvl) => ({ lvl, count: levels[lvl] ?? 0 }));
+  const max = Math.max(...entries.map((e) => e.count)) || 1;
+  return (
+    <div className="flex h-24 items-end gap-3">
+      {entries.map(({ lvl, count }) => {
+        const height = Math.max(4, Math.round((count / max) * 100));
+        return (
+          <div
+            key={lvl}
+            className="flex flex-1 flex-col items-center gap-1"
+            title={`Niveau ${lvl}: ${count}`}
+          >
+            <div
+              className={`w-full rounded-t transition-all ${LEVEL_COLORS[lvl] ?? ''}`}
+              style={{ height: `${height}%` }}
+              aria-hidden
+            />
+            <span className="text-[10px] text-(--text-muted)">{lvl}</span>
           </div>
         );
       })}

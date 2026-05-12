@@ -41,14 +41,15 @@ export function Pagination({
 
   return (
     <nav
-      aria-label="pagination"
+      aria-label={t('common:pagination')}
       className={clsx('flex items-center justify-center gap-1', className)}
     >
+      {/* Fix #4: Touch targets min 44×44 on mobile, 36×36 on sm+ */}
       <button
         type="button"
         onClick={() => onPageChange(page - 1)}
         disabled={isFirst}
-        className="inline-flex h-9 items-center gap-1 rounded-md border border-(--border) bg-(--bg-card) px-3 text-sm disabled:cursor-not-allowed disabled:opacity-50"
+        className="inline-flex min-h-11 items-center gap-1 rounded-md border border-(--border) bg-(--bg-card) px-3 text-sm disabled:cursor-not-allowed disabled:opacity-50 sm:min-h-9"
       >
         <DirectionalIcon name="chevron-prev" size={16} aria-hidden />
         <span>{t('common:previous')}</span>
@@ -60,7 +61,7 @@ export function Pagination({
           onClick={() => onPageChange(p)}
           aria-current={p === page ? 'page' : undefined}
           className={clsx(
-            'h-9 min-w-9 rounded-md border px-2 text-sm font-medium',
+            'min-h-11 min-w-11 rounded-md border px-2 text-sm font-medium sm:min-h-9 sm:min-w-9',
             p === page
               ? 'border-(--cat-verb-fill) bg-(--cat-verb-fill) text-white'
               : 'border-(--border) bg-(--bg-card) text-(--text-secondary) hover:text-(--text-primary)',
@@ -73,7 +74,7 @@ export function Pagination({
         type="button"
         onClick={() => onPageChange(page + 1)}
         disabled={isLast}
-        className="inline-flex h-9 items-center gap-1 rounded-md border border-(--border) bg-(--bg-card) px-3 text-sm disabled:cursor-not-allowed disabled:opacity-50"
+        className="inline-flex min-h-11 items-center gap-1 rounded-md border border-(--border) bg-(--bg-card) px-3 text-sm disabled:cursor-not-allowed disabled:opacity-50 sm:min-h-9"
       >
         <span>{t('common:next')}</span>
         <DirectionalIcon name="chevron-next" size={16} aria-hidden />

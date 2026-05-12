@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, Navigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { AlertCircle, BookOpen, Check, FolderPlus, Layers, Sparkles, Star } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -12,7 +12,7 @@ import { WordCard } from '@/shared/ui/WordCard';
 import { SemanticFieldBadge } from '@/shared/ui/SemanticFieldBadge';
 import { useAuth } from '@/features/auth/useAuth';
 import { useRecordReview } from '@/features/progress/hooks/useProgress';
-import { useLanguage } from '@/shared/i18n/LanguageContext';
+import { useLanguage } from '@/shared/i18n/useLanguage';
 import { RootTree, type RootTreeWord, type GrammaticalCategory as VizCategory } from '@/shared/viz';
 import { GRAMMATICAL_CATEGORIES, type GrammaticalCategory, type Word } from '@/types/models';
 
@@ -47,7 +47,7 @@ export default function RootDetailPage() {
   const { t } = useTranslation(['roots', 'common']);
   const { user } = useAuth();
   const { lang } = useLanguage();
-  const { data, isPending, isError, refetch } = useRoot(id);
+  const { data, isPending, isError, error, refetch } = useRoot(id);
   const recordReview = useRecordReview();
   const [activeCategory, setActiveCategory] = useState<GrammaticalCategory | 'all'>('all');
 
@@ -62,6 +62,9 @@ export default function RootDetailPage() {
     return map;
   }, [data]);
 
+  // Guard: no id in URL params → redirect to explore (hooks done above).
+  if (!id) return <Navigate to="/explore" replace />;
+
   if (isPending) {
     return (
       <section className="mx-auto flex w-full max-w-6xl flex-col gap-6 p-6">
@@ -72,12 +75,21 @@ export default function RootDetailPage() {
   }
 
   if (isError || !data) {
+    const is404 = (error as { response?: { status?: number } } | null)?.response?.status === 404;
     return (
       <section className="mx-auto flex w-full max-w-3xl p-6">
         <EmptyState
           icon={<AlertCircle size={32} aria-hidden />}
-          title={t('common:error')}
-          action={<Button onClick={() => void refetch()}>{t('common:retry')}</Button>}
+          title={is404 ? t('roots:rootNotFound') : t('common:error')}
+          action={
+            is404 ? (
+              <Link to="/explore">
+                <Button variant="primary">{t('roots:backToExplore')}</Button>
+              </Link>
+            ) : (
+              <Button onClick={() => void refetch()}>{t('common:retry')}</Button>
+            )
+          }
         />
       </section>
     );

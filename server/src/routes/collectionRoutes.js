@@ -25,4 +25,11 @@ router.delete(
   collectionController.remove,
 );
 
+router.put(
+  '/:id/roots/order',
+  validate(collectionValidation.idParam, 'params'),
+  validate(collectionValidation.reorderRoots, 'body'),
+  collectionController.reorderRoots,
+);
+
 module.exports = router;

@@ -19,7 +19,7 @@ npm install                      # installe les 3 workspaces
 npm run dev                      # lance backend (:5000) + frontend en parallèle
 ```
 
-C'est tout. La première exécution télécharge un binaire MongoDB 7 (~80 Mo, ~1-2 min, mis en cache). Au boot, la base in-memory est auto-seedée avec 8 racines + 47 mots vocalisés FR/EN/AR + 1 compte admin.
+C'est tout. La première exécution télécharge un binaire MongoDB 7 (~80 Mo, ~1-2 min, mis en cache). Au boot, la base in-memory est auto-seedée avec 16 racines + 87 mots vocalisés FR/EN/AR + 1 compte admin.
 
 - **Backend** : http://localhost:5000
 - **Frontend** : http://localhost:5173 (Vite fallback automatique sur 5174/5175 si le port est occupé — CORS dev est élargi pour accepter 5170-5199)
@@ -37,12 +37,13 @@ Tu peux aussi t'inscrire via `/register`.
 1. **Landing page** `/` — démo statique de l'arbre radial D3 de la racine ك-ت-ب déployée en 7 branches colorées par catégorie grammaticale.
 2. **Explore** `/explore` (public) — catalogue des 8 racines avec filtres champ sémantique + difficulté + recherche.
 3. **Détail racine** `/roots/:id` (public) — arbre D3 interactif + liste des mots dérivés groupés par catégorie.
-4. **Inscription / Connexion** `/register`, `/login`.
-5. **Dashboard** `/dashboard` (protégé) — stats animées (compteurs, streak).
-6. **Apprentissage** `/learn` (protégé) — flashcards SM-2 simplifié (interval 1/3/7/14/30/90 j).
-7. **Constellation** `/constellation` (protégé) — force-directed graph D3 des racines apprises.
-8. **Notes** `/notes` & **Collections** `/collections` (protégés) — CRUD complet.
-9. **Switch FR/EN/AR** + dark mode via la navbar.
+4. **Lettres** `/letters` (public) — visualisation concentriques des co-occurrences de lettres arabes avec détails des racines partagées.
+5. **Inscription / Connexion** `/register`, `/login`.
+6. **Dashboard** `/dashboard` (protégé) — stats animées (compteurs, streak).
+7. **Apprentissage** `/learn` (protégé) — flashcards SM-2 simplifié (interval 1/3/7/14/30/90 j).
+8. **Constellation** `/constellation` (protégé) — force-directed graph D3 des racines apprises.
+9. **Notes** `/notes` & **Collections** `/collections` (protégés) — CRUD complet.
+10. **Switch FR/EN/AR** + dark mode via la navbar.
 
 ---
 
@@ -152,6 +153,8 @@ GET  /api/roots/essential
 GET  /api/roots/:id                       { root, words[] }
 GET  /api/words/:id
 GET  /api/words/by-root/:rootId
+GET  /api/letters                         liste 28 lettres arabes + count
+GET  /api/letters/:letter/cooccurrences   co-occurrences d'une lettre dans les racines
 POST /api/auth/register                   { email, password, username, … } → { user, accessToken }
 POST /api/auth/login                      { email, password } → { user, accessToken }
 ```
@@ -203,16 +206,29 @@ Voir [`design/round3/agent_03_database_designer.md`](./design/round3/agent_03_da
 
 - **JWT Bearer 24h** + `tokenVersion` (révocation centralisée à logout/changePassword)
 - **bcrypt 10-12 rounds** (paramétré via `BCRYPT_ROUNDS`)
-- **helmet** + **CORS** whitelist + **express-mongo-sanitize** + **hpp** + **sanitize-html** sur contenu utilisateur
+- **helmet** + **CORS** whitelist + **express-mongo-sanitize** + **hpp** + **sanitize-html** sur contenu utilisateur (Notes, Collections)
 - **Rate limiters** : `/auth/login` 5/15min, `/auth/register` 3/h, global 100/min
 - `password: { select: false }` + `tokenVersion: { select: false }`
 - Refresh tokens (NICE P1) : non implémentés MVP
+
+### Couverture i18n
+
+- **FR/EN** : chrome 100% (MUST)
+- **AR** : chrome 100% + RTL technique 100% (MUST) — i18n complète avec 6 formes plurielles ICU, pre-paint sync `<html dir>`
 
 ---
 
 ## Méthodologie
 
-Le projet a été conçu en 3 rounds de 10 agents experts (Backend, Frontend, DB, UX, D3, Security, DevOps, i18n/A11y, Data, Tech Lead) qui se sont critiqués mutuellement avant de produire 30 fiches de conception consolidées dans [`PLAN_FINAL.md`](./PLAN_FINAL.md).
+Le projet a été conçu en **3 rounds de 10 agents experts** (Backend, Frontend, DB, UX, D3, Security, DevOps, i18n/A11y, Data, Tech Lead) qui se sont critiqués mutuellement avant de produire 30 fiches de conception consolidées dans [`PLAN_FINAL.md`](./PLAN_FINAL.md).
+
+Après conception, **3 vagues d'implémentation agentique** (10 agents chacune) ont exécuté et itéré le projet :
+
+- **Wave 1** : Audit complet + validation design (130+ findings)
+- **Wave 2** : Implémentation core (SM-2 réparé, i18n AR 100%, ConcentricLetters viz, +8 racines → 16 total, +40 mots → 87 total)
+- **Wave 3** : Polish + QA finale
+
+Voir [`design/CHANGELOG_WAVES.md`](./design/CHANGELOG_WAVES.md) pour le détail complet par wave.
 
 ---
 

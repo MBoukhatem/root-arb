@@ -34,4 +34,8 @@ const listQuery = Joi.object({
   isPublic: Joi.boolean().optional(),
 });
 
-module.exports = { create, update, idParam, listQuery };
+const reorderRoots = Joi.object({
+  rootIds: Joi.array().items(Joi.string().hex().length(24)).min(0).required(),
+});
+
+module.exports = { create, update, idParam, listQuery, reorderRoots };

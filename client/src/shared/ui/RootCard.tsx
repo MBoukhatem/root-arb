@@ -5,7 +5,7 @@ import { BookOpen, Star } from 'lucide-react';
 import { ArabicText } from './ArabicText';
 import { SemanticFieldBadge } from './SemanticFieldBadge';
 import type { Root } from '@/types/models';
-import { useLanguage } from '@/shared/i18n/LanguageContext';
+import { useLanguage } from '@/shared/i18n/useLanguage';
 
 type RootCardProps = {
   root: Root;
@@ -41,7 +41,10 @@ export function RootCard({ root, masteryLevel, className }: RootCardProps) {
         </ArabicText>
         <div className="flex flex-col items-end gap-1">
           {root.isEssential ? (
-            <Star size={14} className="text-(--gold)" aria-label={t('roots:isEssential')} />
+            <span>
+              <Star size={14} className="text-(--gold)" aria-hidden />
+              <span className="sr-only">{t('roots:isEssential')}</span>
+            </span>
           ) : null}
           {masteryLevel != null ? (
             <span className="rounded-full bg-(--cat-noun-fill)/15 px-2 py-0.5 text-xs font-medium text-(--cat-noun-ink)">

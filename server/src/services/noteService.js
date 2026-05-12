@@ -1,9 +1,19 @@
 'use strict';
 
 const mongoose = require('mongoose');
+const sanitizeHtml = require('sanitize-html');
 const Note = require('../models/Note');
 const ApiError = require('../utils/ApiError');
 const { parsePagination, buildPagination } = require('../utils/pagination');
+
+const SANITIZE_OPTS = {
+  allowedTags: ['b', 'i', 'em', 'strong', 'a', 'code', 'p', 'br'],
+  allowedAttributes: { a: ['href'] },
+};
+
+function sanitizeContent(content) {
+  return sanitizeHtml(content, SANITIZE_OPTS);
+}
 
 async function list(userId, query) {
   const { page, limit, skip } = parsePagination(query);
@@ -41,14 +51,22 @@ async function getById(id, userId) {
 }
 
 async function create(userId, payload) {
-  const note = await Note.create({ ...payload, user: userId });
+  const sanitized =
+    payload.content !== undefined
+      ? { ...payload, content: sanitizeContent(payload.content) }
+      : payload;
+  const note = await Note.create({ ...sanitized, user: userId });
   return note.toJSON();
 }
 
 async function update(userId, id, payload) {
   const note = await Note.findOne({ _id: id, user: userId });
   if (!note) throw ApiError.notFound('Note not found', undefined, 'NOTE_NOT_FOUND');
-  Object.assign(note, payload);
+  const sanitized =
+    payload.content !== undefined
+      ? { ...payload, content: sanitizeContent(payload.content) }
+      : payload;
+  Object.assign(note, sanitized);
   await note.save();
   return note.toJSON();
 }

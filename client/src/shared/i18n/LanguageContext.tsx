@@ -1,12 +1,5 @@
-import {
-  createContext,
-  use,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-  type ReactNode,
-} from 'react';
+// @refresh reset
+import { createContext, useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { SupportedLanguage } from '@/shared/lib/env';
 
@@ -19,7 +12,8 @@ type LanguageContextValue = {
   setLang: (lang: SupportedLanguage) => void;
 };
 
-const LanguageContext = createContext<LanguageContextValue | null>(null);
+// eslint-disable-next-line react-refresh/only-export-components
+export const LanguageContext = createContext<LanguageContextValue | null>(null);
 
 function dirFor(lang: SupportedLanguage): Direction {
   return lang === 'ar' ? 'rtl' : 'ltr';
@@ -70,12 +64,4 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   );
 
   return <LanguageContext value={value}>{children}</LanguageContext>;
-}
-
-export function useLanguage(): LanguageContextValue {
-  const ctx = use(LanguageContext);
-  if (!ctx) {
-    throw new Error('useLanguage must be used within <LanguageProvider>');
-  }
-  return ctx;
 }

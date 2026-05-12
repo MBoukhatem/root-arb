@@ -29,7 +29,14 @@ const GRAMMATICAL_CATEGORIES = Object.freeze([
   'participle',
 ]);
 
-const NOTE_TYPES = Object.freeze(['mnemonic', 'context', 'cultural', 'grammar', 'general']);
+const NOTE_TYPES = Object.freeze([
+  'mnemonic',
+  'context',
+  'cultural',
+  'grammar',
+  'general',
+  'personal',
+]);
 const NOTE_TARGET_TYPES = Object.freeze(['Root', 'Word']);
 const MASTERY_LEVELS = Object.freeze([0, 1, 2, 3, 4, 5]);
 

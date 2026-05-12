@@ -11,14 +11,11 @@ import { DEMO_ROOT_KTB } from './_demoData';
 export default function LandingPage() {
   const { t } = useTranslation(['landing', 'common', 'nav']);
 
-  const handleDemoWordClick = useCallback((wordId: string) => {
-    // No routing wired yet on the public demo; log for now.
-    // eslint-disable-next-line no-console
-    console.info('[LandingPage demo] word selected:', wordId);
-  }, []);
+  // Routing to word detail not yet wired in the public demo.
+  const handleDemoWordClick = useCallback((_wordId: string) => void _wordId, []);
 
   return (
-    <main id="main" className="flex flex-col">
+    <div className="flex flex-col">
       {/* Hero */}
       <section className="mx-auto flex w-full max-w-5xl flex-col items-center gap-6 px-6 py-16 text-center">
         <motion.h1
@@ -48,10 +45,10 @@ export default function LandingPage() {
           </Link>
         </div>
         <div className="pt-2 text-(--text-muted)">
-          <ArabicText as="inline" unvocalized="ك ت ب" className="text-2xl">
+          <ArabicText as="inline" unvocalized="كتب" className="text-2xl">
             كَتَبَ
           </ArabicText>
-          <span className="ms-2">{t('landing:demoSubtitle')}</span>
+          <span className="ms-2">{t('landing:heroEyebrow')}</span>
         </div>
       </section>
 
@@ -88,7 +85,6 @@ export default function LandingPage() {
           <h2 id="demo-tree-heading" className="text-2xl font-semibold text-(--text-primary)">
             {t('landing:demoTitle')}
           </h2>
-          <p className="text-(--text-secondary)">{t('landing:demoSubtitle')}</p>
         </div>
         <div className="rounded-2xl border border-(--border) bg-(--bg-card) p-6">
           <RootTree
@@ -114,7 +110,7 @@ export default function LandingPage() {
           </a>
         </div>
       </footer>
-    </main>
+    </div>
   );
 }
 

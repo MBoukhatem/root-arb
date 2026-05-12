@@ -22,6 +22,7 @@ void i18n
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
+    debug: !import.meta.env.PROD,
     fallbackLng: 'fr',
     lng: env.DEFAULT_LANGUAGE,
     supportedLngs: SUPPORTED_LANGS as unknown as string[],
@@ -44,7 +45,7 @@ void i18n
       escapeValue: false,
     },
     detection: {
-      order: ['localStorage', 'navigator', 'htmlTag'],
+      order: ['querystring', 'localStorage', 'navigator', 'htmlTag'],
       caches: ['localStorage'],
       lookupLocalStorage: 'art_lang',
     },

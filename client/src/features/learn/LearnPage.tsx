@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { AnimatePresence, motion } from 'framer-motion';
 import confetti from 'canvas-confetti';
+import toast from 'react-hot-toast';
 import { Award, RotateCcw, AlertCircle } from 'lucide-react';
 import { useTodayReview, useRecordReview } from '@/features/progress/hooks/useProgress';
 import { ArabicText } from '@/shared/ui/ArabicText';
@@ -79,6 +80,8 @@ export default function LearnPage() {
         <EmptyState
           icon={<AlertCircle size={32} aria-hidden />}
           title={t('common:error')}
+          // #15 show actual error message
+          description={review.error instanceof Error ? review.error.message : undefined}
           action={<Button onClick={() => void review.refetch()}>{t('common:retry')}</Button>}
         />
       </section>
@@ -130,7 +133,26 @@ export default function LearnPage() {
 
   function handleRate(rating: ReviewRating) {
     if (!current) return;
-    recordReview.mutate({ rootId: current.root._id, rating });
+    const rootId = current.root._id;
+    // #14 progress bar increments at handleRate, not at flip
+    recordReview.mutate(
+      { rootId, rating },
+      {
+        // #12 SM-2 feedback toast
+        onSuccess: (result) => {
+          const level = result?.masteryLevel;
+          const nextDate = result?.nextReviewDate
+            ? new Date(result.nextReviewDate).toLocaleDateString('fr-FR')
+            : null;
+          if (level != null && nextDate) {
+            toast.success(`Niveau ${level} → revoir le ${nextDate}`, { duration: 3000 });
+          }
+        },
+        onError: (err) => {
+          toast.error(err instanceof Error ? err.message : t('common:error'));
+        },
+      },
+    );
     setFlipped(false);
     if (index + 1 >= items.length) {
       setCompleted(true);
@@ -138,6 +160,15 @@ export default function LearnPage() {
       setIndex((i) => i + 1);
     }
   }
+
+  // #11 tashkil: use first vocalized word if available, fallback to root.letters
+  const displayArabic =
+    (current.root as unknown as { words?: Array<{ arabicWord?: string }> }).words?.[0]
+      ?.arabicWord || current.root.letters;
+  const isVocalized = displayArabic !== current.root.letters;
+
+  // #14 progress increments at rating, not at flip — use index only
+  const progressPct = (index / items.length) * 100;
 
   return (
     <section className="mx-auto flex w-full max-w-2xl flex-col gap-6">
@@ -148,46 +179,55 @@ export default function LearnPage() {
         </span>
       </header>
 
+      {/* #14 progress bar increments at handleRate */}
       <div className="h-2 w-full overflow-hidden rounded-full bg-(--bg-card)">
         <div
           className="h-full bg-(--cat-verb-fill) transition-all"
-          style={{ width: `${((index + (flipped ? 0.5 : 0)) / items.length) * 100}%` }}
+          style={{ width: `${progressPct}%` }}
           aria-hidden
         />
       </div>
 
       <AnimatePresence mode="wait">
-        <motion.button
-          key={current.root._id + (flipped ? '-back' : '-front')}
-          type="button"
-          onClick={() => setFlipped((f) => !f)}
-          initial={{ rotateY: flipped ? -90 : 90, opacity: 0 }}
-          animate={{ rotateY: 0, opacity: 1 }}
-          exit={{ rotateY: flipped ? 90 : -90, opacity: 0 }}
-          transition={{ duration: 0.3 }}
-          className="flex min-h-[280px] w-full flex-col items-center justify-center gap-4 rounded-2xl border border-(--border) bg-(--bg-card) p-8 text-center"
-          aria-label={flipped ? t('learn:hideAnswer') : t('learn:revealAnswer')}
-        >
-          {!flipped ? (
-            <>
-              <ArabicText
-                as="title"
-                unvocalized={current.root.letters}
-                className="text-[clamp(56px,8vw,80px)]"
-              >
-                {current.root.letters}
-              </ArabicText>
-              <p className="font-mono text-(--text-muted)">{current.root.transliteration}</p>
-              <span className="text-sm text-(--text-muted)">{t('learn:tapToReveal')}</span>
-            </>
-          ) : (
-            <>
-              <p className="text-2xl text-(--text-primary)">{current.root.coreMeaning.fr}</p>
-              <p className="text-base text-(--text-muted)">{current.root.coreMeaning.en}</p>
-              <SemanticFieldBadge field={current.root.semanticField} />
-            </>
-          )}
-        </motion.button>
+        {/* #13 Flip 3D perspective wrapper */}
+        <div style={{ perspective: 1000 }}>
+          <motion.button
+            key={current.root._id + (flipped ? '-back' : '-front')}
+            type="button"
+            onClick={() => setFlipped((f) => !f)}
+            initial={{ rotateY: flipped ? -90 : 90, opacity: 0 }}
+            animate={{ rotateY: 0, opacity: 1 }}
+            exit={{ rotateY: flipped ? 90 : -90, opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            style={{ transformStyle: 'preserve-3d' }}
+            className="flex min-h-[280px] w-full flex-col items-center justify-center gap-4 rounded-2xl border border-(--border) bg-(--bg-card) p-8 text-center"
+            aria-label={flipped ? t('learn:hideAnswer') : t('learn:revealAnswer')}
+          >
+            {!flipped ? (
+              <>
+                {/* #11 show vocalized word if available */}
+                <ArabicText
+                  as="title"
+                  unvocalized={current.root.letters}
+                  className="text-[clamp(56px,8vw,80px)]"
+                >
+                  {displayArabic}
+                </ArabicText>
+                {isVocalized && (
+                  <p className="text-sm text-(--text-muted)">{current.root.letters}</p>
+                )}
+                <p className="font-mono text-(--text-muted)">{current.root.transliteration}</p>
+                <span className="text-sm text-(--text-muted)">{t('learn:tapToReveal')}</span>
+              </>
+            ) : (
+              <>
+                <p className="text-2xl text-(--text-primary)">{current.root.coreMeaning.fr}</p>
+                <p className="text-base text-(--text-muted)">{current.root.coreMeaning.en}</p>
+                <SemanticFieldBadge field={current.root.semanticField} />
+              </>
+            )}
+          </motion.button>
+        </div>
       </AnimatePresence>
 
       <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">

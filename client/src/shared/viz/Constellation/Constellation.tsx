@@ -1,7 +1,7 @@
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { select } from 'd3-selection';
 import { drag, type D3DragEvent } from 'd3-drag';
-import { zoom, type D3ZoomEvent } from 'd3-zoom';
+import { zoom, zoomIdentity, type D3ZoomEvent } from 'd3-zoom';
 import type { Simulation } from 'd3-force';
 import clsx from 'clsx';
 import { useResizeObserver } from '../shared/useResizeObserver';
@@ -105,25 +105,23 @@ function ConstellationSvg({
 
       const merged = root.select<SVGGElement>('g.nodes').selectAll<SVGGElement, SimNode>('g.node');
 
-      // Drag (desktop only)
-      if (window.matchMedia('(pointer:fine)').matches) {
-        const dragBehavior = drag<SVGGElement, SimNode>()
-          .on('start', (event: D3DragEvent<SVGGElement, SimNode, SimNode>, d) => {
-            if (!event.active) sim.alphaTarget(0.3).restart();
-            d.fx = d.x ?? 0;
-            d.fy = d.y ?? 0;
-          })
-          .on('drag', (event, d) => {
-            d.fx = event.x;
-            d.fy = event.y;
-          })
-          .on('end', (event, d) => {
-            if (!event.active) sim.alphaTarget(0);
-            d.fx = null;
-            d.fy = null;
-          });
-        merged.call(dragBehavior);
-      }
+      // Drag — activate on all pointer types (touch-action:none handles scroll prevention)
+      const dragBehavior = drag<SVGGElement, SimNode>()
+        .on('start', (event: D3DragEvent<SVGGElement, SimNode, SimNode>, d) => {
+          if (!event.active) sim.alphaTarget(0.3).restart();
+          d.fx = d.x ?? 0;
+          d.fy = d.y ?? 0;
+        })
+        .on('drag', (event, d) => {
+          d.fx = event.x;
+          d.fy = event.y;
+        })
+        .on('end', (event, d) => {
+          if (!event.active) sim.alphaTarget(0);
+          d.fx = null;
+          d.fy = null;
+        });
+      merged.call(dragBehavior);
 
       // Mouse + click handlers
       merged
@@ -138,13 +136,18 @@ function ConstellationSvg({
           if (onNodeClick) onNodeClick(d.id);
         });
 
-      // Zoom + pan
+      // Zoom + pan — init to identity to prevent drift on remount (#fix-1)
       const zoomBehavior = zoom<SVGSVGElement, unknown>()
         .scaleExtent([0.5, 4])
         .on('zoom', (event: D3ZoomEvent<SVGSVGElement, unknown>) => {
+          // Guard: skip programmatic resets to avoid loops (#fix-16)
+          if (!event.sourceEvent) return;
           root.attr('transform', event.transform.toString());
         });
-      select(svg).call(zoomBehavior);
+      const svgSel = select(svg);
+      svgSel.call(zoomBehavior);
+      // Initialise transform so remount doesn't drift
+      svgSel.call(zoomBehavior.transform, zoomIdentity);
     },
     [onNodeClick, setTooltip],
   );
@@ -187,7 +190,7 @@ function ConstellationSvg({
       width="100%"
       height={size.height}
       viewBox={`0 0 ${Math.max(1, size.width)} ${Math.max(1, size.height)}`}
-      style={{ display: 'block', cursor: 'grab' }}
+      style={{ display: 'block', cursor: 'grab', touchAction: 'none' }}
     >
       <g ref={gRef}>
         <g className="links" />
@@ -317,13 +320,17 @@ function ConstellationCanvas({
     canvas.addEventListener('mouseleave', onLeave);
     canvas.addEventListener('click', onClick);
 
+    // Zoom + pan (canvas) — init to identity to prevent drift on remount (#fix-1)
     const zoomBehavior = zoom<HTMLCanvasElement, unknown>()
       .scaleExtent([0.5, 4])
       .on('zoom', (event: D3ZoomEvent<HTMLCanvasElement, unknown>) => {
         transformRef.current = { x: event.transform.x, y: event.transform.y, k: event.transform.k };
         draw();
       });
-    select(canvas).call(zoomBehavior);
+    const canvasSel = select(canvas);
+    canvasSel.call(zoomBehavior);
+    // Initialise transform so remount doesn't drift
+    canvasSel.call(zoomBehavior.transform, zoomIdentity);
 
     return () => {
       canvas.removeEventListener('mousemove', onMove);
@@ -343,6 +350,7 @@ function ConstellationCanvas({
         width: `${size.width}px`,
         height: `${size.height}px`,
         cursor: 'grab',
+        touchAction: 'none',
       }}
     />
   );
@@ -390,7 +398,9 @@ function ConstellationImpl({ nodes, links, onNodeClick, className }: Constellati
           <div className="font-arabic-title text-base" lang="ar" dir="rtl">
             {tooltip.node.letters}
           </div>
-          <div className="italic text-(--text-secondary)">{tooltip.node.transliteration}</div>
+          {tooltip.node.transliteration ? (
+            <div className="italic text-(--text-secondary)">{tooltip.node.transliteration}</div>
+          ) : null}
           <div>Mastery: {tooltip.node.masteryLevel}</div>
         </div>
       )}

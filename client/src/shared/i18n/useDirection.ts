@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { useLanguage } from './LanguageContext';
+import { useLanguage } from './useLanguage';
 
 type Direction = 'ltr' | 'rtl';
 

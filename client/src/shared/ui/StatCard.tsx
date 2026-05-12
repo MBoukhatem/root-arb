@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import clsx from 'clsx';
 
 type StatCardProps = {
@@ -24,26 +24,26 @@ const TONE_BG: Record<NonNullable<StatCardProps['tone']>, string> = {
  * Animation respects prefers-reduced-motion via globals.css (transition off).
  */
 export function StatCard({ icon, label, value, suffix, tone = 'verb', className }: StatCardProps) {
-  const [display, setDisplay] = useState<number | string>(typeof value === 'number' ? 0 : value);
+  // Animated display only for numeric values; string values render directly.
+  const [animatedNum, setAnimatedNum] = useState<number>(typeof value === 'number' ? 0 : 0);
+  const rafRef = useRef<number>(0);
 
   useEffect(() => {
-    if (typeof value !== 'number') {
-      setDisplay(value);
-      return;
-    }
+    if (typeof value !== 'number') return;
     const start = performance.now();
     const duration = 600;
-    let raf = 0;
     const tick = (now: number) => {
       const elapsed = now - start;
       const ratio = Math.min(1, elapsed / duration);
       const eased = 1 - Math.pow(1 - ratio, 3);
-      setDisplay(Math.round(value * eased));
-      if (ratio < 1) raf = requestAnimationFrame(tick);
+      setAnimatedNum(Math.round(value * eased));
+      if (ratio < 1) rafRef.current = requestAnimationFrame(tick);
     };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
+    rafRef.current = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(rafRef.current);
   }, [value]);
+
+  const display = typeof value === 'number' ? animatedNum : value;
 
   return (
     <div

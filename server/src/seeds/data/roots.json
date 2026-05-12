@@ -118,5 +118,133 @@
     "difficulty": 2,
     "isEssential": true,
     "isQuranic": true
+  },
+  {
+    "letters": "ج-ل-س",
+    "transliteration": "j-l-s",
+    "transliterationSimplified": "jls",
+    "coreMeaning": {
+      "fr": "s'asseoir, séance",
+      "en": "to sit, session",
+      "ar": "الجلوس"
+    },
+    "semanticField": "social",
+    "frequency": 70,
+    "difficulty": 2,
+    "isEssential": false,
+    "isQuranic": true,
+    "metadata": { "quranOccurrences": 0, "msaFrequencyRank": null }
+  },
+  {
+    "letters": "ن-ظ-ر",
+    "transliteration": "n-ẓ-r",
+    "transliterationSimplified": "nzr",
+    "coreMeaning": {
+      "fr": "regarder, voir, réfléchir",
+      "en": "to look, see, reflect",
+      "ar": "النظر"
+    },
+    "semanticField": "knowledge",
+    "frequency": 80,
+    "difficulty": 2,
+    "isEssential": false,
+    "isQuranic": true,
+    "metadata": { "quranOccurrences": 0, "msaFrequencyRank": null }
+  },
+  {
+    "letters": "ف-ت-ح",
+    "transliteration": "f-t-ḥ",
+    "transliterationSimplified": "fth",
+    "coreMeaning": {
+      "fr": "ouvrir, conquête",
+      "en": "to open, conquest",
+      "ar": "الفتح"
+    },
+    "semanticField": "action",
+    "frequency": 75,
+    "difficulty": 2,
+    "isEssential": false,
+    "isQuranic": true,
+    "metadata": { "quranOccurrences": 0, "msaFrequencyRank": null }
+  },
+  {
+    "letters": "خ-ر-ج",
+    "transliteration": "kh-r-j",
+    "transliterationSimplified": "khrj",
+    "coreMeaning": {
+      "fr": "sortir, quitter",
+      "en": "to exit, go out",
+      "ar": "الخروج"
+    },
+    "semanticField": "movement",
+    "frequency": 72,
+    "difficulty": 2,
+    "isEssential": false,
+    "isQuranic": true,
+    "metadata": { "quranOccurrences": 0, "msaFrequencyRank": null }
+  },
+  {
+    "letters": "ذ-ه-ب",
+    "transliteration": "dh-h-b",
+    "transliterationSimplified": "dhhb",
+    "coreMeaning": {
+      "fr": "aller, partir",
+      "en": "to go, leave",
+      "ar": "الذهاب"
+    },
+    "semanticField": "movement",
+    "frequency": 78,
+    "difficulty": 2,
+    "isEssential": false,
+    "isQuranic": true,
+    "metadata": { "quranOccurrences": 0, "msaFrequencyRank": null }
+  },
+  {
+    "letters": "ص-ب-ر",
+    "transliteration": "ṣ-b-r",
+    "transliterationSimplified": "sbr",
+    "coreMeaning": {
+      "fr": "patienter, endurer",
+      "en": "to be patient, endure",
+      "ar": "الصبر"
+    },
+    "semanticField": "emotion",
+    "frequency": 76,
+    "difficulty": 2,
+    "isEssential": false,
+    "isQuranic": true,
+    "metadata": { "quranOccurrences": 0, "msaFrequencyRank": null }
+  },
+  {
+    "letters": "ط-ل-ب",
+    "transliteration": "ṭ-l-b",
+    "transliterationSimplified": "tlb",
+    "coreMeaning": {
+      "fr": "demander, chercher, requérir",
+      "en": "to seek, request, demand",
+      "ar": "الطلب"
+    },
+    "semanticField": "action",
+    "frequency": 68,
+    "difficulty": 2,
+    "isEssential": false,
+    "isQuranic": false,
+    "metadata": { "quranOccurrences": 0, "msaFrequencyRank": null }
+  },
+  {
+    "letters": "و-ز-ن",
+    "transliteration": "w-z-n",
+    "transliterationSimplified": "wzn",
+    "coreMeaning": {
+      "fr": "peser, mesurer, équilibre",
+      "en": "to weigh, measure, balance",
+      "ar": "الوزن"
+    },
+    "semanticField": "action",
+    "frequency": 60,
+    "difficulty": 3,
+    "isEssential": false,
+    "isQuranic": true,
+    "metadata": { "quranOccurrences": 0, "msaFrequencyRank": null }
   }
 ]

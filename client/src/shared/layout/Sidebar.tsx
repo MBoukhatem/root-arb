@@ -9,6 +9,7 @@ import {
   NotebookPen,
 } from 'lucide-react';
 import clsx from 'clsx';
+import { FocusTrap } from 'focus-trap-react';
 
 type SidebarProps = {
   open: boolean;
@@ -47,32 +48,47 @@ export function Sidebar({ open, onClose }: SidebarProps) {
       {open ? (
         <button
           type="button"
-          aria-label="Close menu"
+          aria-label={t('nav:closeMenu', 'Fermer le menu')}
           onClick={onClose}
           className="fixed inset-0 z-30 bg-black/40 lg:hidden"
         />
       ) : null}
-      <aside
-        className={clsx(
-          'fixed inset-y-0 start-0 z-40 w-64 transform border-e border-(--border) bg-(--bg-base) p-4 transition-transform lg:static lg:translate-x-0',
-          open ? 'translate-x-0' : '-translate-x-full rtl:translate-x-full lg:translate-x-0',
-        )}
+      {/* Fix #3: FocusTrap wraps the aside on mobile when open.
+          On desktop the aside is static and never traps focus. */}
+      <FocusTrap
+        active={open}
+        focusTrapOptions={{
+          onDeactivate: onClose,
+          escapeDeactivates: true,
+          allowOutsideClick: true,
+          returnFocusOnDeactivate: true,
+        }}
       >
-        <nav className="flex flex-col gap-1">
-          {ITEMS.map(({ to, labelKey, icon: Icon }) => (
-            <NavLink
-              key={to}
-              to={to}
-              className={linkClass}
-              onClick={onClose}
-              end={to === '/dashboard'}
-            >
-              <Icon size={18} aria-hidden />
-              <span>{t(labelKey)}</span>
-            </NavLink>
-          ))}
-        </nav>
-      </aside>
+        <aside
+          role={open ? 'dialog' : undefined}
+          aria-modal={open ? 'true' : undefined}
+          aria-label={open ? t('nav:siteNavigation', 'Navigation principale') : undefined}
+          className={clsx(
+            'fixed inset-y-0 start-0 z-40 w-64 transform border-e border-(--border) bg-(--bg-base) p-4 transition-transform lg:static lg:translate-x-0',
+            open ? 'translate-x-0' : '-translate-x-full rtl:translate-x-full lg:translate-x-0',
+          )}
+        >
+          <nav className="flex flex-col gap-1">
+            {ITEMS.map(({ to, labelKey, icon: Icon }) => (
+              <NavLink
+                key={to}
+                to={to}
+                className={linkClass}
+                onClick={onClose}
+                end={to === '/dashboard'}
+              >
+                <Icon size={18} aria-hidden />
+                <span>{t(labelKey)}</span>
+              </NavLink>
+            ))}
+          </nav>
+        </aside>
+      </FocusTrap>
     </>
   );
 }

@@ -2,11 +2,16 @@
 
 const Joi = require('joi');
 
+const RATING_VALUES = ['failed', 'hard', 'good', 'perfect'];
+
 const recordReview = Joi.object({
   rootId: Joi.string().hex().length(24).required(),
-  success: Joi.boolean().required(),
+  rating: Joi.string()
+    .valid(...RATING_VALUES)
+    .optional(),
+  success: Joi.boolean().optional(),
   wordsLearned: Joi.array().items(Joi.string().hex().length(24)).optional(),
-});
+}).or('rating', 'success');
 
 const update = Joi.object({
   masteryLevel: Joi.number().integer().min(0).max(5).optional(),

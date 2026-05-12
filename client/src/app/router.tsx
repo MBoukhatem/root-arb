@@ -17,7 +17,9 @@ const LearnPage = lazy(() => import('@/features/learn/LearnPage'));
 const ConstellationPage = lazy(() => import('@/features/constellation/ConstellationPage'));
 const NotesPage = lazy(() => import('@/features/notes/NotesPage'));
 const CollectionsPage = lazy(() => import('@/features/collections/CollectionsPage'));
+const CollectionDetailPage = lazy(() => import('@/features/collections/CollectionDetailPage'));
 const ProfilePage = lazy(() => import('@/features/auth/ProfilePage'));
+const LettersPage = lazy(() => import('@/features/letters/LettersPage'));
 
 export function AppRouter() {
   return (
@@ -30,6 +32,7 @@ export function AppRouter() {
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/explore" element={<ExplorePage />} />
           <Route path="/roots/:id" element={<RootDetailPage />} />
+          <Route path="/letters" element={<LettersPage />} />
         </Route>
 
         {/* Protected app layout (Navbar + Sidebar) */}
@@ -40,6 +43,7 @@ export function AppRouter() {
             <Route path="/constellation" element={<ConstellationPage />} />
             <Route path="/notes" element={<NotesPage />} />
             <Route path="/collections" element={<CollectionsPage />} />
+            <Route path="/collections/:id" element={<CollectionDetailPage />} />
             <Route path="/profile" element={<ProfilePage />} />
           </Route>
         </Route>

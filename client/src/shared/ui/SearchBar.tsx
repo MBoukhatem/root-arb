@@ -1,4 +1,4 @@
-import { useEffect, useState, type ChangeEvent } from 'react';
+import { useEffect, useRef, useState, type ChangeEvent } from 'react';
 import { Search, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
@@ -26,18 +26,22 @@ export function SearchBar({
   const isControlled = value !== undefined;
   const [internal, setInternal] = useState<string>(value ?? defaultValue);
   const debounced = useDebounce(internal, delay);
+  const isMounted = useRef(true);
 
-  // Fire change after debounce.
+  // Fire change after debounce, skipping the initial mount to avoid resetting
+  // page=1 on first render when the initial value is already empty.
   useEffect(() => {
+    if (isMounted.current) {
+      isMounted.current = false;
+      return;
+    }
     onChange(debounced);
     // onChange is intentionally omitted — callers re-create it freely.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debounced]);
 
-  // Sync down when used as controlled.
-  useEffect(() => {
-    if (isControlled && value !== undefined) setInternal(value);
-  }, [isControlled, value]);
+  // Sync down when used as controlled: derive directly at render time.
+  const displayValue = isControlled && value !== undefined ? value : internal;
 
   function update(e: ChangeEvent<HTMLInputElement>) {
     setInternal(e.target.value);
@@ -60,13 +64,15 @@ export function SearchBar({
       />
       <input
         type="search"
-        value={internal}
+        value={displayValue}
         onChange={update}
         placeholder={placeholder ?? t('common:search')}
         className="w-full bg-transparent ps-10 pe-10 py-2 text-(--text-primary) placeholder:text-(--text-muted) focus:outline-none"
         aria-label={t('common:search')}
+        enterKeyHint="search"
+        inputMode="search"
       />
-      {internal.length > 0 ? (
+      {displayValue.length > 0 ? (
         <button
           type="button"
           onClick={clear}

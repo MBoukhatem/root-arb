@@ -39,7 +39,14 @@ export type GrammaticalCategory = (typeof GRAMMATICAL_CATEGORIES)[number];
 export const DIFFICULTIES = ['easy', 'medium', 'hard'] as const;
 export type Difficulty = (typeof DIFFICULTIES)[number];
 
-export const NOTE_TYPES = ['mnemonic', 'context', 'cultural', 'grammar', 'general'] as const;
+export const NOTE_TYPES = [
+  'mnemonic',
+  'context',
+  'cultural',
+  'grammar',
+  'general',
+  'personal',
+] as const;
 export type NoteType = (typeof NOTE_TYPES)[number];
 
 export const REVIEW_RATINGS = ['failed', 'hard', 'good', 'perfect'] as const;
@@ -123,7 +130,10 @@ export type Collection = {
   _id: string;
   user: string;
   name: string;
+  slug?: string;
   description?: string;
+  coverColor?: string;
+  /** @deprecated use coverColor */
   color?: string;
   icon?: string;
   roots: string[];
@@ -189,6 +199,8 @@ export type ProgressStats = {
   streak: number;
   activeDays: number;
   weeklyActivity: WeeklyActivityPoint[];
+  /** Distribution of mastery levels 0-5 — key is level, value is count */
+  levels?: Record<number, number>;
 };
 
 export type TodayReview = {

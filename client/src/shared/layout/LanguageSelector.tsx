@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Globe, Check } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
-import { useLanguage } from '@/shared/i18n/LanguageContext';
+import { useLanguage } from '@/shared/i18n/useLanguage';
 import type { SupportedLanguage } from '@/shared/lib/env';
 
 const LANGS: Array<{ code: SupportedLanguage; label: string }> = [
@@ -35,13 +35,14 @@ export function LanguageSelector() {
 
   return (
     <div ref={ref} className="relative">
+      {/* Fix #4 + #10: Touch target min 44×44 on mobile; explicit aria-label for screen readers */}
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        aria-label={t('common:language')}
+        aria-label={t('common:language', 'Changer de langue')}
         aria-haspopup="listbox"
         aria-expanded={open}
-        className="inline-flex h-9 items-center gap-1 rounded-md px-2 text-(--text-secondary) hover:bg-(--bg-card) hover:text-(--text-primary)"
+        className="inline-flex min-h-11 items-center gap-1 rounded-md px-2 text-(--text-secondary) hover:bg-(--bg-card) hover:text-(--text-primary) md:min-h-9"
       >
         <Globe size={18} aria-hidden />
         <span className="text-sm font-medium uppercase">{lang}</span>

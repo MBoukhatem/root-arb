@@ -35,6 +35,7 @@ export default function ExplorePage() {
   const { data, isPending, isError, refetch } = useRoots(query);
 
   function resetFilters() {
+    setSearch('');
     setSemanticField(null);
     setDifficulty(null);
     setIsEssential(null);
@@ -113,14 +114,10 @@ export default function ExplorePage() {
           >
             {t('roots:isQuranic')}
           </FilterPill>
-          {(semanticField || difficulty || isEssential || isQuranic) && (
-            <button
-              type="button"
-              onClick={resetFilters}
-              className="ms-auto text-sm text-(--text-muted) underline hover:text-(--text-primary)"
-            >
+          {(search || semanticField || difficulty || isEssential || isQuranic) && (
+            <Button variant="ghost" size="sm" onClick={resetFilters} className="ms-auto">
               {t('roots:resetFilters')}
-            </button>
+            </Button>
           )}
         </div>
       </div>
@@ -155,7 +152,10 @@ export default function ExplorePage() {
             <Pagination
               page={data.pagination.page}
               totalPages={data.pagination.totalPages}
-              onPageChange={setPage}
+              onPageChange={(p) => {
+                setPage(p);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
               className="pt-4"
             />
           ) : null}

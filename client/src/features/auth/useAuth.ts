@@ -1,3 +1,10 @@
-// Public hook surface for authentication. Wraps AuthContext so feature code
-// imports `@/features/auth/useAuth` rather than the context module directly.
-export { useAuthContext as useAuth } from './AuthContext';
+import { use } from 'react';
+import { AuthContext } from './AuthContext';
+
+export function useAuth() {
+  const ctx = use(AuthContext);
+  if (!ctx) {
+    throw new Error('useAuth must be used within <AuthProvider>');
+  }
+  return ctx;
+}

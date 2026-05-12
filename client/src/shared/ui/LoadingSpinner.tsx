@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+import { useTranslation } from 'react-i18next';
 
 type LoadingSpinnerProps = {
   size?: number;
@@ -10,10 +11,11 @@ type LoadingSpinnerProps = {
  * Lightweight CSS-only spinner. No animation when prefers-reduced-motion.
  */
 export function LoadingSpinner({ size = 24, fullscreen = false, className }: LoadingSpinnerProps) {
+  const { t } = useTranslation('common');
   const spinner = (
     <span
       role="status"
-      aria-label="loading"
+      aria-label={t('loading')}
       className={clsx(
         'inline-block animate-spin rounded-full border-2 border-(--border) border-t-(--focus-ring)',
         className,

@@ -20,7 +20,8 @@
     "theme": "Thème",
     "theme-light": "Clair",
     "theme-dark": "Sombre",
-    "theme-system": "Système"
+    "theme-system": "Système",
+    "pagination": "Navigation entre les pages"
   },
   "nav": {
     "home": "Accueil",
@@ -33,7 +34,10 @@
     "profile": "Profil",
     "login": "Connexion",
     "register": "Inscription",
-    "logout": "Déconnexion"
+    "logout": "Déconnexion",
+    "toggleNav": "Afficher/masquer la navigation",
+    "toggle": "Afficher/masquer la navigation",
+    "close": "Fermer le menu"
   },
   "auth": {
     "login-title": "Connexion",
@@ -206,5 +210,26 @@
     "demoTitle": "La racine ك-ت-ب",
     "demoSubtitle": "Une seule racine, des dizaines de mots.",
     "footerTagline": "Conçu pour les apprenants curieux."
+  },
+  "letters": {
+    "title": "Lettres arabes",
+    "subtitle": "Choisis une lettre pour voir les lettres qui co-occurrent dans les racines.",
+    "empty": "Aucune racine trouvée pour cette lettre.",
+    "noRoots": "Aucune racine partagée.",
+    "pageAriaLabel": "Visualisation des lettres arabes",
+    "pickerAriaLabel": "Sélection d'une lettre arabe",
+    "sidePanelAriaLabel": "Détails de la lettre sélectionnée",
+    "vizAriaLabel": "Cercles concentriques de la lettre {{letter}}",
+    "mobileHint": "Touche une lettre pour zoomer.",
+    "roots_one": "{{count}} racine",
+    "roots_other": "{{count}} racines",
+    "rootCount_one": "{{count}} racine contient cette lettre",
+    "rootCount_other": "{{count}} racines contiennent cette lettre",
+    "neighbourCount_one": "{{count}} lettre voisine",
+    "neighbourCount_other": "{{count}} lettres voisines",
+    "sharedRoots_one": "{{count}} racine partagée",
+    "sharedRoots_other": "{{count}} racines partagées",
+    "cooccurrenceCount_one": "co-occurrence : {{count}}",
+    "cooccurrenceCount_other": "co-occurrences : {{count}}"
   }
 }

@@ -29,4 +29,9 @@ const remove = asyncHandler(async (req, res) => {
   return sendSuccess(res, result, { message: 'Collection deleted' });
 });
 
-module.exports = { list, getById, create, update, remove };
+const reorderRoots = asyncHandler(async (req, res) => {
+  const col = await collectionService.reorderRoots(req.user.id, req.params.id, req.body.rootIds);
+  return sendSuccess(res, col, { message: 'Roots reordered' });
+});
+
+module.exports = { list, getById, create, update, remove, reorderRoots };

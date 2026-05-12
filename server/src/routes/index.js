@@ -9,6 +9,7 @@ const progressRoutes = require('./progressRoutes');
 const noteRoutes = require('./noteRoutes');
 const collectionRoutes = require('./collectionRoutes');
 const statsRoutes = require('./statsRoutes');
+const lettersRoutes = require('./lettersRoutes');
 
 const router = express.Router();
 
@@ -19,6 +20,7 @@ router.use('/words', wordRoutes);
 router.use('/progress', progressRoutes);
 router.use('/notes', noteRoutes);
 router.use('/collections', collectionRoutes);
+router.use('/letters', lettersRoutes);
 // statsRoutes monte /constellation et /stats à la racine /api.
 router.use('/', statsRoutes);
 

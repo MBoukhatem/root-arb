@@ -93,6 +93,28 @@
   --motion-fast: 150ms;
   --motion-base: 200ms;
   --motion-ease: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ConcentricLetters ring tokens */
+  --letter-ring1-fill: oklch(0.92 0.08 250);
+  --letter-ring2-fill: oklch(0.95 0.04 250);
+  --letter-ring3-fill: oklch(0.97 0.02 250);
+  --letter-ink: oklch(0.30 0.08 250);
+  --letter-center-stroke: var(--gold);
+
+  /* Skeleton shimmer */
+  --skeleton-base: #e2e8f0;
+  --skeleton-shine: #f1f5f9;
+  --skeleton-duration: 1.6s;
+
+  /* Semantic field colors (shared between Constellation + future overlays) */
+  --sf-writing: var(--cat-verb-fill);
+  --sf-reading: var(--cat-noun-fill);
+  --sf-speech: var(--cat-adjective-fill);
+  --sf-motion: var(--cat-participle-fill);
+  --sf-thought: var(--cat-masdar-fill);
+  --sf-emotion: var(--cat-pluriel-brise-fill);
+  --sf-action: var(--cat-adverb-fill);
+  --sf-derive: var(--cat-derive-fill);
 }
 
 /* -----------------------------------------------------------------------------
@@ -118,7 +140,20 @@
   --cat-pluriel-brise-ink: #67e8f9;
   --cat-derive-ink: #a5b4fc;
 
-  /* fill identique cross-theme (couleur graph identifiable) */
+  /* Catégorielles - fill dark (graphes D3 — luminosité réduite pour fond sombre) */
+  --cat-verb-fill: #60a5fa;
+  --cat-noun-fill: #34d399;
+  --cat-adjective-fill: #fbbf24;
+  --cat-adverb-fill: #fb923c;
+  --cat-participle-fill: #a78bfa;
+  --cat-masdar-fill: #f472b6;
+  --cat-pluriel-brise-fill: #22d3ee;
+  --cat-derive-fill: #818cf8;
+
+  /* Skeleton shimmer — dark */
+  --skeleton-base: #1e293b;
+  --skeleton-shine: #2d3f55;
+
   /* États */
   --success: #4ade80;
   --warning: #fbbf24;
@@ -126,6 +161,12 @@
 
   /* Or décoratif */
   --gold: #fcd34d;
+
+  /* ConcentricLetters ring tokens — dark overrides (floor raised for ring-2/3 legibility) */
+  --letter-ring1-fill: oklch(0.42 0.10 250);
+  --letter-ring2-fill: oklch(0.32 0.07 250);
+  --letter-ring3-fill: oklch(0.24 0.04 250);
+  --letter-ink: oklch(0.88 0.06 250);
 }
 
 /* -----------------------------------------------------------------------------
@@ -163,6 +204,20 @@
   --color-danger: var(--danger);
   --color-info: var(--info);
   --color-gold: var(--gold);
+
+  /* Skeleton */
+  --color-skeleton-base: var(--skeleton-base);
+  --color-skeleton-shine: var(--skeleton-shine);
+
+  /* Semantic fields */
+  --color-sf-writing: var(--sf-writing);
+  --color-sf-reading: var(--sf-reading);
+  --color-sf-speech: var(--sf-speech);
+  --color-sf-motion: var(--sf-motion);
+  --color-sf-thought: var(--sf-thought);
+  --color-sf-emotion: var(--sf-emotion);
+  --color-sf-action: var(--sf-action);
+  --color-sf-derive: var(--sf-derive);
 
   --font-sans: var(--font-sans);
   --font-arabic: var(--font-arabic-body);

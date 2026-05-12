@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { useTheme } from './ThemeContext';
+import { useMemo } from 'react';
+import { useTheme } from './useTheme';
 
 /**
  * Reads CSS variables from `:root` so D3 / Recharts can colour graphs with the
@@ -49,12 +49,8 @@ function readTokens(): DesignTokens {
 
 export function useDesignTokens(): DesignTokens {
   const { resolved } = useTheme();
-  const [tokens, setTokens] = useState<DesignTokens>(() => readTokens());
-
-  useEffect(() => {
-    // Theme switch -> re-read CSS vars (next microtask: class has been applied)
-    setTokens(readTokens());
-  }, [resolved]);
-
-  return tokens;
+  // Re-read CSS vars on every theme change. useMemo re-runs synchronously after
+  // ThemeContext has applied the .dark class, so the values are always current.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  return useMemo(() => readTokens(), [resolved]);
 }

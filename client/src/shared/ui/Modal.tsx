@@ -1,6 +1,6 @@
-import { useEffect, useRef, type ReactNode } from 'react';
+import { useEffect, useId, useRef, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
@@ -28,6 +28,10 @@ const SIZE_CLASSES: Record<NonNullable<ModalProps['size']>, string> = {
 export function Modal({ open, onClose, title, children, footer, size = 'md' }: ModalProps) {
   const { t } = useTranslation(['common']);
   const dialogRef = useRef<HTMLDivElement>(null);
+  // Fix #2: useId for stable aria-labelledby relationship.
+  const titleId = useId();
+  // Fix #8: honour prefers-reduced-motion for Framer Motion JS animations.
+  const shouldReduceMotion = useReducedMotion();
 
   useEffect(() => {
     if (!open) return;
@@ -79,8 +83,8 @@ export function Modal({ open, onClose, title, children, footer, size = 'md' }: M
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.15 }}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+          transition={{ duration: shouldReduceMotion ? 0 : 0.15 }}
+          className="fixed inset-0 z-50 flex max-sm:items-end sm:items-center justify-center max-sm:p-0 sm:p-4"
           onClick={onClose}
           aria-hidden
         >
@@ -88,19 +92,29 @@ export function Modal({ open, onClose, title, children, footer, size = 'md' }: M
             ref={dialogRef}
             role="dialog"
             aria-modal="true"
-            aria-label={title}
-            initial={{ opacity: 0, scale: 0.96, y: 8 }}
+            aria-labelledby={title ? titleId : undefined}
+            initial={{
+              opacity: 0,
+              scale: shouldReduceMotion ? 1 : 0.96,
+              y: shouldReduceMotion ? 0 : 8,
+            }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.96 }}
-            transition={{ duration: 0.2 }}
+            exit={{ opacity: 0, scale: shouldReduceMotion ? 1 : 0.96 }}
+            transition={{ duration: shouldReduceMotion ? 0 : 0.2 }}
             className={clsx(
-              'w-full rounded-xl bg-(--bg-base) shadow-xl border border-(--border)',
+              'w-full bg-(--bg-base) shadow-xl border border-(--border)',
+              /* Fix #5: full-screen on mobile, constrained + rounded on sm+ */
+              'max-sm:rounded-none max-sm:h-screen max-sm:max-w-none max-sm:overflow-y-auto',
+              'sm:rounded-xl',
               SIZE_CLASSES[size],
             )}
             onClick={(e) => e.stopPropagation()}
           >
             <header className="flex items-center justify-between border-b border-(--border) p-4">
-              <h2 className="text-lg font-semibold text-(--text-primary)">{title}</h2>
+              {/* Fix #2: id on h2, referenced by aria-labelledby on dialog */}
+              <h2 id={titleId} className="text-lg font-semibold text-(--text-primary)">
+                {title}
+              </h2>
               <button
                 type="button"
                 onClick={onClose}

@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { ArabicText } from './ArabicText';
 import type { Word } from '@/types/models';
-import { useLanguage } from '@/shared/i18n/LanguageContext';
+import { useLanguage } from '@/shared/i18n/useLanguage';
 
 type WordCardProps = {
   word: Word;

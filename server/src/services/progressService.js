@@ -3,41 +3,104 @@
 const mongoose = require('mongoose');
 const Progress = require('../models/Progress');
 const Root = require('../models/Root');
+const User = require('../models/User');
 const ApiError = require('../utils/ApiError');
 const { parsePagination, buildPagination } = require('../utils/pagination');
 const { SRS_INTERVALS } = require('../utils/enums');
+const { startOfDayInTz, addDaysInTz, toDateStringInTz } = require('../utils/timezone');
+
+/** Map rating string to boolean success + optional interval multiplier. */
+function resolveSuccess(rating, successFlag) {
+  if (typeof rating === 'string') {
+    if (rating === 'failed') return { success: false, multiplier: 1.0 };
+    if (rating === 'hard') return { success: true, multiplier: 0.7 };
+    if (rating === 'good') return { success: true, multiplier: 1.0 };
+    if (rating === 'perfect') return { success: true, multiplier: 1.3 };
+  }
+  return { success: Boolean(successFlag), multiplier: 1.0 };
+}
 
 /**
- * Algorithme SM-2 simplifié (PLAN §5).
- *   - success : masteryLevel++ (cap 5), intervalDays = SRS_INTERVALS[newLevel]
+ * Algorithme SM-2 simplifié (PLAN §5), timezone-aware.
+ *   - success : masteryLevel++ (cap 5), intervalDays = SRS_INTERVALS[newLevel] * multiplier
  *   - échec   : masteryLevel-- (min 0), intervalDays = 1
- *   - nextReviewDate = now + intervalDays
+ *   - nextReviewDate aligné sur minuit TZ user
  */
-function nextScheduling(current, success) {
+function nextScheduling(current, success, multiplier, userTz) {
+  const tz = userTz || 'UTC';
   let masteryLevel = current?.masteryLevel ?? 0;
   let intervalDays;
 
   if (success) {
     masteryLevel = Math.min(5, masteryLevel + 1);
-    intervalDays = SRS_INTERVALS[masteryLevel] ?? SRS_INTERVALS[SRS_INTERVALS.length - 1];
+    const base = SRS_INTERVALS[masteryLevel] ?? SRS_INTERVALS[SRS_INTERVALS.length - 1];
+    intervalDays = Math.max(1, Math.round(base * multiplier));
   } else {
     masteryLevel = Math.max(0, masteryLevel - 1);
     intervalDays = 1;
   }
 
   const now = new Date();
-  const nextReviewDate = new Date(now.getTime() + intervalDays * 24 * 60 * 60 * 1000);
+  const nextReviewDate = addDaysInTz(now, intervalDays, tz);
   return { masteryLevel, intervalDays, nextReviewDate, lastReviewed: now };
 }
 
-async function recordReview(userId, { rootId, success, wordsLearned }) {
+/**
+ * Update streak on user after a review.
+ * Logic: if lastActivityDate == today (TZ user) → noop
+ *        if lastActivityDate == yesterday → streak++
+ *        otherwise → streak reset to 1
+ */
+async function updateStreak(user, now) {
+  const tz = user.timezone || 'UTC';
+  const todayStr = toDateStringInTz(now, tz);
+  const lastDate = user.streak?.lastActivityDate;
+  const lastStr = lastDate ? toDateStringInTz(new Date(lastDate), tz) : null;
+
+  if (lastStr === todayStr) {
+    // Already active today — noop
+    return;
+  }
+
+  // Check if yesterday
+  const yesterday = new Date(now);
+  yesterday.setDate(yesterday.getDate() - 1);
+  const yesterdayStr = toDateStringInTz(yesterday, tz);
+
+  let newCurrent;
+  if (lastStr === yesterdayStr) {
+    newCurrent = (user.streak?.current ?? 0) + 1;
+  } else {
+    newCurrent = 1;
+  }
+
+  const newLongest = Math.max(user.streak?.longest ?? 0, newCurrent);
+
+  await User.updateOne(
+    { _id: user._id },
+    {
+      $set: {
+        'streak.current': newCurrent,
+        'streak.longest': newLongest,
+        'streak.lastActivityDate': now,
+      },
+    },
+  );
+}
+
+async function recordReview(userId, { rootId, rating, success: successFlag, wordsLearned }) {
   const root = await Root.findById(rootId).lean();
   if (!root) throw ApiError.notFound('Root not found', undefined, 'ROOT_NOT_FOUND');
+
+  // Fetch user for timezone + streak
+  const user = await User.findById(userId).select('+streak +timezone').lean();
+
+  const { success, multiplier } = resolveSuccess(rating, successFlag);
 
   let progress = await Progress.findOne({ user: userId, root: rootId });
   const current = progress ? { masteryLevel: progress.masteryLevel } : { masteryLevel: 0 };
 
-  const sched = nextScheduling(current, success);
+  const sched = nextScheduling(current, success, multiplier, user?.timezone);
 
   if (!progress) {
     progress = await Progress.create({
@@ -67,6 +130,12 @@ async function recordReview(userId, { rootId, success, wordsLearned }) {
     }
     await progress.save();
   }
+
+  // Update streak (non-blocking on failure)
+  if (user) {
+    await updateStreak(user, sched.lastReviewed).catch(() => {});
+  }
+
   return progress.toJSON();
 }
 
@@ -98,44 +167,77 @@ async function today(userId) {
 }
 
 async function stats(userId) {
-  const [byLevel, totalRoots, totalReviews] = await Promise.all([
+  const user = await User.findById(userId).select('+streak +timezone').lean();
+  const tz = user?.timezone || 'UTC';
+
+  // Build 7-day window in user TZ
+  const now = new Date();
+  const todayStart = startOfDayInTz(now, tz);
+  const sevenDaysAgo = new Date(todayStart);
+  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6);
+
+  const uid = new mongoose.Types.ObjectId(userId);
+
+  const [totalRootsLearned, wordsAgg, weeklyAgg, activeDaysAgg] = await Promise.all([
+    // Roots mastered: masteryLevel >= 3
+    Progress.countDocuments({ user: userId, masteryLevel: { $gte: 3 } }),
+
+    // Total unique words mastered across all progress docs
     Progress.aggregate([
-      { $match: { user: new mongoose.Types.ObjectId(userId) } },
-      { $group: { _id: '$masteryLevel', count: { $sum: 1 } } },
+      { $match: { user: uid } },
+      { $project: { wordsLearned: 1 } },
+      { $unwind: '$wordsLearned' },
+      { $group: { _id: '$wordsLearned' } },
+      { $count: 'total' },
     ]),
-    Progress.countDocuments({ user: userId }),
+
+    // Weekly activity: reviews per day for last 7 days
     Progress.aggregate([
-      { $match: { user: new mongoose.Types.ObjectId(userId) } },
+      { $match: { user: uid, lastReviewed: { $gte: sevenDaysAgo } } },
       {
         $group: {
-          _id: null,
-          totalReviews: { $sum: '$reviewCount' },
-          totalSuccess: { $sum: '$successCount' },
-          totalFailure: { $sum: '$failureCount' },
+          _id: { $dateToString: { format: '%Y-%m-%d', date: '$lastReviewed', timezone: tz } },
+          count: { $sum: '$reviewCount' },
         },
       },
+      { $sort: { _id: 1 } },
+    ]),
+
+    // Active days: distinct days with at least one review
+    Progress.aggregate([
+      { $match: { user: uid, lastReviewed: { $ne: null } } },
+      {
+        $group: {
+          _id: { $dateToString: { format: '%Y-%m-%d', date: '$lastReviewed', timezone: tz } },
+        },
+      },
+      { $count: 'total' },
     ]),
   ]);
 
-  const levels = {};
-  byLevel.forEach((row) => {
-    levels[row._id] = row.count;
+  // Fill in all 7 days (including zeros)
+  const weeklyMap = {};
+  weeklyAgg.forEach((row) => {
+    weeklyMap[row._id] = row.count;
   });
+  const weeklyActivity = [];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(todayStart);
+    d.setDate(d.getDate() - i);
+    const dateStr = toDateStringInTz(d, tz);
+    weeklyActivity.push({ date: dateStr, count: weeklyMap[dateStr] ?? 0 });
+  }
 
-  const agg = totalReviews[0] || { totalReviews: 0, totalSuccess: 0, totalFailure: 0 };
-  const successRate = agg.totalReviews
-    ? Math.round((agg.totalSuccess / agg.totalReviews) * 100)
-    : 0;
+  const totalWordsMastered = wordsAgg[0]?.total ?? 0;
+  const activeDays = activeDaysAgg[0]?.total ?? 0;
+  const streak = user?.streak?.current ?? 0;
 
   return {
-    totalRootsStudied: totalRoots,
-    levels,
-    reviews: {
-      total: agg.totalReviews,
-      success: agg.totalSuccess,
-      failure: agg.totalFailure,
-      successRate,
-    },
+    totalRootsLearned,
+    totalWordsMastered,
+    streak,
+    activeDays,
+    weeklyActivity,
   };
 }
 

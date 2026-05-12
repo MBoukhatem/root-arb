@@ -792,5 +792,768 @@
     ],
     "difficulty": 2,
     "isCommon": false
+  },
+
+  {
+    "rootLetters": "ج-ل-س",
+    "arabicWord": "جَلَسَ",
+    "transliteration": "jalasa",
+    "translations": { "fr": "il s'est assis", "en": "he sat down", "ar": "جلس" },
+    "pattern": "فَعَلَ",
+    "patternDescription": { "fr": "verbe accompli 3e p. masc.", "en": "perfect 3rd masc." },
+    "grammaticalCategory": "verb",
+    "examples": [
+      {
+        "sentence": "جَلَسَ الطَّالِبُ عَلَى الكُرْسِيِّ",
+        "translation": {
+          "fr": "L'étudiant s'est assis sur la chaise.",
+          "en": "The student sat on the chair."
+        }
+      }
+    ],
+    "difficulty": 1,
+    "isCommon": true
+  },
+  {
+    "rootLetters": "ج-ل-س",
+    "arabicWord": "جَالِس",
+    "transliteration": "jālis",
+    "translations": { "fr": "assis", "en": "sitting, seated", "ar": "جالس" },
+    "pattern": "فَاعِل",
+    "patternDescription": { "fr": "participe actif", "en": "active participle" },
+    "grammaticalCategory": "agent",
+    "examples": [
+      {
+        "sentence": "الرَّجُلُ جَالِسٌ",
+        "translation": { "fr": "L'homme est assis.", "en": "The man is sitting." }
+      }
+    ],
+    "difficulty": 1,
+    "isCommon": true
+  },
+  {
+    "rootLetters": "ج-ل-س",
+    "arabicWord": "مَجْلِس",
+    "transliteration": "majlis",
+    "translations": {
+      "fr": "salon, conseil, assemblée",
+      "en": "council, sitting room, assembly",
+      "ar": "مجلس"
+    },
+    "pattern": "مَفْعِل",
+    "patternDescription": { "fr": "nom de lieu/temps", "en": "noun of place/time" },
+    "grammaticalCategory": "place",
+    "examples": [
+      {
+        "sentence": "اجْتَمَعُوا فِي المَجْلِسِ",
+        "translation": {
+          "fr": "Ils se sont réunis dans le salon.",
+          "en": "They gathered in the council."
+        }
+      }
+    ],
+    "difficulty": 2,
+    "isCommon": true
+  },
+  {
+    "rootLetters": "ج-ل-س",
+    "arabicWord": "جُلُوس",
+    "transliteration": "julūs",
+    "translations": {
+      "fr": "le fait d'être assis, séance",
+      "en": "sitting, being seated",
+      "ar": "جلوس"
+    },
+    "pattern": "فُعُول",
+    "patternDescription": { "fr": "nom verbal (masdar)", "en": "verbal noun" },
+    "grammaticalCategory": "verbal_noun",
+    "examples": [
+      {
+        "sentence": "الجُلُوسُ الطَّوِيلُ مُضِرٌّ",
+        "translation": {
+          "fr": "La station assise prolongée est nocive.",
+          "en": "Long sitting is harmful."
+        }
+      }
+    ],
+    "difficulty": 2,
+    "isCommon": true
+  },
+  {
+    "rootLetters": "ج-ل-س",
+    "arabicWord": "جَلْسَة",
+    "transliteration": "jalsa",
+    "translations": { "fr": "séance, session", "en": "session, sitting", "ar": "جلسة" },
+    "pattern": "فَعْلَة",
+    "grammaticalCategory": "noun",
+    "examples": [
+      {
+        "sentence": "جَلْسَةُ البَرْلَمَانِ",
+        "translation": { "fr": "La séance du parlement.", "en": "The parliamentary session." }
+      }
+    ],
+    "difficulty": 2,
+    "isCommon": true
+  },
+
+  {
+    "rootLetters": "ن-ظ-ر",
+    "arabicWord": "نَظَرَ",
+    "transliteration": "naẓara",
+    "translations": { "fr": "il a regardé", "en": "he looked", "ar": "نظر" },
+    "pattern": "فَعَلَ",
+    "patternDescription": { "fr": "verbe accompli 3e p. masc.", "en": "perfect 3rd masc." },
+    "grammaticalCategory": "verb",
+    "examples": [
+      {
+        "sentence": "نَظَرَ إِلَى السَّمَاءِ",
+        "translation": { "fr": "Il a regardé vers le ciel.", "en": "He looked at the sky." }
+      }
+    ],
+    "difficulty": 1,
+    "isCommon": true
+  },
+  {
+    "rootLetters": "ن-ظ-ر",
+    "arabicWord": "نَظَر",
+    "transliteration": "naẓar",
+    "translations": {
+      "fr": "regard, vue, point de vue",
+      "en": "view, sight, perspective",
+      "ar": "نظر"
+    },
+    "pattern": "فَعَل",
+    "grammaticalCategory": "verbal_noun",
+    "examples": [
+      {
+        "sentence": "وُجْهَةُ نَظَرٍ",
+        "translation": { "fr": "Un point de vue.", "en": "A point of view." }
+      }
+    ],
+    "difficulty": 1,
+    "isCommon": true
+  },
+  {
+    "rootLetters": "ن-ظ-ر",
+    "arabicWord": "نَاظِر",
+    "transliteration": "nāẓir",
+    "translations": { "fr": "regardant, directeur", "en": "looking, overseer", "ar": "ناظر" },
+    "pattern": "فَاعِل",
+    "grammaticalCategory": "agent",
+    "examples": [
+      {
+        "sentence": "النَّاظِرُ إِلَى النُّورِ",
+        "translation": {
+          "fr": "Celui qui regarde la lumière.",
+          "en": "The one looking at the light."
+        }
+      }
+    ],
+    "difficulty": 2,
+    "isCommon": false
+  },
+  {
+    "rootLetters": "ن-ظ-ر",
+    "arabicWord": "مَنْظُور",
+    "transliteration": "manẓūr",
+    "translations": { "fr": "vu, regardé, visible", "en": "seen, viewed, visible", "ar": "منظور" },
+    "pattern": "مَفْعُول",
+    "grammaticalCategory": "participle",
+    "examples": [
+      {
+        "sentence": "هَذَا أَمْرٌ مَنْظُورٌ",
+        "translation": { "fr": "C'est une chose visible.", "en": "This is a visible matter." }
+      }
+    ],
+    "difficulty": 2,
+    "isCommon": false
+  },
+  {
+    "rootLetters": "ن-ظ-ر",
+    "arabicWord": "مَنْظَر",
+    "transliteration": "manẓar",
+    "translations": { "fr": "vue, paysage, scène", "en": "view, scene, landscape", "ar": "منظر" },
+    "pattern": "مَفْعَل",
+    "grammaticalCategory": "place",
+    "examples": [
+      {
+        "sentence": "المَنْظَرُ جَمِيلٌ",
+        "translation": { "fr": "Le paysage est beau.", "en": "The scenery is beautiful." }
+      }
+    ],
+    "difficulty": 2,
+    "isCommon": true
+  },
+
+  {
+    "rootLetters": "ف-ت-ح",
+    "arabicWord": "فَتَحَ",
+    "transliteration": "fataḥa",
+    "translations": { "fr": "il a ouvert", "en": "he opened", "ar": "فتح" },
+    "pattern": "فَعَلَ",
+    "patternDescription": { "fr": "verbe accompli 3e p. masc.", "en": "perfect 3rd masc." },
+    "grammaticalCategory": "verb",
+    "examples": [
+      {
+        "sentence": "فَتَحَ البَابَ",
+        "translation": { "fr": "Il a ouvert la porte.", "en": "He opened the door." }
+      }
+    ],
+    "difficulty": 1,
+    "isCommon": true
+  },
+  {
+    "rootLetters": "ف-ت-ح",
+    "arabicWord": "فَتْح",
+    "transliteration": "fatḥ",
+    "translations": {
+      "fr": "ouverture, conquête, victoire",
+      "en": "opening, conquest, victory",
+      "ar": "فتح"
+    },
+    "pattern": "فَعْل",
+    "grammaticalCategory": "verbal_noun",
+    "examples": [
+      {
+        "sentence": "الفَتْحُ العَظِيمُ",
+        "translation": { "fr": "La grande conquête.", "en": "The great conquest." }
+      }
+    ],
+    "difficulty": 2,
+    "isCommon": true
+  },
+  {
+    "rootLetters": "ف-ت-ح",
+    "arabicWord": "فَاتِح",
+    "transliteration": "fātiḥ",
+    "translations": {
+      "fr": "conquérant, celui qui ouvre",
+      "en": "conqueror, opener",
+      "ar": "فاتح"
+    },
+    "pattern": "فَاعِل",
+    "grammaticalCategory": "agent",
+    "examples": [
+      {
+        "sentence": "الفَاتِحُ الكَبِيرُ",
+        "translation": { "fr": "Le grand conquérant.", "en": "The great conqueror." }
+      }
+    ],
+    "difficulty": 2,
+    "isCommon": true
+  },
+  {
+    "rootLetters": "ف-ت-ح",
+    "arabicWord": "مَفْتُوح",
+    "transliteration": "maftūḥ",
+    "translations": { "fr": "ouvert", "en": "open, opened", "ar": "مفتوح" },
+    "pattern": "مَفْعُول",
+    "grammaticalCategory": "participle",
+    "examples": [
+      {
+        "sentence": "البَابُ مَفْتُوحٌ",
+        "translation": { "fr": "La porte est ouverte.", "en": "The door is open." }
+      }
+    ],
+    "difficulty": 1,
+    "isCommon": true
+  },
+  {
+    "rootLetters": "ف-ت-ح",
+    "arabicWord": "مِفْتَاح",
+    "transliteration": "miftāḥ",
+    "translations": { "fr": "clé", "en": "key", "ar": "مفتاح" },
+    "pattern": "مِفْعَال",
+    "patternDescription": { "fr": "nom d'instrument", "en": "noun of instrument" },
+    "grammaticalCategory": "instrument",
+    "examples": [
+      {
+        "sentence": "أَيْنَ المِفْتَاحُ؟",
+        "translation": { "fr": "Où est la clé ?", "en": "Where is the key?" }
+      }
+    ],
+    "difficulty": 1,
+    "isCommon": true
+  },
+
+  {
+    "rootLetters": "خ-ر-ج",
+    "arabicWord": "خَرَجَ",
+    "transliteration": "kharaja",
+    "translations": { "fr": "il est sorti", "en": "he went out", "ar": "خرج" },
+    "pattern": "فَعَلَ",
+    "patternDescription": { "fr": "verbe accompli 3e p. masc.", "en": "perfect 3rd masc." },
+    "grammaticalCategory": "verb",
+    "examples": [
+      {
+        "sentence": "خَرَجَ مِنَ البَيْتِ",
+        "translation": { "fr": "Il est sorti de la maison.", "en": "He went out of the house." }
+      }
+    ],
+    "difficulty": 1,
+    "isCommon": true
+  },
+  {
+    "rootLetters": "خ-ر-ج",
+    "arabicWord": "خُرُوج",
+    "transliteration": "khurūj",
+    "translations": { "fr": "sortie, départ", "en": "exit, departure", "ar": "خروج" },
+    "pattern": "فُعُول",
+    "grammaticalCategory": "verbal_noun",
+    "examples": [
+      {
+        "sentence": "بَابُ الخُرُوجِ",
+        "translation": { "fr": "La porte de sortie.", "en": "The exit door." }
+      }
+    ],
+    "difficulty": 1,
+    "isCommon": true
+  },
+  {
+    "rootLetters": "خ-ر-ج",
+    "arabicWord": "خَارِج",
+    "transliteration": "khārij",
+    "translations": { "fr": "extérieur, dehors", "en": "outside, exterior", "ar": "خارج" },
+    "pattern": "فَاعِل",
+    "grammaticalCategory": "agent",
+    "examples": [
+      {
+        "sentence": "هُوَ خَارِجَ البَيْتِ",
+        "translation": {
+          "fr": "Il est à l'extérieur de la maison.",
+          "en": "He is outside the house."
+        }
+      }
+    ],
+    "difficulty": 1,
+    "isCommon": true
+  },
+  {
+    "rootLetters": "خ-ر-ج",
+    "arabicWord": "مَخْرَج",
+    "transliteration": "makhraj",
+    "translations": { "fr": "sortie, issue", "en": "exit, way out", "ar": "مخرج" },
+    "pattern": "مَفْعَل",
+    "grammaticalCategory": "place",
+    "examples": [
+      {
+        "sentence": "المَخْرَجُ هُنَا",
+        "translation": { "fr": "La sortie est ici.", "en": "The exit is here." }
+      }
+    ],
+    "difficulty": 2,
+    "isCommon": true
+  },
+  {
+    "rootLetters": "خ-ر-ج",
+    "arabicWord": "أَخْرَجَ",
+    "transliteration": "ʾakhraja",
+    "translations": {
+      "fr": "il a fait sortir, il a extrait",
+      "en": "he took out, he extracted",
+      "ar": "أخرج"
+    },
+    "pattern": "أَفْعَلَ",
+    "patternDescription": { "fr": "verbe forme IV (causatif)", "en": "form IV verb (causative)" },
+    "grammaticalCategory": "verb",
+    "examples": [
+      {
+        "sentence": "أَخْرَجَ الكِتَابَ مِنَ الحَقِيبَةِ",
+        "translation": {
+          "fr": "Il a sorti le livre du sac.",
+          "en": "He took the book out of the bag."
+        }
+      }
+    ],
+    "difficulty": 2,
+    "isCommon": true
+  },
+
+  {
+    "rootLetters": "ذ-ه-ب",
+    "arabicWord": "ذَهَبَ",
+    "transliteration": "dhahaba",
+    "translations": { "fr": "il est allé, il est parti", "en": "he went, he left", "ar": "ذهب" },
+    "pattern": "فَعَلَ",
+    "patternDescription": { "fr": "verbe accompli 3e p. masc.", "en": "perfect 3rd masc." },
+    "grammaticalCategory": "verb",
+    "examples": [
+      {
+        "sentence": "ذَهَبَ إِلَى المَدْرَسَةِ",
+        "translation": { "fr": "Il est allé à l'école.", "en": "He went to school." }
+      }
+    ],
+    "difficulty": 1,
+    "isCommon": true
+  },
+  {
+    "rootLetters": "ذ-ه-ب",
+    "arabicWord": "ذَهَب",
+    "transliteration": "dhahab",
+    "translations": { "fr": "or (métal précieux)", "en": "gold", "ar": "ذهب" },
+    "pattern": "فَعَل",
+    "grammaticalCategory": "noun",
+    "examples": [
+      {
+        "sentence": "الذَّهَبُ ثَمِينٌ",
+        "translation": { "fr": "L'or est précieux.", "en": "Gold is precious." }
+      }
+    ],
+    "difficulty": 1,
+    "isCommon": true
+  },
+  {
+    "rootLetters": "ذ-ه-ب",
+    "arabicWord": "ذَاهِب",
+    "transliteration": "dhāhib",
+    "translations": { "fr": "allant, partant", "en": "going, departing", "ar": "ذاهب" },
+    "pattern": "فَاعِل",
+    "grammaticalCategory": "agent",
+    "examples": [
+      {
+        "sentence": "هُوَ ذَاهِبٌ إِلَى العَمَلِ",
+        "translation": {
+          "fr": "Il est en train de partir au travail.",
+          "en": "He is going to work."
+        }
+      }
+    ],
+    "difficulty": 2,
+    "isCommon": true
+  },
+  {
+    "rootLetters": "ذ-ه-ب",
+    "arabicWord": "مَذْهَب",
+    "transliteration": "madhhab",
+    "translations": {
+      "fr": "école de pensée, doctrine, rite",
+      "en": "school of thought, doctrine",
+      "ar": "مذهب"
+    },
+    "pattern": "مَفْعَل",
+    "grammaticalCategory": "place",
+    "examples": [
+      {
+        "sentence": "المَذْهَبُ الحَنَفِيُّ",
+        "translation": { "fr": "Le rite hanafite.", "en": "The Hanafi school." }
+      }
+    ],
+    "difficulty": 3,
+    "isCommon": false
+  },
+  {
+    "rootLetters": "ذ-ه-ب",
+    "arabicWord": "ذِهَاب",
+    "transliteration": "dhihāb",
+    "translations": { "fr": "départ, aller", "en": "departure, going", "ar": "ذهاب" },
+    "pattern": "فِعَال",
+    "grammaticalCategory": "verbal_noun",
+    "examples": [
+      {
+        "sentence": "تَذْكِرَةُ ذِهَابٍ فَقَطْ",
+        "translation": { "fr": "Billet aller simple.", "en": "One-way ticket." }
+      }
+    ],
+    "difficulty": 2,
+    "isCommon": true
+  },
+
+  {
+    "rootLetters": "ص-ب-ر",
+    "arabicWord": "صَبَرَ",
+    "transliteration": "ṣabara",
+    "translations": {
+      "fr": "il a patienté, il a enduré",
+      "en": "he was patient, he endured",
+      "ar": "صبر"
+    },
+    "pattern": "فَعَلَ",
+    "patternDescription": { "fr": "verbe accompli 3e p. masc.", "en": "perfect 3rd masc." },
+    "grammaticalCategory": "verb",
+    "examples": [
+      {
+        "sentence": "صَبَرَ عَلَى الصُّعُوبَاتِ",
+        "translation": {
+          "fr": "Il a patienté face aux difficultés.",
+          "en": "He endured the hardships."
+        }
+      }
+    ],
+    "difficulty": 1,
+    "isCommon": true
+  },
+  {
+    "rootLetters": "ص-ب-ر",
+    "arabicWord": "صَبْر",
+    "transliteration": "ṣabr",
+    "translations": { "fr": "patience, endurance", "en": "patience, endurance", "ar": "صبر" },
+    "pattern": "فَعْل",
+    "grammaticalCategory": "verbal_noun",
+    "examples": [
+      {
+        "sentence": "الصَّبْرُ مِفْتَاحُ الفَرَجِ",
+        "translation": {
+          "fr": "La patience est la clé de la délivrance.",
+          "en": "Patience is the key to relief."
+        }
+      }
+    ],
+    "difficulty": 1,
+    "isCommon": true
+  },
+  {
+    "rootLetters": "ص-ب-ر",
+    "arabicWord": "صَابِر",
+    "transliteration": "ṣābir",
+    "translations": { "fr": "patient, qui endure", "en": "patient, enduring", "ar": "صابر" },
+    "pattern": "فَاعِل",
+    "grammaticalCategory": "agent",
+    "examples": [
+      {
+        "sentence": "الصَّابِرُونَ يَنْجَحُونَ",
+        "translation": { "fr": "Les patients réussissent.", "en": "The patient ones succeed." }
+      }
+    ],
+    "difficulty": 2,
+    "isCommon": true
+  },
+  {
+    "rootLetters": "ص-ب-ر",
+    "arabicWord": "صَبُور",
+    "transliteration": "ṣabūr",
+    "translations": {
+      "fr": "très patient, patient (attribut divin)",
+      "en": "very patient, forbearing",
+      "ar": "صبور"
+    },
+    "pattern": "فَعُول",
+    "patternDescription": { "fr": "adjectif intensif (hyperbole)", "en": "intensifying adjective" },
+    "grammaticalCategory": "adjective",
+    "examples": [
+      {
+        "sentence": "اللهُ الصَّبُورُ",
+        "translation": { "fr": "Allah est le Très Patient.", "en": "Allah is the Most Patient." }
+      }
+    ],
+    "difficulty": 2,
+    "isCommon": true
+  },
+  {
+    "rootLetters": "ص-ب-ر",
+    "arabicWord": "مَصْبَرَة",
+    "transliteration": "maṣbara",
+    "translations": {
+      "fr": "épreuve qui exige la patience",
+      "en": "trial requiring patience",
+      "ar": "مصبرة"
+    },
+    "pattern": "مَفْعَلَة",
+    "grammaticalCategory": "noun",
+    "examples": [
+      {
+        "sentence": "هَذِهِ مَصْبَرَةٌ عَظِيمَةٌ",
+        "translation": {
+          "fr": "C'est une grande épreuve de patience.",
+          "en": "This is a great trial of patience."
+        }
+      }
+    ],
+    "difficulty": 3,
+    "isCommon": false
+  },
+
+  {
+    "rootLetters": "ط-ل-ب",
+    "arabicWord": "طَلَبَ",
+    "transliteration": "ṭalaba",
+    "translations": {
+      "fr": "il a demandé, il a cherché",
+      "en": "he sought, he requested",
+      "ar": "طلب"
+    },
+    "pattern": "فَعَلَ",
+    "patternDescription": { "fr": "verbe accompli 3e p. masc.", "en": "perfect 3rd masc." },
+    "grammaticalCategory": "verb",
+    "examples": [
+      {
+        "sentence": "طَلَبَ المُسَاعَدَةَ",
+        "translation": { "fr": "Il a demandé de l'aide.", "en": "He requested help." }
+      }
+    ],
+    "difficulty": 1,
+    "isCommon": true
+  },
+  {
+    "rootLetters": "ط-ل-ب",
+    "arabicWord": "طَلَب",
+    "transliteration": "ṭalab",
+    "translations": {
+      "fr": "demande, requête, commande",
+      "en": "request, demand, order",
+      "ar": "طلب"
+    },
+    "pattern": "فَعَل",
+    "grammaticalCategory": "verbal_noun",
+    "examples": [
+      {
+        "sentence": "قَدَّمَ طَلَبًا",
+        "translation": { "fr": "Il a soumis une demande.", "en": "He submitted a request." }
+      }
+    ],
+    "difficulty": 1,
+    "isCommon": true
+  },
+  {
+    "rootLetters": "ط-ل-ب",
+    "arabicWord": "طَالِب",
+    "transliteration": "ṭālib",
+    "translations": { "fr": "étudiant, demandeur", "en": "student, seeker", "ar": "طالب" },
+    "pattern": "فَاعِل",
+    "grammaticalCategory": "agent",
+    "examples": [
+      {
+        "sentence": "الطَّالِبُ مُجْتَهِدٌ",
+        "translation": { "fr": "L'étudiant est diligent.", "en": "The student is diligent." }
+      }
+    ],
+    "difficulty": 1,
+    "isCommon": true
+  },
+  {
+    "rootLetters": "ط-ل-ب",
+    "arabicWord": "مَطْلُوب",
+    "transliteration": "maṭlūb",
+    "translations": {
+      "fr": "demandé, requis, recherché",
+      "en": "required, sought, wanted",
+      "ar": "مطلوب"
+    },
+    "pattern": "مَفْعُول",
+    "grammaticalCategory": "participle",
+    "examples": [
+      {
+        "sentence": "هَذَا مَطْلُوبٌ",
+        "translation": { "fr": "C'est requis.", "en": "This is required." }
+      }
+    ],
+    "difficulty": 2,
+    "isCommon": true
+  },
+  {
+    "rootLetters": "ط-ل-ب",
+    "arabicWord": "مَطْلَب",
+    "transliteration": "maṭlab",
+    "translations": {
+      "fr": "objectif, revendication",
+      "en": "objective, claim, demand",
+      "ar": "مطلب"
+    },
+    "pattern": "مَفْعَل",
+    "grammaticalCategory": "noun",
+    "examples": [
+      {
+        "sentence": "مَطْلَبُ الشَّعْبِ",
+        "translation": { "fr": "La revendication du peuple.", "en": "The people's demand." }
+      }
+    ],
+    "difficulty": 3,
+    "isCommon": false
+  },
+
+  {
+    "rootLetters": "و-ز-ن",
+    "arabicWord": "وَزَنَ",
+    "transliteration": "wazana",
+    "translations": { "fr": "il a pesé", "en": "he weighed", "ar": "وزن" },
+    "pattern": "فَعَلَ",
+    "patternDescription": { "fr": "verbe accompli 3e p. masc.", "en": "perfect 3rd masc." },
+    "grammaticalCategory": "verb",
+    "examples": [
+      {
+        "sentence": "وَزَنَ البَضَاعَةَ",
+        "translation": { "fr": "Il a pesé la marchandise.", "en": "He weighed the goods." }
+      }
+    ],
+    "difficulty": 2,
+    "isCommon": true
+  },
+  {
+    "rootLetters": "و-ز-ن",
+    "arabicWord": "وَزْن",
+    "transliteration": "wazn",
+    "translations": {
+      "fr": "poids, mesure, balance",
+      "en": "weight, measure, balance",
+      "ar": "وزن"
+    },
+    "pattern": "فَعْل",
+    "grammaticalCategory": "verbal_noun",
+    "examples": [
+      {
+        "sentence": "وَزْنُهُ سَبْعُونَ كِيلُوغْرَامًا",
+        "translation": {
+          "fr": "Son poids est soixante-dix kilogrammes.",
+          "en": "His weight is seventy kilograms."
+        }
+      }
+    ],
+    "difficulty": 1,
+    "isCommon": true
+  },
+  {
+    "rootLetters": "و-ز-ن",
+    "arabicWord": "مِيزَان",
+    "transliteration": "mīzān",
+    "translations": { "fr": "balance, bascule, équilibre", "en": "scale, balance", "ar": "ميزان" },
+    "pattern": "مِفْعَال",
+    "patternDescription": { "fr": "nom d'instrument", "en": "noun of instrument" },
+    "grammaticalCategory": "instrument",
+    "examples": [
+      {
+        "sentence": "يَوْمُ المِيزَانِ",
+        "translation": {
+          "fr": "Le jour de la balance (Jugement dernier).",
+          "en": "The day of the scales (Judgment)."
+        }
+      }
+    ],
+    "difficulty": 2,
+    "isCommon": true
+  },
+  {
+    "rootLetters": "و-ز-ن",
+    "arabicWord": "مَوْزُون",
+    "transliteration": "mawzūn",
+    "translations": {
+      "fr": "pesé, mesuré, équilibré",
+      "en": "weighed, measured, balanced",
+      "ar": "موزون"
+    },
+    "pattern": "مَفْعُول",
+    "grammaticalCategory": "participle",
+    "examples": [
+      {
+        "sentence": "كَلَامٌ مَوْزُونٌ",
+        "translation": { "fr": "Un discours mesuré.", "en": "Measured speech." }
+      }
+    ],
+    "difficulty": 3,
+    "isCommon": false
+  },
+  {
+    "rootLetters": "و-ز-ن",
+    "arabicWord": "وَازِن",
+    "transliteration": "wāzin",
+    "translations": { "fr": "pesant, qui pèse", "en": "weighing, significant", "ar": "وازن" },
+    "pattern": "فَاعِل",
+    "grammaticalCategory": "agent",
+    "examples": [
+      {
+        "sentence": "رَأْيٌ وَازِنٌ",
+        "translation": { "fr": "Un avis qui pèse.", "en": "A significant opinion." }
+      }
+    ],
+    "difficulty": 3,
+    "isCommon": false
   }
 ]

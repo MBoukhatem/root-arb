@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { AlertCircle, Compass } from 'lucide-react';
 import { useConstellation } from './hooks/useConstellation';
@@ -9,6 +9,7 @@ import { Skeleton } from '@/shared/ui/Skeleton';
 import { EmptyState } from '@/shared/ui/EmptyState';
 import { Button } from '@/shared/ui/Button';
 import { SEMANTIC_FIELDS, type SemanticField } from '@/types/models';
+import { colorForSemanticField } from '@/shared/viz/Constellation/semanticFieldColors';
 
 export default function ConstellationPage() {
   const { t } = useTranslation(['constellation', 'common', 'roots']);
@@ -28,7 +29,7 @@ export default function ConstellationPage() {
       nodes: data.nodes.map<ConstellationNode>((n) => ({
         id: n.id,
         letters: n.letters,
-        transliteration: '',
+        transliteration: (n as { transliteration?: string }).transliteration ?? '',
         semanticField: n.semanticField,
         masteryLevel: n.masteryLevel ?? 0,
       })),
@@ -38,6 +39,15 @@ export default function ConstellationPage() {
       })),
     };
   }, [data]);
+
+  // Collect unique semantic fields present in visible nodes for the legend
+  const visibleFields = useMemo(() => {
+    const seen = new Set<string>();
+    for (const n of vizPayload.nodes) {
+      if (n.semanticField) seen.add(n.semanticField);
+    }
+    return Array.from(seen).sort();
+  }, [vizPayload.nodes]);
 
   return (
     <section className="mx-auto flex w-full max-w-7xl flex-col gap-6">
@@ -92,6 +102,14 @@ export default function ConstellationPage() {
           icon={<Compass size={32} aria-hidden />}
           title={t('constellation:emptyTitle')}
           description={t('constellation:emptyDescription')}
+          action={
+            <Link
+              to="/explore"
+              className="inline-flex items-center justify-center gap-2 rounded-md bg-(--cat-verb-fill) px-4 h-10 text-base font-medium text-white transition-opacity hover:opacity-90"
+            >
+              {t('constellation:exploreFirstRoot')}
+            </Link>
+          }
         />
       ) : (
         <div className="rounded-2xl border border-(--border) bg-(--bg-card) p-4">
@@ -100,6 +118,21 @@ export default function ConstellationPage() {
             links={vizPayload.links}
             onNodeClick={handleNodeClick}
           />
+          {/* Légende couleurs sémantiques (#fix-4) */}
+          {visibleFields.length > 0 && (
+            <div className="mt-4 flex flex-wrap gap-3 border-t border-(--border) pt-3">
+              {visibleFields.map((field) => (
+                <div key={field} className="flex items-center gap-1.5 text-xs text-(--text-muted)">
+                  <span
+                    className="inline-block h-3 w-3 rounded-full"
+                    style={{ backgroundColor: colorForSemanticField(field) }}
+                    aria-hidden
+                  />
+                  {t(`roots:semanticField.${field}`, { defaultValue: field })}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
     </section>

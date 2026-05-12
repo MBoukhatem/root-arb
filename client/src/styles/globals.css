@@ -9,8 +9,8 @@
  * ============================================================================= */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=optional');
-@import url('https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500;700&display=optional');
+@import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500;700&display=swap');
 @import './tokens.css';
 
 /* -----------------------------------------------------------------------------
@@ -98,4 +98,25 @@ a:hover {
 /* Skip link target hint */
 #main:focus {
   outline: none;
+}
+
+/* Skeleton shimmer — respects prefers-reduced-motion via globals reset above */
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--skeleton-base) 25%,
+    var(--skeleton-shine) 50%,
+    var(--skeleton-base) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer var(--skeleton-duration, 1.6s) ease-in-out infinite;
 }

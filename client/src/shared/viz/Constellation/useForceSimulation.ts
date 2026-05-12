@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import {
   forceCenter,
   forceCollide,
@@ -7,7 +7,6 @@ import {
   forceSimulation,
   type Simulation,
   type SimulationLinkDatum,
-  type SimulationNodeDatum,
 } from 'd3-force';
 import type { ConstellationLink, ConstellationNode, SimLink, SimNode } from './Constellation.types';
 
@@ -28,6 +27,24 @@ type Params = {
 export function useForceSimulation({ nodes, links, width, height, onTick, onReady }: Params) {
   const simRef = useRef<Simulation<SimNode, SimLink> | null>(null);
   const dataRef = useRef<{ nodes: SimNode[]; links: SimLink[] }>({ nodes: [], links: [] });
+
+  // Hash sorted ids so filter changes with same node count still trigger a rebuild.
+  const nodeIdHash = useMemo(
+    () =>
+      nodes
+        .map((n) => n.id)
+        .sort()
+        .join(','),
+    [nodes],
+  );
+  const linkIdHash = useMemo(
+    () =>
+      links
+        .map((l) => `${l.source}-${l.target}`)
+        .sort()
+        .join(','),
+    [links],
+  );
 
   useEffect(() => {
     // Defensive deep-ish clone: spread each node + link so d3 mutations stay local.
@@ -67,12 +84,12 @@ export function useForceSimulation({ nodes, links, width, height, onTick, onRead
       sim.on('tick', null);
       simRef.current = null;
     };
-    // We intentionally key on data length + size; deep changes will warrant a remount.
+    // Key on sorted id hash so filter changes with same node count also trigger a rebuild.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [nodes.length, links.length, width, height]);
+  }, [nodeIdHash, linkIdHash, width, height]);
 
   return simRef;
 }
 
 /** Type re-export to keep callers honest on what d3 mutates. */
-export type { SimulationNodeDatum };
+export type { SimulationLinkDatum };

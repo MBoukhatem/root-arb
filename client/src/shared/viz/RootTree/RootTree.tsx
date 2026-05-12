@@ -121,9 +121,22 @@ function RootTreeImpl({ root, words, onWordClick, className }: RootTreeProps) {
     setReplayKey((k) => k + 1);
   }, []);
 
-  // Tooltip positioning relative to the SVG container
+  // Tooltip positioning: convert SVG coords to pixel coords via getScreenCTM
+  // so the tooltip tracks correctly in RTL and on narrow viewports.
   const showTooltip = useCallback((node: LayoutNode) => {
-    setTooltip({ node, x: node.x, y: node.y });
+    if (!svgRef.current) {
+      setTooltip({ node, x: node.x, y: node.y });
+      return;
+    }
+    const ctm = svgRef.current.getScreenCTM();
+    const containerRect = svgRef.current.parentElement?.getBoundingClientRect();
+    if (ctm && containerRect) {
+      const px = node.x * ctm.a + node.y * ctm.c + ctm.e - containerRect.left;
+      const py = node.x * ctm.b + node.y * ctm.d + ctm.f - containerRect.top;
+      setTooltip({ node, x: px, y: py });
+    } else {
+      setTooltip({ node, x: node.x, y: node.y });
+    }
   }, []);
   const hideTooltip = useCallback(() => setTooltip(null), []);
 
@@ -183,8 +196,8 @@ function RootTreeImpl({ root, words, onWordClick, className }: RootTreeProps) {
                 initial={reducedMotion ? false : { pathLength: 0, opacity: 0 }}
                 animate={{ pathLength: 1, opacity: 0.7 }}
                 transition={{
-                  duration: reducedMotion ? 0 : 0.5,
-                  delay: reducedMotion ? 0 : 0.1 + link.target.depth * 0.05,
+                  duration: reducedMotion ? 0 : 0.3,
+                  delay: reducedMotion ? 0 : 0.08 + link.target.depth * 0.04,
                   ease: 'easeOut',
                 }}
               />
@@ -231,8 +244,8 @@ function RootTreeImpl({ root, words, onWordClick, className }: RootTreeProps) {
                 initial={reducedMotion ? false : { opacity: 0, scale: 0 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{
-                  duration: reducedMotion ? 0 : 0.4,
-                  delay: reducedMotion ? 0 : 0.15 + i * 0.05,
+                  duration: reducedMotion ? 0 : 0.25,
+                  delay: reducedMotion ? 0 : 0.1 + i * 0.03,
                   ease: 'easeOut',
                 }}
                 whileHover={interactive && !reducedMotion ? { scale: 1.1 } : undefined}
@@ -279,7 +292,7 @@ function RootTreeImpl({ root, words, onWordClick, className }: RootTreeProps) {
                     x={labelOffset}
                     y={labelY}
                     textAnchor={anchor}
-                    fontSize={12}
+                    fontSize={14}
                     fontFamily="var(--font-sans)"
                     fill="var(--text-secondary)"
                     style={{ pointerEvents: 'none' }}
@@ -293,14 +306,14 @@ function RootTreeImpl({ root, words, onWordClick, className }: RootTreeProps) {
         </AnimatePresence>
       </svg>
 
-      {/* Tooltip */}
+      {/* Tooltip — pixel-positioned via getScreenCTM to avoid RTL/viewBox drift */}
       {tooltip && tooltip.node.data.wordId && (
         <div
           role="tooltip"
           className="pointer-events-none absolute z-20 -translate-x-1/2 -translate-y-full rounded-md border border-(--border) bg-(--bg-card) px-3 py-2 text-xs text-(--text-primary) shadow-md"
           style={{
-            left: `${(tooltip.x / layout.viewBox.width) * 100}%`,
-            top: `${((tooltip.y - NODE_RADIUS - 8) / layout.viewBox.height) * 100}%`,
+            left: tooltip.x,
+            top: tooltip.y - NODE_RADIUS - 8,
           }}
         >
           <div className="font-arabic-title text-base" lang="ar" dir="rtl">

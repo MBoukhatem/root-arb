@@ -40,7 +40,6 @@ const AS_CLASSES: Record<As, string> = {
 export function ArabicText({
   children,
   unvocalized,
-  vocalized: _vocalized,
   as = 'body',
   className,
   tag,

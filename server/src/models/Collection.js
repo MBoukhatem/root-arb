@@ -25,7 +25,7 @@ const collectionSchema = new Schema(
   {
     user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     name: { type: String, required: true, trim: true, maxlength: 100 },
-    slug: { type: String, required: true, trim: true, lowercase: true, unique: true },
+    slug: { type: String, required: true, trim: true, lowercase: true },
     description: { type: String, trim: true, maxlength: 500, default: '' },
     roots: [{ type: Schema.Types.ObjectId, ref: 'Root' }],
     isPublic: { type: Boolean, default: false },
@@ -37,6 +37,7 @@ const collectionSchema = new Schema(
 );
 
 collectionSchema.index({ user: 1, createdAt: -1 });
+collectionSchema.index({ user: 1, slug: 1 }, { unique: true });
 collectionSchema.index({ isPublic: 1, createdAt: -1 });
 
 collectionSchema.pre('validate', function preValidate(next) {

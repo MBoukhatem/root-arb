@@ -57,4 +57,18 @@ async function remove(userId, id) {
   return { ok: true };
 }
 
-module.exports = { list, getById, create, update, remove };
+async function reorderRoots(userId, id, rootIds) {
+  const col = await Collection.findOne({ _id: id, user: userId });
+  if (!col) throw ApiError.notFound('Collection not found', undefined, 'COLLECTION_NOT_FOUND');
+  // Validate all rootIds belong to the collection
+  const existingSet = new Set(col.roots.map(String));
+  const valid = rootIds.filter((rid) => existingSet.has(rid));
+  col.roots = valid;
+  await col.save();
+  return Collection.findById(id)
+    .populate('user', 'username avatar')
+    .populate('roots', 'letters transliteration semanticField coreMeaning')
+    .lean();
+}
+
+module.exports = { list, getById, create, update, remove, reorderRoots };

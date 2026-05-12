@@ -7,12 +7,13 @@ type SkeletonProps = {
 };
 
 /**
- * Reusable loading skeleton. Animation is suppressed by globals.css under
- * `prefers-reduced-motion`.
+ * Reusable loading skeleton with shimmer effect.
+ * Animation is suppressed globally by globals.css `prefers-reduced-motion` reset.
+ * Shimmer colours are theme-aware via --skeleton-base / --skeleton-shine tokens.
  */
 export function Skeleton({ className, variant = 'line' }: SkeletonProps) {
-  const base = 'animate-pulse rounded-md bg-(--bg-card)';
+  const base = 'skeleton-shimmer rounded-md';
   const variantClass =
-    variant === 'card' ? 'h-32 w-full' : variant === 'tree' ? 'h-96 w-full' : 'h-4 w-full';
+    variant === 'card' ? 'h-32 w-full' : variant === 'tree' ? 'aspect-square w-full' : 'h-4 w-full';
   return <div aria-hidden="true" className={clsx(base, variantClass, className)} />;
 }

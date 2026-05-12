@@ -12,14 +12,15 @@
     "seed:demo": "node src/seeds/seed.js --demo",
     "validate:dataset": "node src/seeds/validate.js",
     "db:indexes": "node src/scripts/syncIndexes.js",
-    "lint": "echo \"(todo) eslint\"",
+    "lint": "eslint src/",
     "test": "echo \"(no tests)\""
   },
   "dependencies": {
     "@arb/shared": "*",
-    "bcrypt": "^5.1.1",
+    "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
+    "date-fns-tz": "^3.2.0",
     "dotenv": "^16.4.5",
     "express": "^4.21.2",
     "express-mongo-sanitize": "^2.2.0",
@@ -35,6 +36,12 @@
     "sanitize-html": "^2.14.0"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.3.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-security": "^4.0.0",
+    "globals": "^17.6.0",
     "mongodb-memory-server": "^10.4.3",
     "nodemon": "^3.1.9"
   }

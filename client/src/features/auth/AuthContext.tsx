@@ -1,12 +1,5 @@
-import {
-  createContext,
-  use,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-  type ReactNode,
-} from 'react';
+// @refresh reset
+import { createContext, useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { authApi, type AuthUser, type LoginPayload, type RegisterPayload } from '@/api/authApi';
 import { ACCESS_TOKEN_KEY } from '@/api/axiosInstance';
@@ -20,7 +13,8 @@ type AuthContextValue = {
   logout: () => Promise<void>;
 };
 
-const AuthContext = createContext<AuthContextValue | null>(null);
+// eslint-disable-next-line react-refresh/only-export-components
+export const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient();
@@ -29,17 +23,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Bootstrap: if token in LS, hydrate user via /auth/me. Otherwise mark ready.
   useEffect(() => {
-    const token = localStorage.getItem(ACCESS_TOKEN_KEY);
-    if (!token) {
-      setReady(true);
-      return;
-    }
     let cancelled = false;
-    authApi
-      .me()
-      .then((u) => {
-        if (!cancelled) setUser(u);
-      })
+    const token = localStorage.getItem(ACCESS_TOKEN_KEY);
+    const bootstrap = token
+      ? authApi.me().then((u) => {
+          if (!cancelled) setUser(u);
+        })
+      : Promise.resolve();
+    bootstrap
       .catch(() => {
         // 401 already handled by axios interceptor (clears token + dispatches
         // auth:logout). For other errors we just remain unauthenticated.
@@ -95,12 +86,4 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
 
   return <AuthContext value={value}>{children}</AuthContext>;
-}
-
-export function useAuthContext(): AuthContextValue {
-  const ctx = use(AuthContext);
-  if (!ctx) {
-    throw new Error('useAuthContext must be used within <AuthProvider>');
-  }
-  return ctx;
 }

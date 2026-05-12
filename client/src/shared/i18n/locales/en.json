@@ -20,7 +20,8 @@
     "theme": "Theme",
     "theme-light": "Light",
     "theme-dark": "Dark",
-    "theme-system": "System"
+    "theme-system": "System",
+    "pagination": "Page navigation"
   },
   "nav": {
     "home": "Home",
@@ -33,7 +34,10 @@
     "profile": "Profile",
     "login": "Sign in",
     "register": "Sign up",
-    "logout": "Sign out"
+    "logout": "Sign out",
+    "toggleNav": "Toggle navigation",
+    "toggle": "Toggle navigation",
+    "close": "Close menu"
   },
   "auth": {
     "login-title": "Sign in",
@@ -206,5 +210,26 @@
     "demoTitle": "The root ك-ت-ب",
     "demoSubtitle": "A single root, dozens of derived words.",
     "footerTagline": "Built for curious learners."
+  },
+  "letters": {
+    "title": "Arabic letters",
+    "subtitle": "Choose a letter to see which letters co-occur with it in roots.",
+    "empty": "No roots found for this letter.",
+    "noRoots": "No shared roots.",
+    "pageAriaLabel": "Arabic letters visualisation",
+    "pickerAriaLabel": "Arabic letter picker",
+    "sidePanelAriaLabel": "Details of the selected letter",
+    "vizAriaLabel": "Concentric rings around the letter {{letter}}",
+    "mobileHint": "Tap a letter to focus on it.",
+    "roots_one": "{{count}} root",
+    "roots_other": "{{count}} roots",
+    "rootCount_one": "{{count}} root contains this letter",
+    "rootCount_other": "{{count}} roots contain this letter",
+    "neighbourCount_one": "{{count}} neighbouring letter",
+    "neighbourCount_other": "{{count}} neighbouring letters",
+    "sharedRoots_one": "{{count}} shared root",
+    "sharedRoots_other": "{{count}} shared roots",
+    "cooccurrenceCount_one": "co-occurrence: {{count}}",
+    "cooccurrenceCount_other": "co-occurrences: {{count}}"
   }
 }
