@@ -39,17 +39,16 @@ export const CENTER_FILL_DARK = 'oklch(0.18 0.08 250)';
  * For SVG use: inject via `fill` attribute only when CSS var fallback is
  * insufficient (e.g. when animating with Framer Motion style props).
  */
-export function interpolateFill(normFreq: number, isDark: boolean): string {
-  if (isDark) {
-    // dark: lch(0.38→0.62) — floor raised for ring-2 legibility
-    const l = 0.38 + normFreq * 0.24; // 0.38 → 0.62
-    const c = 0.06 + normFreq * 0.05; // 0.06 → 0.11
-    return `oklch(${l.toFixed(2)} ${c.toFixed(2)} 250)`;
-  }
-  // light: lch(0.70→0.92) — high-freq nodes are darker/more saturated
-  const l = 0.7 + (1 - normFreq) * 0.22; // 0.70 → 0.92
-  const c = 0.02 + normFreq * 0.06; // 0.02 → 0.08
-  return `oklch(${l.toFixed(2)} ${c.toFixed(2)} 250)`;
+/**
+ * Single flat fill colour for every peripheral letter (user request: no
+ * frequency-based intensity gradation). `normFreq` is accepted for API
+ * compatibility but ignored.
+ */
+export function interpolateFill(_normFreq: number, isDark: boolean): string {
+  void _normFreq;
+  return isDark
+    ? 'oklch(0.56 0.10 250)' // dark mode: medium luminous blue
+    : 'oklch(0.82 0.06 250)'; // light mode: soft parchment blue
 }
 
 /**

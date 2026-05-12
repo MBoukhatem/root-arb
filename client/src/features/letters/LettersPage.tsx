@@ -408,15 +408,18 @@ export default function LettersPage() {
         )}
       </AnimatePresence>
 
-      {/* Alphabet picker */}
-      <div className="rounded-xl border border-(--border) bg-(--bg-card) p-4">
-        <AlphabetPicker
-          letters={letterList}
-          buffer={buffer}
-          focal={focal}
-          onSelect={handleLetterSelect}
-        />
-      </div>
+      {/* Alphabet picker — hidden once the buffer is full (3 letters reached).
+          User must Reset or Pop to choose again. */}
+      {buffer.length < MAX_LETTERS && (
+        <div className="rounded-xl border border-(--border) bg-(--bg-card) p-4">
+          <AlphabetPicker
+            letters={letterList}
+            buffer={buffer}
+            focal={focal}
+            onSelect={handleLetterSelect}
+          />
+        </div>
+      )}
 
       {/* Stats bar — only when focal letter exists */}
       {focal && (

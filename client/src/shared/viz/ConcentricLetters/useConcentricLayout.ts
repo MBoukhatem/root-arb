@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import { scaleLog, scaleLinear, min, max } from 'd3';
 import type { CooccurrenceData, ConcentricLayout, RingNode, CenterNode, LayoutLink } from './types';
 import { linkStrokeWidth } from './colors';
 
@@ -10,31 +9,28 @@ import { linkStrokeWidth } from './colors';
  */
 export const VIEWBOX_SIZE = 1000;
 const CENTER = VIEWBOX_SIZE / 2; // 500
-const CENTER_FOOTPRINT = 95; // px (center disc radius + breathing room)
-
-// Ring radii are computed from the square edge so they always fit.
-// Order: ring 0 (closest = most frequent), ring 1, ring 2 (farthest = rare).
-const RING_FRACTIONS = [0.42, 0.62, 0.82] as const;
-
-const NODE_RADIUS_RANGE: [number, number] = [32, 56];
+const CENTER_FOOTPRINT = 95;
 
 /**
- * `useConcentricLayout` — pure deterministic D3-math layout hook.
+ * Single ring layout — all peripheral letters share the same ring at a fixed
+ * fraction of the viewport. No frequency-based intensity or sizing : every
+ * peripheral letter has the same colour, same circle radius, evenly spaced
+ * around the centre. The user requested this simpler reading (no gradation).
+ */
+const RING_FRACTION = 0.68;
+const NODE_RADIUS = 44;
+
+/**
+ * `useConcentricLayout` — single-ring radial layout.
  *
- * Pattern: React owns DOM, D3 owns math. This hook returns stable position
- * data; the component renders SVG elements. No D3 DOM manipulation.
+ * All peripheral letters are placed evenly on ONE circle around the centre
+ * (no rings/tertiles, no frequency-based intensity, no log radius scale).
+ * Each letter shares the same fill colour and the same circle radius — the
+ * encoding is purely positional. User explicitly requested this simpler
+ * reading.
  *
- * Coordinates are in a fixed 1000×1000 viewBox — the SVG element scales
- * uniformly to its (square) container. This guarantees:
- *   • cercles toujours circulaires (pas d'aspect-ratio mismatch)
- *   • lettres ne se chevauchent pas (positions statiques deterministes)
- *
- * Ring assignment:
- *   - neighbours sorted descending by count
- *   - ≤ 8 neighbours → 2 rings (split en deux moitiés)
- *   - sinon → 3 rings (tertiles)
- *
- * RTL inverse le sens angulaire pour cohérence avec la lecture droite→gauche.
+ * Coordinates are in a fixed 1000×1000 viewBox so circles stay circular
+ * regardless of viewport. RTL inverse le sens angulaire.
  */
 export function useConcentricLayout(
   data: CooccurrenceData | null,
@@ -56,84 +52,39 @@ export function useConcentricLayout(
     const neighbours = [...data.cooccurrences].sort((a, b) => b.count - a.count);
     const n = neighbours.length;
 
-    const useRings = n <= 8 ? 2 : 3;
-
-    const ringOf = (i: number): 0 | 1 | 2 => {
-      if (useRings === 2) {
-        const half = Math.ceil(n / 2);
-        return i < half ? 0 : 1;
-      }
-      const third = Math.ceil(n / 3);
-      if (i < third) return 0;
-      if (i < 2 * third) return 1;
-      return 2;
-    };
-
-    const counts = neighbours.map((nb) => nb.count);
-    const minC = min(counts) ?? 1;
-    const maxC = max(counts) ?? 1;
-
-    const radiusScale =
-      minC === maxC
-        ? () => (NODE_RADIUS_RANGE[0] + NODE_RADIUS_RANGE[1]) / 2
-        : scaleLog<number>()
-            .domain([Math.max(1, minC), maxC])
-            .range(NODE_RADIUS_RANGE)
-            .clamp(true);
-
-    const normScale =
-      minC === maxC ? () => 1 : scaleLinear().domain([minC, maxC]).range([0, 1]).clamp(true);
-
-    const byRing = new Map<0 | 1 | 2, Array<(typeof neighbours)[number] & { idx: number }>>([
-      [0, []],
-      [1, []],
-      [2, []],
-    ]);
-    neighbours.forEach((nb, i) => {
-      byRing.get(ringOf(i))!.push({ ...nb, idx: i });
-    });
-
-    const ringRadii = RING_FRACTIONS.map((f) => f * maxR) as [number, number, number];
+    const r = RING_FRACTION * maxR;
+    const step = (2 * Math.PI) / n;
+    const direction = isRTL ? -1 : 1;
 
     const ringNodes: RingNode[] = [];
     const links: LayoutLink[] = [];
 
-    for (const [ring, group] of byRing.entries()) {
-      if (group.length === 0) continue;
-      const r = ringRadii[ring as 0 | 1 | 2];
-      const count = group.length;
-      const step = (2 * Math.PI) / count;
-      // Start at 12 o'clock (-π/2). RTL inverse le sens.
-      const direction = isRTL ? -1 : 1;
+    neighbours.forEach((nb, i) => {
+      // Start at 12 o'clock (-π/2). Even spacing on a single ring.
+      const angle = -Math.PI / 2 + i * step * direction;
+      const x = cx + r * Math.cos(angle);
+      const y = cy + r * Math.sin(angle);
 
-      group.forEach((nb, i) => {
-        const angle = -Math.PI / 2 + i * step * direction;
-        const x = cx + r * Math.cos(angle);
-        const y = cy + r * Math.sin(angle);
-        const radius = radiusScale(nb.count);
-        const normFreq = normScale(nb.count);
-
-        ringNodes.push({
-          letter: nb.letter,
-          count: nb.count,
-          sharedRootIds: nb.sharedRootIds,
-          ring: ring as 0 | 1 | 2,
-          x,
-          y,
-          radius,
-          normFreq,
-        });
-
-        links.push({
-          x1: cx,
-          y1: cy,
-          x2: x,
-          y2: y,
-          strokeWidth: linkStrokeWidth(normFreq),
-          normFreq,
-        });
+      ringNodes.push({
+        letter: nb.letter,
+        count: nb.count,
+        sharedRootIds: nb.sharedRootIds,
+        ring: 0,
+        x,
+        y,
+        radius: NODE_RADIUS,
+        normFreq: 1,
       });
-    }
+
+      links.push({
+        x1: cx,
+        y1: cy,
+        x2: x,
+        y2: y,
+        strokeWidth: linkStrokeWidth(1),
+        normFreq: 1,
+      });
+    });
 
     return { centerNode, ringNodes, links };
   }, [data, isRTL]);
