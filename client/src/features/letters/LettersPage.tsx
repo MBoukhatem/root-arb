@@ -19,7 +19,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { X, Loader2, Hash, RotateCcw, Undo2, ArrowRight } from 'lucide-react';
 import clsx from 'clsx';
 import { ConcentricLetters } from '@/shared/viz/ConcentricLetters';
-import { useLettersList, useCooccurrences } from './hooks/useCooccurrences';
+import { useLettersList } from './hooks/useCooccurrences';
 import { useRoots } from '@/features/roots/hooks/useRoots';
 import type { RingNode } from '@/shared/viz/ConcentricLetters/types';
 
@@ -310,7 +310,41 @@ export default function LettersPage() {
   // Focal letter (centre du viz) = dernière lettre du buffer, ou null si vide.
   const focal = buffer[buffer.length - 1] ?? null;
 
-  const { data, isPending, isError } = useCooccurrences(focal ?? '');
+  /**
+   * Co-occurrences = INTERSECTION des lettres choisies (pas juste la dernière).
+   * Ex: buffer = [ك, ت] → on cherche les racines contenant ك ET ت, puis on
+   * compte les autres lettres présentes dans CES racines uniquement.
+   * Quand buffer.length === 3 et la racine existe, cooccurrences = [] (la
+   * racine est complète, plus de voisines à proposer).
+   * Calculé côté client à partir de useRoots — pas de nouvel endpoint requis.
+   */
+  const data = useMemo(() => {
+    if (!focal || !allRoots) return null;
+    const matchingRoots = allRoots.roots.filter((r) =>
+      buffer.every((l) => r.lettersArray.includes(l)),
+    );
+    const counts = new Map<string, { count: number; sharedRootIds: string[] }>();
+    for (const root of matchingRoots) {
+      for (const letter of root.lettersArray) {
+        if (buffer.includes(letter)) continue;
+        const entry = counts.get(letter) ?? { count: 0, sharedRootIds: [] };
+        entry.count += 1;
+        entry.sharedRootIds.push(root._id);
+        counts.set(letter, entry);
+      }
+    }
+    const cooccurrences = Array.from(counts.entries())
+      .map(([letter, v]) => ({ letter, count: v.count, sharedRootIds: v.sharedRootIds }))
+      .sort((a, b) => b.count - a.count);
+    return {
+      letter: focal,
+      totalRootsWithLetter: matchingRoots.length,
+      cooccurrences,
+      generatedAt: new Date().toISOString(),
+    };
+  }, [focal, buffer, allRoots]);
+  const isPending = !allRoots;
+  const isError = false;
 
   const handleLetterSelect = useCallback((letter: string) => {
     setBuffer((curr) => {
@@ -456,27 +490,29 @@ export default function LettersPage() {
         </div>
       )}
 
-      {/* Viz + side panel */}
-      <div className="relative overflow-hidden rounded-xl border border-(--border) bg-(--bg-card) p-4">
-        {focal ? (
-          <ConcentricLetters
-            selectedLetter={focal}
-            data={data ?? null}
-            onLetterSelect={handleLetterSelect}
-            showTooltip={activePanelNode === null}
-            isLoading={isPending}
-          />
-        ) : (
-          <div className="flex h-[420px] flex-col items-center justify-center gap-2 text-center">
-            <span className="text-5xl text-(--text-muted)" aria-hidden>
-              ✦
-            </span>
-            <p className="text-(--text-muted)">{t('buildHint')}</p>
-          </div>
-        )}
+      {/* Viz + side panel — hidden at buffer.length === 3 (banner above suffit) */}
+      {buffer.length < MAX_LETTERS && (
+        <div className="relative overflow-hidden rounded-xl border border-(--border) bg-(--bg-card) p-4">
+          {focal ? (
+            <ConcentricLetters
+              selectedLetter={focal}
+              data={data ?? null}
+              onLetterSelect={handleLetterSelect}
+              showTooltip={activePanelNode === null}
+              isLoading={isPending}
+            />
+          ) : (
+            <div className="flex h-[420px] flex-col items-center justify-center gap-2 text-center">
+              <span className="text-5xl text-(--text-muted)" aria-hidden>
+                ✦
+              </span>
+              <p className="text-(--text-muted)">{t('buildHint')}</p>
+            </div>
+          )}
 
-        <RootSidePanel node={activePanelNode} onClose={() => setActivePanelNode(null)} />
-      </div>
+          <RootSidePanel node={activePanelNode} onClose={() => setActivePanelNode(null)} />
+        </div>
+      )}
 
       <p className="sr-only sm:hidden">{t('mobileHint')}</p>
     </section>
