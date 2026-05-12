@@ -21,15 +21,28 @@ import { GRAMMATICAL_CATEGORIES, type GrammaticalCategory, type Word } from '@/t
  * by the D3 RootTree component (which was authored against a slightly older
  * brief). Categories that have no 1:1 visual mapping fall back to `noun`.
  */
-const VIZ_CATEGORY_MAP: Record<GrammaticalCategory, VizCategory> = {
+/**
+ * Maps grammatical-category values returned by the seed to the viz-internal
+ * enum used by the D3 RootTree. The seed (server/src/seeds/data/words.json)
+ * mixes PLAN-FINAL aliases (`masdar`, `derive`, `pluriel-brise`) with the
+ * older viz names (`verbal_noun`, `agent`, `place`, `instrument`). We cover
+ * both spellings here and fall back to `noun` for any new value.
+ */
+const VIZ_CATEGORY_MAP: Record<string, VizCategory> = {
   verb: 'verb',
   noun: 'noun',
   adjective: 'adjective',
   adverb: 'noun',
   participle: 'participle',
+  // PLAN-FINAL aliases
   masdar: 'verbal_noun',
   'pluriel-brise': 'noun',
   derive: 'noun',
+  // Seed-direct viz names (server-emitted values)
+  verbal_noun: 'verbal_noun',
+  agent: 'agent',
+  place: 'place',
+  instrument: 'instrument',
 };
 
 function toRootTreeWord(w: Word): RootTreeWord {
@@ -38,7 +51,7 @@ function toRootTreeWord(w: Word): RootTreeWord {
     arabicWord: w.arabicWord,
     transliteration: w.transliteration,
     translations: w.translations,
-    grammaticalCategory: VIZ_CATEGORY_MAP[w.grammaticalCategory],
+    grammaticalCategory: VIZ_CATEGORY_MAP[w.grammaticalCategory] ?? 'noun',
   };
 }
 

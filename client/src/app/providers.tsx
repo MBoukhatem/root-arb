@@ -25,32 +25,34 @@ const queryClient = new QueryClient({
 
 /**
  * Composition root. Order matters:
- *  - ErrorBoundary outermost so it catches provider errors too.
  *  - QueryClient before Auth so AuthContext can call queryClient.clear() on logout.
  *  - i18n before Language/Theme/Auth so they can call `t()` at mount.
- *  - Router innermost so deep components can use hooks (useLocation etc.).
+ *  - BrowserRouter wraps RootErrorBoundary so the fallback (ServerErrorPage)
+ *    can use <Link> / router hooks — otherwise it crashes with
+ *    "Cannot destructure property 'basename' of useContext(...) as null".
+ *  - RootErrorBoundary catches errors thrown inside any route.
  */
 export function Providers({ children }: { children: ReactNode }) {
   return (
-    <RootErrorBoundary>
-      <I18nextProvider i18n={i18n}>
-        <QueryClientProvider client={queryClient}>
-          <ThemeProvider>
-            <LanguageProvider>
-              <AuthProvider>
-                <BrowserRouter>
+    <I18nextProvider i18n={i18n}>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider>
+          <LanguageProvider>
+            <AuthProvider>
+              <BrowserRouter>
+                <RootErrorBoundary>
                   {children}
                   <Toaster
                     position="top-right"
                     containerStyle={{ pointerEvents: 'none' }}
                     toastOptions={{ style: { pointerEvents: 'auto' } }}
                   />
-                </BrowserRouter>
-              </AuthProvider>
-            </LanguageProvider>
-          </ThemeProvider>
-        </QueryClientProvider>
-      </I18nextProvider>
-    </RootErrorBoundary>
+                </RootErrorBoundary>
+              </BrowserRouter>
+            </AuthProvider>
+          </LanguageProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
+    </I18nextProvider>
   );
 }
