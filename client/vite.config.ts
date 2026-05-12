@@ -10,9 +10,13 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
-    host: true,
-    port: 5173,
-    strictPort: false,
+    // Bind to loopback only — Tailscale Funnel binds the public Tailscale IP
+    // separately on port 4180, so binding 0.0.0.0:4180 conflicts. strictPort
+    // forces a single try on 127.0.0.1 (which IS free, even though the
+    // Tailscale IP holds the same port number).
+    host: '127.0.0.1',
+    port: 4180,
+    strictPort: true,
     allowedHosts: true,
     proxy: {
       '/api': {
